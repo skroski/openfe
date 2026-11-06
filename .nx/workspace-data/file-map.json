@@ -46,92 +46,108 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": "vitest.config.ts",
-        "hash": "7747400676042857361"
-      },
-      {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css",
-        "hash": "198251265470598406"
-      },
-      {
-        "file": "DEVELOPMENT.md",
-        "hash": "2908939375849820188"
-      },
-      {
-        "file": ".prettierrc",
-        "hash": "16267754514737964994"
-      },
-      {
-        "file": "eslint.config.mjs",
-        "hash": "12926286793420397906"
-      },
-      {
-        "file": "design-reference/NfeImportacao.dc.html",
-        "hash": "16735249675860165018"
-      },
-      {
-        "file": "docs/PROVIDERS.md",
-        "hash": "14769840639895691244"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "18312066278950104235"
-      },
-      {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css",
-        "hash": "14199684132777999316"
-      },
-      {
-        "file": "design-reference/support.js",
-        "hash": "14640174182844953874"
+        "file": ".editorconfig",
+        "hash": "5443105041930014821"
       },
       {
         "file": ".env.example",
         "hash": "6682745852617629131"
       },
       {
-        "file": "design-reference/NfeEmpresas.dc.html",
-        "hash": "4982256411977315817"
+        "file": ".gitignore",
+        "hash": "9928673004667191403"
       },
       {
-        "file": "design-reference/NfeProdutos.dc.html",
-        "hash": "7185701423785031275"
+        "file": ".prettierignore",
+        "hash": "4806318144369935397"
       },
       {
-        "file": "package.json",
-        "hash": "18162572172733395942"
-      },
-      {
-        "file": "docs/PRD.md",
-        "hash": "2131474363515875420"
-      },
-      {
-        "file": "docs/DATABASE.md",
-        "hash": "5797814949851530740"
-      },
-      {
-        "file": "design-reference/NfeClientes.dc.html",
-        "hash": "9035012684261225434"
-      },
-      {
-        "file": "design-reference/NfeDashboard.dc.html",
-        "hash": "18027015824704838037"
-      },
-      {
-        "file": "nx.json",
-        "hash": "17477786919773191578"
+        "file": ".prettierrc",
+        "hash": "16267754514737964994"
       },
       {
         "file": ".vscode/launch.json",
         "hash": "11911801181309274062"
       },
       {
-        "file": "docs/UI-GUIDE.md",
-        "hash": "11333855337902159713"
+        "file": "DEVELOPMENT.md",
+        "hash": "2908939375849820188"
       },
       {
-        "file": "tsconfig.base.json",
-        "hash": "950848304108897294"
+        "file": "design-reference/.thumbnail",
+        "hash": "7817685553390610108"
+      },
+      {
+        "file": "design-reference/NfeClientes.dc.html",
+        "hash": "9035012684261225434"
+      },
+      {
+        "file": "design-reference/NfeConfiguracoes.dc.html",
+        "hash": "7845331108946561117"
+      },
+      {
+        "file": "design-reference/NfeDashboard.dc.html",
+        "hash": "18027015824704838037"
+      },
+      {
+        "file": "design-reference/NfeDocumentoDetalhe.dc.html",
+        "hash": "10845493591022623093"
+      },
+      {
+        "file": "design-reference/NfeDocumentos.dc.html",
+        "hash": "17915011175438367781"
+      },
+      {
+        "file": "design-reference/NfeEmissao.dc.html",
+        "hash": "18290838698788091486"
+      },
+      {
+        "file": "design-reference/NfeEmpresas.dc.html",
+        "hash": "4982256411977315817"
+      },
+      {
+        "file": "design-reference/NfeImportacao.dc.html",
+        "hash": "16735249675860165018"
+      },
+      {
+        "file": "design-reference/NfeIntegracoes.dc.html",
+        "hash": "1067824367249326927"
+      },
+      {
+        "file": "design-reference/NfeProdutos.dc.html",
+        "hash": "7185701423785031275"
+      },
+      {
+        "file": "design-reference/NfeRelatorios.dc.html",
+        "hash": "7344031642027584451"
+      },
+      {
+        "file": "design-reference/OpenNFE Design System.dc.html",
+        "hash": "698128687840691119"
+      },
+      {
+        "file": "design-reference/OpenNFE.dc.html",
+        "hash": "5132207699754075556"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_adherence.oxlintrc.json",
+        "hash": "7660157563473259781"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js",
+        "hash": "7194858268701789749"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_manifest.json",
+        "hash": "12348595191782266251"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/readme.md",
+        "hash": "9531017648170764555"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css",
+        "hash": "198251265470598406"
       },
       {
         "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css",
@@ -142,501 +158,144 @@
         "hash": "14934225975189629043"
       },
       {
-        "file": "jest.preset.js",
-        "hash": "9430166341120122740"
-      },
-      {
-        "file": "design-reference/OpenNFE.dc.html",
-        "hash": "5132207699754075556"
-      },
-      {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js",
-        "hash": "7194858268701789749"
-      },
-      {
-        "file": "design-reference/.thumbnail",
-        "hash": "7817685553390610108"
-      },
-      {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css",
-        "hash": "7441608978569851697"
-      },
-      {
-        "file": "jest.config.ts",
-        "hash": "6870352021923392442"
-      },
-      {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css",
-        "hash": "18321901169661015660"
-      },
-      {
         "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css",
         "hash": "10978485217311688495"
-      },
-      {
-        "file": "design-reference/NfeRelatorios.dc.html",
-        "hash": "7344031642027584451"
-      },
-      {
-        "file": "docker/docker-compose.yml",
-        "hash": "929054956917067231"
-      },
-      {
-        "file": ".gitignore",
-        "hash": "9928673004667191403"
-      },
-      {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_manifest.json",
-        "hash": "12348595191782266251"
-      },
-      {
-        "file": "design-reference/NfeDocumentos.dc.html",
-        "hash": "17915011175438367781"
-      },
-      {
-        "file": "design-reference/NfeDocumentoDetalhe.dc.html",
-        "hash": "10845493591022623093"
-      },
-      {
-        "file": "design-reference/NfeEmissao.dc.html",
-        "hash": "18290838698788091486"
-      },
-      {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_adherence.oxlintrc.json",
-        "hash": "7660157563473259781"
-      },
-      {
-        "file": "design-reference/NfeIntegracoes.dc.html",
-        "hash": "1067824367249326927"
-      },
-      {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/readme.md",
-        "hash": "9531017648170764555"
-      },
-      {
-        "file": "design-reference/NfeConfiguracoes.dc.html",
-        "hash": "7845331108946561117"
       },
       {
         "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css",
         "hash": "12728357232290870860"
       },
       {
-        "file": "docs/SECURITY.md",
-        "hash": "14385278779829559724"
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css",
+        "hash": "14199684132777999316"
       },
       {
-        "file": "docs/ARCHITECTURE.md",
-        "hash": "17687977753591575927"
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css",
+        "hash": "18321901169661015660"
       },
       {
-        "file": ".prettierignore",
-        "hash": "4806318144369935397"
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css",
+        "hash": "7441608978569851697"
       },
       {
-        "file": ".editorconfig",
-        "hash": "5443105041930014821"
+        "file": "design-reference/support.js",
+        "hash": "14640174182844953874"
+      },
+      {
+        "file": "docker/docker-compose.yml",
+        "hash": "929054956917067231"
       },
       {
         "file": "docs/API.md",
         "hash": "9342222593210185780"
       },
       {
-        "file": "design-reference/OpenNFE Design System.dc.html",
-        "hash": "698128687840691119"
+        "file": "docs/ARCHITECTURE.md",
+        "hash": "17687977753591575927"
+      },
+      {
+        "file": "docs/DATABASE.md",
+        "hash": "5797814949851530740"
+      },
+      {
+        "file": "docs/PRD.md",
+        "hash": "2131474363515875420"
+      },
+      {
+        "file": "docs/PROVIDERS.md",
+        "hash": "14769840639895691244"
+      },
+      {
+        "file": "docs/SECURITY.md",
+        "hash": "14385278779829559724"
+      },
+      {
+        "file": "docs/UI-GUIDE.md",
+        "hash": "11333855337902159713"
+      },
+      {
+        "file": "eslint.config.mjs",
+        "hash": "12926286793420397906"
+      },
+      {
+        "file": "jest.config.ts",
+        "hash": "6870352021923392442"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "9430166341120122740"
+      },
+      {
+        "file": "nx.json",
+        "hash": "17477786919773191578"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "18312066278950104235"
+      },
+      {
+        "file": "package.json",
+        "hash": "18162572172733395942"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "950848304108897294"
+      },
+      {
+        "file": "vitest.config.ts",
+        "hash": "7747400676042857361"
       }
     ],
     "projectFileMap": {
-      "web": [
+      "shared": [
         {
-          "file": "apps/web/.postcssrc.json",
-          "hash": "4165803757389925959"
+          "file": "libs/shared/README.md",
+          "hash": "11786132251247811791"
         },
         {
-          "file": "apps/web/eslint.config.mjs",
-          "hash": "17918432245055023638",
+          "file": "libs/shared/eslint.config.mjs",
+          "hash": "2624537849564014525"
+        },
+        {
+          "file": "libs/shared/project.json",
+          "hash": "2214406144155872643"
+        },
+        {
+          "file": "libs/shared/src/index.ts",
+          "hash": "4409947503601050718"
+        },
+        {
+          "file": "libs/shared/src/lib/shared.ts",
+          "hash": "3815621113879200261"
+        },
+        {
+          "file": "libs/shared/src/lib/validators.spec.ts",
+          "hash": "1979218148632539778",
           "deps": [
-            "npm:@nx/eslint-plugin"
-          ]
-        },
-        {
-          "file": "apps/web/project.json",
-          "hash": "3555547514708459532"
-        },
-        {
-          "file": "apps/web/public/favicon.ico",
-          "hash": "9303420814833116677"
-        },
-        {
-          "file": "apps/web/src/app/app.config.server.ts",
-          "hash": "16664769899172877666",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/ssr"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/app.config.ts",
-          "hash": "5748714325256253611",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/router",
-            "npm:@angular/common",
-            "npm:@angular/platform-browser"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/app.css",
-          "hash": "3244421341483603138"
-        },
-        {
-          "file": "apps/web/src/app/app.html",
-          "hash": "17816966185630879015"
-        },
-        {
-          "file": "apps/web/src/app/app.routes.server.ts",
-          "hash": "603264254662479907",
-          "deps": [
-            "npm:@angular/ssr"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/app.routes.ts",
-          "hash": "15666404695143396696",
-          "deps": [
-            "npm:@angular/router"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/app.spec.ts",
-          "hash": "18440479386742326523",
-          "deps": [
-            "npm:@angular/compiler",
             "npm:vitest"
           ]
         },
         {
-          "file": "apps/web/src/app/app.ts",
-          "hash": "16530716323073860533",
+          "file": "libs/shared/src/security/encryption.service.spec.ts",
+          "hash": "7149278354638340173",
           "deps": [
-            "npm:@angular/core",
-            "npm:@angular/router"
+            "npm:vitest"
           ]
         },
         {
-          "file": "apps/web/src/app/core/data/demo-data.ts",
-          "hash": "16716419894624620409",
-          "deps": [
-            "shared"
-          ]
+          "file": "libs/shared/src/security/encryption.service.ts",
+          "hash": "300933230114448633"
         },
         {
-          "file": "apps/web/src/app/core/layout/app-layout.component.ts",
-          "hash": "16170205249899498639",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/router"
-          ]
+          "file": "libs/shared/src/server.ts",
+          "hash": "2072586480980773657"
         },
         {
-          "file": "apps/web/src/app/core/services/fiscal-api.service.ts",
-          "hash": "2525281331451933531",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/common",
-            "shared",
-            "npm:rxjs"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/core/services/toast.service.ts",
-          "hash": "7271538672268154694",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/core/utils/br.ts",
-          "hash": "13262195328323198184",
-          "deps": [
-            "shared"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/companies/companies.component.ts",
-          "hash": "16809395633112945080",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/router",
-            "npm:@angular/forms",
-            "shared"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/customers/customers.component.ts",
-          "hash": "4020644940790327757",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/forms",
-            "shared"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/dashboard/dashboard.component.ts",
-          "hash": "15454165471943185846",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "npm:@angular/router",
-            "shared"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/documents/cancel-document-dialog.component.ts",
-          "hash": "15243798665248946847",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/forms",
-            "shared"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/documents/document-detail.component.ts",
-          "hash": "16540228054093059581",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "npm:@angular/router"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/documents/document-examples.component.ts",
-          "hash": "12714428339864776373",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/router",
-            "shared"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/documents/documents.component.ts",
-          "hash": "16524336814138327815",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "npm:@angular/router",
-            "shared"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/guide/guide.component.ts",
-          "hash": "7706687926702698988",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/router"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/imports/imports.component.ts",
-          "hash": "4144042057247487696",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "npm:@angular/forms",
-            "npm:@angular/router"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/integrations/integrations.component.ts",
-          "hash": "11563627615092703248",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/forms",
-            "shared"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/issuance/issuance.component.ts",
-          "hash": "8607492104754423052",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "npm:@angular/router",
-            "shared"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/products/products.component.ts",
-          "hash": "9201817070310651742",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "npm:@angular/forms",
-            "shared"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/reports/reports.component.ts",
-          "hash": "14872244354530867475",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/forms"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/settings/settings.component.ts",
-          "hash": "15871823570184312537",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/shared/components/danfe/danfe-preview.component.ts",
-          "hash": "7635781958848034706",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core",
-            "shared"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/shared/components/data-grid/data-grid.component.ts",
-          "hash": "8494050370482740347",
-          "deps": [
-            "npm:@angular/common",
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/shared/components/data-grid/data-grid.types.ts",
-          "hash": "2487743176732065000"
-        },
-        {
-          "file": "apps/web/src/app/shared/components/data-grid/grid-templates.directive.ts",
-          "hash": "319536055437259649",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/shared/components/form-field.component.ts",
-          "hash": "14332750307037391149",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/shared/components/icon.component.ts",
-          "hash": "15023314407187403199",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/common"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/shared/components/modal.component.ts",
-          "hash": "15038008489604431207",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/shared/components/page-header.component.ts",
-          "hash": "5803633015522222983",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/router"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/shared/components/status-badge.component.ts",
-          "hash": "5072003729392698353",
-          "deps": [
-            "npm:@angular/core"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/shared/forms.ts",
-          "hash": "10841270266984138904"
-        },
-        {
-          "file": "apps/web/src/index.html",
-          "hash": "3373382062822948571"
-        },
-        {
-          "file": "apps/web/src/main.server.ts",
-          "hash": "2790221776171602446",
-          "deps": [
-            "npm:@angular/platform-browser"
-          ]
-        },
-        {
-          "file": "apps/web/src/main.ts",
-          "hash": "3314327030169821486",
-          "deps": [
-            "npm:@angular/platform-browser"
-          ]
-        },
-        {
-          "file": "apps/web/src/server.ts",
-          "hash": "4425888484242007746",
-          "deps": [
-            "npm:@angular/ssr",
-            "npm:express"
-          ]
-        },
-        {
-          "file": "apps/web/src/styles.css",
-          "hash": "5968821452862945188"
-        },
-        {
-          "file": "apps/web/tsconfig.app.json",
-          "hash": "2438757114263802077"
-        },
-        {
-          "file": "apps/web/tsconfig.json",
-          "hash": "4069448406902918869"
-        }
-      ],
-      "providers": [
-        {
-          "file": "libs/providers/README.md",
-          "hash": "1200423322977624925"
-        },
-        {
-          "file": "libs/providers/eslint.config.mjs",
-          "hash": "2624537849564014525"
-        },
-        {
-          "file": "libs/providers/project.json",
-          "hash": "7443939102484400694"
-        },
-        {
-          "file": "libs/providers/src/index.ts",
-          "hash": "12978854975961429811",
-          "deps": [
-            "fiscal",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/providers/src/lib/providers.spec.ts",
-          "hash": "15152530507222245767",
-          "deps": [
-            "npm:vitest",
-            "shared"
-          ]
-        },
-        {
-          "file": "libs/providers/src/lib/providers.ts",
-          "hash": "2668822909891686444"
-        },
-        {
-          "file": "libs/providers/tsconfig.json",
+          "file": "libs/shared/tsconfig.json",
           "hash": "11893191431783790763"
         },
         {
-          "file": "libs/providers/tsconfig.lib.json",
+          "file": "libs/shared/tsconfig.lib.json",
           "hash": "15798669420171897096"
         }
       ],
@@ -1046,49 +705,34 @@
           ]
         }
       ],
-      "database": [
+      "worker": [
         {
-          "file": "libs/database/README.md",
-          "hash": "14973314855003427360"
+          "file": "apps/worker/project.json",
+          "hash": "18106998283902791326"
         },
         {
-          "file": "libs/database/eslint.config.mjs",
-          "hash": "2624537849564014525"
-        },
-        {
-          "file": "libs/database/prisma/schema.prisma",
-          "hash": "3802476624958848861"
-        },
-        {
-          "file": "libs/database/project.json",
-          "hash": "15435767894715537611"
-        },
-        {
-          "file": "libs/database/src/database.module.ts",
-          "hash": "3854116159227282401",
-          "deps": [
-            "npm:@nestjs/common"
-          ]
-        },
-        {
-          "file": "libs/database/src/index.ts",
-          "hash": "10301170634930259682",
+          "file": "apps/worker/src/main.ts",
+          "hash": "12554297944535324110",
           "deps": [
             "npm:@nestjs/common",
-            "npm:@prisma/client"
+            "providers",
+            "shared"
           ]
         },
         {
-          "file": "libs/database/src/lib/database.ts",
-          "hash": "7359317065646903957"
+          "file": "apps/worker/tsconfig.app.json",
+          "hash": "15727378403584483088"
         },
         {
-          "file": "libs/database/tsconfig.json",
-          "hash": "11893191431783790763"
+          "file": "apps/worker/tsconfig.json",
+          "hash": "14965573243554529923"
         },
         {
-          "file": "libs/database/tsconfig.lib.json",
-          "hash": "15798669420171897096"
+          "file": "apps/worker/webpack.config.js",
+          "hash": "12967827066890930627",
+          "deps": [
+            "npm:@nx/webpack"
+          ]
         }
       ],
       "fiscal": [
@@ -1147,85 +791,441 @@
           "hash": "15798669420171897096"
         }
       ],
-      "worker": [
+      "providers": [
         {
-          "file": "apps/worker/project.json",
-          "hash": "18106998283902791326"
+          "file": "libs/providers/README.md",
+          "hash": "1200423322977624925"
         },
         {
-          "file": "apps/worker/src/main.ts",
-          "hash": "12554297944535324110",
+          "file": "libs/providers/eslint.config.mjs",
+          "hash": "2624537849564014525"
+        },
+        {
+          "file": "libs/providers/project.json",
+          "hash": "7443939102484400694"
+        },
+        {
+          "file": "libs/providers/src/index.ts",
+          "hash": "12978854975961429811",
           "deps": [
-            "npm:@nestjs/common",
-            "providers",
+            "fiscal",
             "shared"
           ]
         },
         {
-          "file": "apps/worker/tsconfig.app.json",
-          "hash": "15727378403584483088"
-        },
-        {
-          "file": "apps/worker/tsconfig.json",
-          "hash": "14965573243554529923"
-        },
-        {
-          "file": "apps/worker/webpack.config.js",
-          "hash": "12967827066890930627",
+          "file": "libs/providers/src/lib/providers.spec.ts",
+          "hash": "15152530507222245767",
           "deps": [
-            "npm:@nx/webpack"
-          ]
-        }
-      ],
-      "shared": [
-        {
-          "file": "libs/shared/README.md",
-          "hash": "11786132251247811791"
-        },
-        {
-          "file": "libs/shared/eslint.config.mjs",
-          "hash": "2624537849564014525"
-        },
-        {
-          "file": "libs/shared/project.json",
-          "hash": "2214406144155872643"
-        },
-        {
-          "file": "libs/shared/src/index.ts",
-          "hash": "4409947503601050718"
-        },
-        {
-          "file": "libs/shared/src/lib/shared.ts",
-          "hash": "3815621113879200261"
-        },
-        {
-          "file": "libs/shared/src/lib/validators.spec.ts",
-          "hash": "1979218148632539778",
-          "deps": [
-            "npm:vitest"
+            "npm:vitest",
+            "shared"
           ]
         },
         {
-          "file": "libs/shared/src/security/encryption.service.spec.ts",
-          "hash": "7149278354638340173",
-          "deps": [
-            "npm:vitest"
-          ]
+          "file": "libs/providers/src/lib/providers.ts",
+          "hash": "2668822909891686444"
         },
         {
-          "file": "libs/shared/src/security/encryption.service.ts",
-          "hash": "300933230114448633"
-        },
-        {
-          "file": "libs/shared/src/server.ts",
-          "hash": "2072586480980773657"
-        },
-        {
-          "file": "libs/shared/tsconfig.json",
+          "file": "libs/providers/tsconfig.json",
           "hash": "11893191431783790763"
         },
         {
-          "file": "libs/shared/tsconfig.lib.json",
+          "file": "libs/providers/tsconfig.lib.json",
+          "hash": "15798669420171897096"
+        }
+      ],
+      "web": [
+        {
+          "file": "apps/web/.postcssrc.json",
+          "hash": "4165803757389925959"
+        },
+        {
+          "file": "apps/web/eslint.config.mjs",
+          "hash": "17918432245055023638",
+          "deps": [
+            "npm:@nx/eslint-plugin"
+          ]
+        },
+        {
+          "file": "apps/web/project.json",
+          "hash": "3555547514708459532"
+        },
+        {
+          "file": "apps/web/public/favicon.ico",
+          "hash": "9303420814833116677"
+        },
+        {
+          "file": "apps/web/src/app/app.config.server.ts",
+          "hash": "16664769899172877666",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/ssr"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/app.config.ts",
+          "hash": "5748714325256253611",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/common",
+            "npm:@angular/platform-browser"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/app.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/app.html",
+          "hash": "17816966185630879015"
+        },
+        {
+          "file": "apps/web/src/app/app.routes.server.ts",
+          "hash": "603264254662479907",
+          "deps": [
+            "npm:@angular/ssr"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/app.routes.ts",
+          "hash": "15666404695143396696",
+          "deps": [
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/app.spec.ts",
+          "hash": "18440479386742326523",
+          "deps": [
+            "npm:@angular/compiler",
+            "npm:vitest"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/app.ts",
+          "hash": "16530716323073860533",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/core/data/demo-data.ts",
+          "hash": "16716419894624620409",
+          "deps": [
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/core/layout/app-layout.component.ts",
+          "hash": "16170205249899498639",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/core/services/fiscal-api.service.ts",
+          "hash": "2525281331451933531",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "shared",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/core/services/toast.service.ts",
+          "hash": "7271538672268154694",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/core/utils/br.ts",
+          "hash": "13262195328323198184",
+          "deps": [
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/companies/companies.component.ts",
+          "hash": "16809395633112945080",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/forms",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/customers/customers.component.ts",
+          "hash": "4020644940790327757",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/dashboard/dashboard.component.ts",
+          "hash": "15454165471943185846",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/documents/cancel-document-dialog.component.ts",
+          "hash": "15243798665248946847",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/documents/document-detail.component.ts",
+          "hash": "16540228054093059581",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/documents/document-examples.component.ts",
+          "hash": "12714428339864776373",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/documents/documents.component.ts",
+          "hash": "16524336814138327815",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/guide/guide.component.ts",
+          "hash": "7706687926702698988",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/imports/imports.component.ts",
+          "hash": "4144042057247487696",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/integrations/integrations.component.ts",
+          "hash": "11563627615092703248",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/issuance/issuance.component.ts",
+          "hash": "8607492104754423052",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/products/products.component.ts",
+          "hash": "9201817070310651742",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/reports/reports.component.ts",
+          "hash": "14872244354530867475",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/forms"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/settings/settings.component.ts",
+          "hash": "15871823570184312537",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/danfe/danfe-preview.component.ts",
+          "hash": "7635781958848034706",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/data-grid/data-grid.component.ts",
+          "hash": "8494050370482740347",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/data-grid/data-grid.types.ts",
+          "hash": "2487743176732065000"
+        },
+        {
+          "file": "apps/web/src/app/shared/components/data-grid/grid-templates.directive.ts",
+          "hash": "319536055437259649",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/form-field.component.ts",
+          "hash": "14332750307037391149",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/icon.component.ts",
+          "hash": "15023314407187403199",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/modal.component.ts",
+          "hash": "15038008489604431207",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/page-header.component.ts",
+          "hash": "5803633015522222983",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/status-badge.component.ts",
+          "hash": "5072003729392698353",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/forms.ts",
+          "hash": "10841270266984138904"
+        },
+        {
+          "file": "apps/web/src/index.html",
+          "hash": "3373382062822948571"
+        },
+        {
+          "file": "apps/web/src/main.server.ts",
+          "hash": "2790221776171602446",
+          "deps": [
+            "npm:@angular/platform-browser"
+          ]
+        },
+        {
+          "file": "apps/web/src/main.ts",
+          "hash": "3314327030169821486",
+          "deps": [
+            "npm:@angular/platform-browser"
+          ]
+        },
+        {
+          "file": "apps/web/src/server.ts",
+          "hash": "4425888484242007746",
+          "deps": [
+            "npm:@angular/ssr",
+            "npm:express"
+          ]
+        },
+        {
+          "file": "apps/web/src/styles.css",
+          "hash": "5968821452862945188"
+        },
+        {
+          "file": "apps/web/tsconfig.app.json",
+          "hash": "2438757114263802077"
+        },
+        {
+          "file": "apps/web/tsconfig.json",
+          "hash": "4069448406902918869"
+        }
+      ],
+      "database": [
+        {
+          "file": "libs/database/README.md",
+          "hash": "14973314855003427360"
+        },
+        {
+          "file": "libs/database/eslint.config.mjs",
+          "hash": "2624537849564014525"
+        },
+        {
+          "file": "libs/database/prisma/schema.prisma",
+          "hash": "3802476624958848861"
+        },
+        {
+          "file": "libs/database/project.json",
+          "hash": "15435767894715537611"
+        },
+        {
+          "file": "libs/database/src/database.module.ts",
+          "hash": "3854116159227282401",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/database/src/index.ts",
+          "hash": "10301170634930259682",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@prisma/client"
+          ]
+        },
+        {
+          "file": "libs/database/src/lib/database.ts",
+          "hash": "7359317065646903957"
+        },
+        {
+          "file": "libs/database/tsconfig.json",
+          "hash": "11893191431783790763"
+        },
+        {
+          "file": "libs/database/tsconfig.lib.json",
           "hash": "15798669420171897096"
         }
       ]
