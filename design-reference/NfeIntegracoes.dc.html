@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+</helmet>
+<div style="display:grid;gap:18px;min-width:0" data-screen-label="Integrações e provedores">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+    <div style="display:grid;gap:6px;max-width:760px">
+      <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">FERRAMENTAS</span>
+      <h1 style="margin:0;font:300 30px/1.1 var(--font-sans);color:var(--text-heading)"><strong style="font-weight:500">Provedores</strong> fiscais</h1>
+      <span style="font:14px/1.5 var(--font-sans);color:var(--text-muted-aa)">O OpenNFE conversa com a SEFAZ e as prefeituras por meio de provedores intercambiáveis. Cada empresa usa um provedor principal e, opcionalmente, um de contingência — trocar um provedor não muda nada para quem emite.</span>
+    </div>
+    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" on-click="{{ openAdd }}" hint-size="150px,34px">adicionar provedor</x-import>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px">
+    <sc-for list="{{ cards }}" as="p" hint-placeholder-count="4">
+      <article style="background:#fff;border:{{ p.bd }};border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06);display:grid;grid-template-rows:auto 1fr auto;opacity:{{ p.op }}">
+        <button onClick="{{ p.select }}" style="display:grid;gap:10px;padding:16px;border:0;background:transparent;text-align:left;cursor:pointer;color:inherit">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+            <div style="display:flex;gap:10px;align-items:center;min-width:0">
+              <span style="width:38px;height:38px;flex:none;border-radius:var(--radius-sm);background:var(--graphite-800);color:#fff;display:flex;align-items:center;justify-content:center;font:600 13px/1 var(--font-display);letter-spacing:.04em">{{ p.abbr }}</span>
+              <div style="display:grid;gap:3px;min-width:0"><strong style="font:500 16px/1.2 var(--font-sans)">{{ p.name }}</strong><span style="font:12.5px/1 var(--font-sans);color:var(--text-muted-aa)">{{ p.kind }}{{ p.demoTag }}</span></div>
+            </div>
+            <span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:var(--radius-pill);background:{{ p.sBg }};color:{{ p.sFg }};font:600 11px/1 var(--font-display);letter-spacing:.06em;white-space:nowrap"><span aria-hidden="true" style="width:7px;height:7px;border-radius:50%;background:{{ p.sDot }}"></span>{{ p.sLabel }}</span>
+          </div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap"><sc-for list="{{ p.docs }}" as="d" hint-placeholder-count="3"><span style="padding:2px 6px;border-radius:var(--radius-xs);background:var(--neutral-100);font:600 11px/1.3 var(--font-display);letter-spacing:.05em">{{ d }}</span></sc-for></div>
+          <dl style="margin:0;display:grid;grid-template-columns:auto 1fr;gap:5px 12px;font:12.5px/1.3 var(--font-sans)">
+            <dt style="color:var(--text-muted-aa)">Ambientes</dt><dd style="margin:0">{{ p.envTxt }}</dd>
+            <dt style="color:var(--text-muted-aa)">Última sincronização</dt><dd style="margin:0">{{ p.sync }}</dd>
+            <dt style="color:var(--text-muted-aa)">Tempo médio</dt><dd style="margin:0;font-family:var(--font-mono);color:{{ p.latFg }}">{{ p.latTxt }}</dd>
+            <dt style="color:var(--text-muted-aa)">Empresas</dt><dd style="margin:0">{{ p.compTxt }}</dd>
+          </dl>
+        </button>
+        <div></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 16px;border-top:1px solid var(--border-subtle);background:var(--neutral-050)">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toggle" size="sm" label="{{ p.toggleLabel }}" checked="{{ p.active }}" on-change="{{ p.toggle }}" hint-size="110px,24px"></x-import>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ p.select }}" hint-size="90px,26px">configurar</x-import>
+        </div>
+      </article>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{ hasSel }}" hint-placeholder-val="{{ true }}">
+    <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06);min-width:0">
+      <header style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+        <div style="display:grid;gap:3px"><h2 style="margin:0;font:300 21px/1.2 var(--font-sans)"><strong style="font-weight:500">{{ sel.name }}</strong> · configuração</h2><span style="font:12.5px/1.3 var(--font-sans);color:var(--text-muted-aa)">{{ sel.kind }} · {{ sel.envTxt }}</span></div>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" loading="{{ testing }}" on-click="{{ testConn }}" hint-size="140px,26px">testar conexão</x-import>
+      </header>
+      <sc-if value="{{ degraded }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px 18px 0"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="warning" title="Lentidão detectada" hint-size="100%,60px">Tempo médio de {{ sel.latTxt }} nas últimas 2 h (limite: 1.500 ms). Emissões continuam, mas podem sofrer timeout. Considere ativar contingência para {{ sel.compTxt }}.</x-import></div>
+      </sc-if>
+      <sc-if value="{{ testResult }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:14px 18px 0"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="{{ testTone }}" title="{{ testTitle }}" hint-size="100%,60px">{{ testBody }}</x-import></div>
+      </sc-if>
+      <div style="padding:0 18px;overflow-x:auto"><div style="height:41px;overflow:hidden;flex:none;max-width:100%"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Tabs" label="Seções do provedor" tabs="{{ tabs }}" value="{{ tab }}" on-change="{{ setTab }}" hint-size="100%,40px"></x-import></div></div>
+      <div style="padding:18px;display:grid;gap:16px">
+        <sc-if value="{{ t.credenciais }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px 18px">
+            <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Ambiente
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ envOpts }}" value="{{ credEnv }}" on-change="{{ onCredEnv }}" hint-size="100%,34px"></x-import>
+            </label>
+            <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">URL base
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ baseUrl }}" disabled="{{ true }}" style="font-family:var(--font-mono);font-size:13px" hint-size="100%,34px"></x-import>
+            </label>
+            <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Token de acesso · {{ credEnvLabel }}
+              <div style="display:flex;gap:6px">
+                <div style="flex:1"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" type="{{ tokenType }}" value="{{ token }}" on-change="{{ onToken }}" style="font-family:var(--font-mono);font-size:13px" hint-size="100%,34px"></x-import></div>
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ toggleToken }}" hint-size="70px,34px">{{ tokenBtn }}</x-import>
+              </div>
+            </label>
+            <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Timeout por requisição (s)
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ timeout }}" on-change="{{ onTimeout }}" hint-size="100%,34px"></x-import>
+            </label>
+            <div style="grid-column:1 / -1;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;padding-top:6px">
+              <span style="font:12.5px/1.5 var(--font-sans);color:var(--text-muted-aa)">Credenciais são criptografadas e nunca exibidas em logs. Homologação e produção usam tokens separados.</span>
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" on-click="{{ saveCred }}" hint-size="150px,34px">salvar credenciais</x-import>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ t.capacidades }}" hint-placeholder-val="{{ false }}">
+          <div style="overflow-x:auto;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+            <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:640px">
+              <thead><tr style="background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:9px 12px;text-align:left">Documento</th><sc-for list="{{ ops }}" as="o" hint-placeholder-count="6"><th style="padding:9px 8px;text-align:center">{{ o }}</th></sc-for></tr></thead>
+              <tbody>
+                <sc-for list="{{ capRows }}" as="r" hint-placeholder-count="5">
+                  <tr style="border-top:1px solid var(--neutral-100)">
+                    <td style="padding:9px 12px;font:600 12.5px/1 var(--font-display);letter-spacing:.05em">{{ r.doc }}</td>
+                    <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="6"><td style="padding:9px 8px;text-align:center"><span title="{{ c.t }}" style="display:inline-flex;width:22px;height:22px;border-radius:var(--radius-xs);align-items:center;justify-content:center;background:{{ c.bg }};color:{{ c.fg }};font:700 12px/1 var(--font-sans)">{{ c.g }}</span></td></sc-for>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <span style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">Capacidades consultadas no provedor em {{ sel.sync }}. O OpenNFE só oferece ações suportadas pelo provedor da empresa.</span>
+        </sc-if>
+        <sc-if value="{{ t.empresas }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:8px">
+            <sc-for list="{{ compRows }}" as="c" hint-placeholder-count="4">
+              <div style="display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Checkbox" aria-label="{{ c.fantasia }}" checked="{{ c.on }}" on-change="{{ c.toggle }}" hint-size="18px,24px"></x-import>
+                <div style="display:grid;gap:2px;min-width:0"><span style="font:500 14px/1.2 var(--font-sans)">{{ c.fantasia }}</span><span style="font:12px/1.3 var(--font-sans);color:var(--text-muted-aa)"><span style="font-family:var(--font-mono)">{{ c.cnpj }}</span> · {{ c.note }}</span></div>
+                <span style="font:600 11px/1 var(--font-display);letter-spacing:.08em;color:{{ c.roleFg }}">{{ c.role }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ t.logs }}" hint-placeholder-val="{{ false }}">
+          <div style="overflow-x:auto;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+            <table style="width:100%;border-collapse:collapse;font:12.5px/1.3 var(--font-mono);min-width:760px">
+              <thead><tr style="text-align:left;background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:9px 12px">Horário</th><th style="padding:9px 12px">Método</th><th style="padding:9px 12px">Endpoint</th><th style="padding:9px 12px">HTTP</th><th style="padding:9px 12px;text-align:right">Latência</th><th style="padding:9px 12px;font-family:var(--font-sans)">Mensagem</th></tr></thead>
+              <tbody>
+                <sc-for list="{{ logs }}" as="l" hint-placeholder-count="8">
+                  <tr style="border-top:1px solid var(--neutral-100)">
+                    <td style="padding:8px 12px;white-space:nowrap">{{ l.t }}</td><td style="padding:8px 12px">{{ l.m }}</td><td style="padding:8px 12px">{{ l.e }}</td>
+                    <td style="padding:8px 12px"><span style="padding:2px 6px;border-radius:var(--radius-xs);background:{{ l.bg }};color:{{ l.fg }};font-weight:600">{{ l.c }}</span></td>
+                    <td style="padding:8px 12px;text-align:right">{{ l.ms }}</td><td style="padding:8px 12px;font-family:var(--font-sans);color:var(--text-muted-aa)">{{ l.msg }}</td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+  </sc-if>
+
+  <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06)">
+    <header style="padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)"><h2 style="margin:0;font:300 19px/1.2 var(--font-sans)"><strong style="font-weight:500">Roteamento</strong> por empresa</h2><span style="font:12.5px/1.3 var(--font-sans);color:var(--text-muted-aa)">Qual provedor atende cada CNPJ, com contingência automática em caso de falha técnica</span></header>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:680px">
+        <thead><tr style="text-align:left;color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:9px 18px;border-bottom:1px solid var(--border-subtle)">Empresa</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle)">Documentos</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle)">Principal</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle)">Contingência</th></tr></thead>
+        <tbody>
+          <sc-for list="{{ routing }}" as="r" hint-placeholder-count="4">
+            <tr style="border-bottom:1px solid var(--neutral-100)">
+              <td style="padding:9px 18px;font-weight:500">{{ r.fantasia }}</td><td style="padding:9px 12px;font:600 12px/1 var(--font-display);letter-spacing:.04em">{{ r.types }}</td>
+              <td style="padding:9px 12px">{{ r.main }}</td>
+              <td style="padding:9px 12px;width:230px"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ r.opts }}" value="{{ r.fb }}" on-change="{{ r.setFb }}" aria-label="Contingência" hint-size="100%,34px"></x-import></td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Modal" open="{{ addOpen }}" on-close="{{ closeAdd }}" title="Adicionar provedor fiscal" size="lg" hint-size="0,0">
+    <div style="display:grid;gap:18px">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Steps" steps="{{ addSteps }}" current="{{ addStep }}" label="Etapas" hint-size="100%,56px"></x-import>
+      <sc-if value="{{ a0 }}" hint-placeholder-val="{{ true }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px">
+          <sc-for list="{{ catalog }}" as="c" hint-placeholder-count="5">
+            <button onClick="{{ c.pick }}" aria-pressed="{{ c.sel }}" style="display:grid;gap:6px;padding:12px;border:{{ c.bd }};border-radius:var(--radius-md);background:{{ c.bg }};text-align:left;cursor:pointer;color:inherit">
+              <strong style="font:500 14.5px/1.2 var(--font-sans)">{{ c.name }}</strong>
+              <span style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ c.desc }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </sc-if>
+      <sc-if value="{{ a1 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+          <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Nome de exibição<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ nw.name }}" on-change="{{ nwName }}" hint-size="100%,34px"></x-import></label>
+          <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Token de homologação<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" type="password" value="{{ nw.tokenH }}" on-change="{{ nwTokenH }}" invalid="{{ nwTokenInvalid }}" hint-size="100%,34px"></x-import></label>
+          <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Token de produção (opcional)<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" type="password" value="{{ nw.tokenP }}" on-change="{{ nwTokenP }}" hint-size="100%,34px"></x-import></label>
+        </div>
+      </sc-if>
+      <sc-if value="{{ a2 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;gap:10px">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Radio" name="nwenv" label="Somente homologação (recomendado para começar)" checked="{{ nwEnvH }}" on-change="{{ nwSetH }}" hint-size="100%,24px"></x-import>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Radio" name="nwenv" label="Homologação e produção" checked="{{ nwEnvB }}" on-change="{{ nwSetB }}" hint-size="100%,24px"></x-import>
+          <sc-if value="{{ nwEnvB }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="warning" title="Produção exige token de produção" live="{{ false }}" hint-size="100%,50px">Sem o token de produção, a integração funciona apenas em homologação.</x-import></sc-if>
+        </div>
+      </sc-if>
+      <sc-if value="{{ a3 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;gap:12px">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" loading="{{ nwTesting }}" on-click="{{ nwTest }}" hint-size="160px,34px">testar conexão</x-import>
+          <sc-if value="{{ nwTested }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="success" title="Conexão estabelecida · 284 ms" live="{{ false }}" hint-size="100%,70px">Capacidades encontradas: {{ nwDocs }}. Status da SEFAZ PR e SC: em operação.</x-import>
+          </sc-if>
+        </div>
+      </sc-if>
+      <sc-if value="{{ a4 }}" hint-placeholder-val="{{ false }}">
+        <div style="display:grid;gap:8px">
+          <sc-for list="{{ nwComps }}" as="c" hint-placeholder-count="4">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Checkbox" label="{{ c.label }}" checked="{{ c.on }}" on-change="{{ c.toggle }}" hint-size="100%,24px"></x-import>
+          </sc-for>
+          <span style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">Empresas marcadas passam a usar este provedor como contingência. Você pode torná-lo principal depois, em Empresas.</span>
+        </div>
+      </sc-if>
+      <div style="display:flex;justify-content:space-between;gap:8px">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" disabled="{{ a0 }}" on-click="{{ addPrev }}" hint-size="90px,34px">voltar</x-import>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" disabled="{{ addBlocked }}" on-click="{{ addNext }}" hint-size="120px,34px">{{ addNextLabel }}</x-import>
+      </div>
+    </div>
+  </x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const CATALOG = [
+  { name: 'Focus NFe', kind: 'API REST', docs: ['NF-e', 'NFC-e', 'NFS-e', 'CT-e', 'MDF-e'], desc: 'API REST com emissão, eventos e webhooks.', url: 'https://homologacao.focusnfe.com.br/v2' },
+  { name: 'Fiscalia API', kind: 'API REST', docs: ['NF-e', 'NFC-e'], desc: 'Provedor demonstrativo · foco em varejo.', url: 'https://sandbox.fiscalia.example/v1', demo: true },
+  { name: 'NotaHub', kind: 'API REST', docs: ['NFS-e'], desc: 'Provedor demonstrativo · NFS-e municipal.', url: 'https://api.notahub.example', demo: true },
+  { name: 'Emissor direto SEFAZ', kind: 'Webservice SOAP', docs: ['NF-e', 'CT-e', 'MDF-e'], desc: 'Comunicação direta com os webservices da SEFAZ.', url: 'https://nfe-homologacao.sefaz.example/ws', demo: true },
+  { name: 'API genérica', kind: 'Conector configurável', docs: ['NF-e'], desc: 'Mapeie endpoints de outro fornecedor.', url: 'https://', demo: true }
+];
+const OPS = ['Emitir', 'Consultar', 'Cancelar', 'CC-e', 'Inutilizar', 'PDF'];
+class Component extends DCLogic {
+  state = { sel: 'p1', tab: 'credenciais', credEnv: 'homologacao', showToken: false, token: 'fx_hom_8f2c••••••••••••••7a1d', timeout: '30', testing: false, test: null, fallback: { c1: 'p3', c2: 'p1', c3: '', c4: '' }, addOpen: false, addStep: 0, nw: { cat: null, name: '', tokenH: '', tokenP: '', env: 'h', comps: {} }, nwTesting: false, nwTested: false };
+  componentDidMount() { const p = (this.props.app || {}).param; if (p && p.startsWith('p')) this.setState({ sel: p, tab: p === 'p2' ? 'logs' : 'credenciais' }); }
+  renderVals() {
+    const app = this.props.app || {};
+    const D = app.data || { providers: [], companies: [] };
+    const s = this.state;
+    const comp = id => (D.companies.find(c => c.id === id) || {}).fantasia;
+    const abbr = n => n.split(/\s+/).map(w => w[0]).join('').slice(0, 2).toUpperCase();
+    const statusOf = p => !p.active ? ['INATIVO', 'var(--neutral-100)', 'var(--text-muted-aa)', 'var(--neutral-500)'] : p.status === 'degradado' ? ['LENTIDÃO', 'var(--warning-100)', 'var(--orange-800)', 'var(--amber-500)'] : ['CONECTADO', 'var(--success-100)', 'var(--success-700)', 'var(--success-500)'];
+    const enrich = p => { const [sLabel, sBg, sFg, sDot] = statusOf(p); return { ...p, sLabel, sBg, sFg, sDot, abbr: abbr(p.name), demoTag: p.demo ? ' · dados demonstrativos' : '', envTxt: p.envs.join(' e '), latTxt: p.latency ? p.latency.toLocaleString('pt-BR') + ' ms' : '—', latFg: p.latency > 1500 ? 'var(--orange-800)' : 'var(--text-body)', compTxt: p.companies.length ? p.companies.map(comp).join(', ') : 'nenhuma associada' }; };
+    const cards = D.providers.map(p => ({ ...enrich(p), bd: s.sel === p.id ? '2px solid var(--info-700)' : '1px solid var(--border-subtle)', op: p.active ? 1 : .75, toggleLabel: p.active ? 'ativo' : 'inativo',
+      select: () => this.setState({ sel: p.id, test: null }), toggle: e => { const on = e.target.checked; if (!on && p.companies.length) { app.toast('warning', 'Provedor em uso', p.name + ' atende ' + p.companies.map(comp).join(', ') + '. Defina outro provedor principal antes de desativar.'); return; } app.updateProvider(p.id, { active: on, status: on ? 'conectado' : 'inativo' }); app.toast(on ? 'success' : 'neutral', on ? 'Integração ativada' : 'Integração desativada', p.name); } }));
+    const selP = D.providers.find(p => p.id === s.sel);
+    const sel = selP ? enrich(selP) : {};
+    const tabs = [{ id: 'credenciais', label: 'Credenciais' }, { id: 'capacidades', label: 'Capacidades' }, { id: 'empresas', label: 'Empresas · ' + (sel.companies || []).length }, { id: 'logs', label: 'Logs' }];
+    const t = {}; tabs.forEach(x => t[x.id] = s.tab === x.id);
+    const capRows = ['NF-e', 'NFC-e', 'NFS-e', 'CT-e', 'MDF-e'].map(doc => {
+      const has = (sel.docs || []).includes(doc);
+      return { doc, cells: OPS.map(op => { const ok = has && !(doc === 'NFS-e' && (op === 'CC-e' || op === 'Inutilizar')) && !(doc === 'NFC-e' && op === 'CC-e') && !(doc === 'MDF-e' && op === 'CC-e'); return { g: ok ? '✓' : '–', bg: ok ? 'var(--success-100)' : 'var(--neutral-100)', fg: ok ? 'var(--success-700)' : 'var(--neutral-500)', t: doc + ' · ' + op + (ok ? ': suportado' : ': não suportado') }; }) };
+    });
+    const now = new Date(); const hh = n => { const d = new Date(now.getTime() - n * 60000); return '03/11 ' + d.toTimeString().slice(0, 8); };
+    const deg = selP && selP.status === 'degradado';
+    const L = (n, m, e, c, ms, msg) => ({ t: hh(n), m, e, c, ms: ms.toLocaleString('pt-BR') + ' ms', msg, bg: c >= 500 ? 'var(--graphite-800)' : c >= 400 ? 'var(--danger-100)' : 'var(--success-100)', fg: c >= 500 ? '#fff' : c >= 400 ? 'var(--danger-700)' : 'var(--success-700)' });
+    const logs = [
+      L(2, 'GET', '/v2/nfe/{ref}', 200, deg ? 2210 : 288, 'Consulta de situação · autorizada'),
+      L(6, 'POST', '/v2/nfe?ref=onfe_1248', 201, deg ? 3120 : 412, 'Lote recebido para processamento'),
+      deg ? L(18, 'POST', '/v1/nfe?ref=onfe_411', 504, 30000, 'Timeout do provedor — não chegou à SEFAZ') : L(18, 'POST', '/v2/nfe?ref=onfe_1247', 422, 520, 'Retorno SEFAZ 233 · rejeição fiscal'),
+      L(31, 'GET', '/v2/nfse/{ref}', 200, deg ? 1980 : 301, 'NFS-e em processamento na prefeitura'),
+      L(44, 'DELETE', '/v2/nfe/{ref}', 200, deg ? 2400 : 640, 'Cancelamento homologado · evento 110111'),
+      L(58, 'GET', '/v2/capabilities', 200, 190, 'Capacidades sincronizadas'),
+      L(73, 'POST', '/v2/webhooks/test', 200, 160, 'Webhook de retorno verificado')
+    ];
+    const tokenEnvLabel = s.credEnv === 'producao' ? 'produção' : 'homologação';
+    const cat = s.nw.cat != null ? CATALOG[s.nw.cat] : null;
+    const nwOkStep = [s.nw.cat != null, s.nw.name.trim().length > 1 && s.nw.tokenH.length >= 6, true, s.nwTested, true][s.addStep];
+    return {
+      cards, hasSel: !!selP, sel, degraded: deg, tabs, tab: s.tab, t, setTab: id => this.setState({ tab: id }),
+      envOpts: (sel.envs || []).map(e => ({ value: e === 'Produção' ? 'producao' : 'homologacao', label: e })), credEnv: s.credEnv, credEnvLabel: tokenEnvLabel,
+      onCredEnv: e => this.setState({ credEnv: e.target.value, token: e.target.value === 'producao' ? 'fx_prd_31be••••••••••••••c09e' : 'fx_hom_8f2c••••••••••••••7a1d' }),
+      baseUrl: (CATALOG.find(c => c.name === sel.name) || CATALOG[4]).url.replace('homologacao.', s.credEnv === 'producao' ? 'api.' : 'homologacao.'),
+      token: s.token, onToken: e => this.setState({ token: e.target.value }), tokenType: s.showToken ? 'text' : 'password', tokenBtn: s.showToken ? 'ocultar' : 'exibir', toggleToken: () => this.setState({ showToken: !s.showToken }),
+      timeout: s.timeout, onTimeout: e => this.setState({ timeout: e.target.value }),
+      saveCred: () => app.toast('success', 'Credenciais salvas', sel.name + ' · ' + tokenEnvLabel),
+      testing: s.testing,
+      testConn: () => { this.setState({ testing: true, test: null }); setTimeout(() => this.setState({ testing: false, test: !selP.active ? 'off' : deg ? 'slow' : 'ok' }), 1100); },
+      testResult: !!s.test, testTone: s.test === 'ok' ? 'success' : s.test === 'slow' ? 'warning' : 'neutral',
+      testTitle: s.test === 'ok' ? 'Conexão bem-sucedida · ' + sel.latTxt : s.test === 'slow' ? 'Conectado, com lentidão · 2.910 ms' : 'Integração desativada',
+      testBody: s.test === 'ok' ? 'Autenticação válida em ' + tokenEnvLabel + '. Webservices da SEFAZ PR e SC em operação.' : s.test === 'slow' ? 'Autenticação válida, mas a resposta excedeu o limite recomendado. Ative contingência para evitar timeouts.' : 'Ative a integração para testar.',
+      ops: OPS, capRows,
+      compRows: D.companies.map(c => { const on = (sel.companies || []).includes(c.id), main = c.providerId === sel.id, fb = s.fallback[c.id] === sel.id;
+        return { ...c, on: on || fb, role: main ? 'PRINCIPAL' : fb ? 'CONTINGÊNCIA' : '—', roleFg: main ? 'var(--info-700)' : 'var(--text-muted-aa)', note: c.types.filter(ty => (sel.docs || []).includes(ty)).join(', ') + (c.types.some(ty => !(sel.docs || []).includes(ty)) ? ' · parcialmente suportado' : ''),
+          toggle: e => { const v = e.target.checked; if (main && !v) { app.toast('warning', 'Provedor principal', 'Troque o provedor principal de ' + c.fantasia + ' em Empresas.'); return; } this.setState(x => ({ fallback: { ...x.fallback, [c.id]: v ? sel.id : '' } })); app.toast('success', v ? 'Empresa associada' : 'Associação removida', c.fantasia + ' · contingência'); } }; }),
+      logs,
+      routing: D.companies.map(c => ({ fantasia: c.fantasia, types: c.types.join(' · '), main: (D.providers.find(p => p.id === c.providerId) || {}).name || '—', fb: s.fallback[c.id] || '',
+        opts: [{ value: '', label: 'Sem contingência' }, ...D.providers.filter(p => p.id !== c.providerId && p.active).map(p => ({ value: p.id, label: p.name }))],
+        setFb: e => { const v = e.target.value; this.setState(x => ({ fallback: { ...x.fallback, [c.id]: v } })); app.toast('success', 'Roteamento atualizado', c.fantasia + (v ? ' · contingência: ' + D.providers.find(p => p.id === v).name : ' · sem contingência')); } })),
+      addOpen: s.addOpen, openAdd: () => this.setState({ addOpen: true, addStep: 0, nw: { cat: null, name: '', tokenH: '', tokenP: '', env: 'h', comps: {} }, nwTested: false }), closeAdd: () => this.setState({ addOpen: false }),
+      addSteps: ['Provedor', 'Credenciais', 'Ambiente', 'Testar', 'Empresas'], addStep: s.addStep,
+      a0: s.addStep === 0, a1: s.addStep === 1, a2: s.addStep === 2, a3: s.addStep === 3, a4: s.addStep === 4,
+      catalog: CATALOG.map((c, i) => ({ ...c, sel: s.nw.cat === i, bd: s.nw.cat === i ? '2px solid var(--info-700)' : '1px solid var(--border-subtle)', bg: s.nw.cat === i ? 'var(--info-100)' : '#fff', pick: () => this.setState(x => ({ nw: { ...x.nw, cat: i, name: c.name + (D.providers.some(p => p.name === c.name) ? ' (2)' : '') } })) })),
+      nw: s.nw, nwName: e => { const v = e.target.value; this.setState(x => ({ nw: { ...x.nw, name: v } })); }, nwTokenH: e => { const v = e.target.value; this.setState(x => ({ nw: { ...x.nw, tokenH: v } })); }, nwTokenP: e => { const v = e.target.value; this.setState(x => ({ nw: { ...x.nw, tokenP: v } })); },
+      nwTokenInvalid: s.nw.tokenH.length > 0 && s.nw.tokenH.length < 6,
+      nwEnvH: s.nw.env === 'h', nwEnvB: s.nw.env === 'b', nwSetH: () => this.setState(x => ({ nw: { ...x.nw, env: 'h' } })), nwSetB: () => this.setState(x => ({ nw: { ...x.nw, env: 'b' } })),
+      nwTesting: s.nwTesting, nwTested: s.nwTested, nwDocs: cat ? cat.docs.join(', ') : '',
+      nwTest: () => { this.setState({ nwTesting: true }); setTimeout(() => this.setState({ nwTesting: false, nwTested: true }), 1000); },
+      nwComps: D.companies.map(c => ({ label: c.fantasia + ' · ' + c.cnpj, on: !!s.nw.comps[c.id], toggle: e => { const v = e.target.checked; this.setState(x => ({ nw: { ...x.nw, comps: { ...x.nw.comps, [c.id]: v } } })); } })),
+      addBlocked: !nwOkStep, addNextLabel: s.addStep === 4 ? 'concluir' : 'continuar',
+      addPrev: () => this.setState({ addStep: Math.max(0, s.addStep - 1) }),
+      addNext: () => {
+        if (s.addStep < 4) { this.setState({ addStep: s.addStep + 1 }); return; }
+        const id = app.addProvider({ name: s.nw.name, kind: cat.kind, status: 'conectado', envs: s.nw.env === 'b' ? ['Homologação', 'Produção'] : ['Homologação'], docs: cat.docs, sync: 'agora', latency: 284, uptime: '—', companies: [], active: true, demo: true });
+        const fb = { ...s.fallback }; Object.keys(s.nw.comps).forEach(k => { if (s.nw.comps[k]) fb[k] = id; });
+        this.setState({ addOpen: false, sel: id, tab: 'capacidades', fallback: fb });
+        app.toast('success', 'Provedor adicionado', s.nw.name + ' · ' + (s.nw.env === 'b' ? 'homologação e produção' : 'homologação'));
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

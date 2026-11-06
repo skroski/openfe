@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+</helmet>
+<div style="display:grid;gap:18px;min-width:0" data-screen-label="Detalhes do documento">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+    <button onClick="{{ back }}" aria-label="Voltar para documentos" style="width:34px;height:34px;border:1px solid var(--border-subtle);border-radius:var(--radius-sm);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--slate-600)" style-hover="background:var(--neutral-100)"><span aria-hidden="true" style="width:16px;height:16px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/arrow-left.svg) center/contain no-repeat"></span></button>
+    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Breadcrumbs" items="{{ crumbs }}" hint-size="260px,18px"></x-import>
+  </div>
+
+  <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06)">
+    <div style="display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:flex-start;padding:18px 20px">
+      <div style="display:grid;gap:10px;min-width:0">
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <span style="padding:4px 8px;border-radius:var(--radius-xs);background:var(--graphite-800);color:#fff;font:600 12px/1 var(--font-display);letter-spacing:.08em">{{ doc.type }} · MOD. {{ doc.modelo }}</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--radius-pill);background:{{ st.bg }};color:{{ st.fg }};font:600 12px/1 var(--font-display);letter-spacing:.06em;text-transform:uppercase"><span aria-hidden="true" style="width:13px;height:13px;background:currentColor;mask:url({{ st.icon }}) center/contain no-repeat"></span>{{ st.label }}</span>
+          <span style="height:24px;display:inline-flex;align-items:center;padding:0 8px;border-radius:var(--radius-xs);background:{{ envTag.bg }};color:{{ envTag.fg }};font:600 11px/1 var(--font-display);letter-spacing:.1em">{{ envTag.label }}</span>
+        </div>
+        <h1 style="margin:0;font:300 28px/1.1 var(--font-sans);color:var(--text-heading)"><strong style="font-weight:500">{{ doc.type }} nº {{ numF }}</strong> · série {{ doc.serie }}</h1>
+        <span style="font:14px/1.4 var(--font-sans);color:var(--text-muted-aa)">Emitida em {{ doc.date }} às {{ doc.time }} por {{ company.fantasia }} · via {{ providerName }}</span>
+      </div>
+      <div style="display:grid;gap:10px;justify-items:end">
+        <span style="font:600 11.5px/1 var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted-aa)">Valor total</span>
+        <strong style="font:700 30px/1 var(--font-display);color:var(--text-heading);font-variant-numeric:tabular-nums">{{ valueF }}</strong>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;padding:12px 20px;border-top:1px solid var(--border-subtle);background:var(--neutral-050)">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" disabled="{{ noFiles }}" on-click="{{ dlXml }}" hint-size="100px,26px">baixar XML</x-import>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" disabled="{{ noFiles }}" on-click="{{ dlPdf }}" hint-size="120px,26px">baixar {{ pdfName }}</x-import>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" loading="{{ syncing }}" on-click="{{ sync }}" hint-size="140px,26px">consultar situação</x-import>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ duplicate }}" hint-size="120px,26px">duplicar emissão</x-import>
+      <sc-if value="{{ canCce }}" hint-placeholder-val="{{ false }}">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ cce }}" hint-size="140px,26px">carta de correção</x-import>
+      </sc-if>
+      <div style="flex:1"></div>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Tooltip" content="{{ cancelWhy }}" hint-size="160px,26px">
+        <span><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="danger" size="sm" disabled="{{ noCancel }}" on-click="{{ openCancel }}" hint-size="160px,26px">solicitar cancelamento</x-import></span>
+      </x-import>
+    </div>
+  </section>
+
+  <sc-if value="{{ isRejected }}" hint-placeholder-val="{{ false }}">
+    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="error" title="{{ rejTitle }}" hint-size="100%,120px">
+      <div style="display:grid;gap:8px">
+        <span><strong style="font-weight:600">Como corrigir:</strong> {{ doc.rej.fix }}</span>
+        <span style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">Campo apontado: {{ doc.rej.field }} · Rejeição fiscal emitida pela {{ authority }} — o documento foi recebido e recusado; a numeração continua disponível.</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ fixData }}" hint-size="140px,26px">{{ fixLabel }}</x-import>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" size="sm" loading="{{ resending }}" on-click="{{ resend }}" hint-size="120px,26px">reenviar documento</x-import>
+        </div>
+      </div>
+    </x-import>
+  </sc-if>
+  <sc-if value="{{ isTech }}" hint-placeholder-val="{{ false }}">
+    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="neutral" title="{{ techTitle }}" hint-size="100%,110px">
+      <div style="display:grid;gap:8px">
+        <span>{{ doc.techError.msg }} {{ doc.techError.fix }}</span>
+        <span style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">Isto não é uma rejeição fiscal: o problema ocorreu entre o OpenNFE e o provedor. Próxima tentativa automática em 4 min.</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" size="sm" loading="{{ resending }}" on-click="{{ resend }}" hint-size="120px,26px">reenviar agora</x-import>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ goProvider }}" hint-size="140px,26px">ver status do provedor</x-import>
+        </div>
+      </div>
+    </x-import>
+  </sc-if>
+  <sc-if value="{{ isDenied }}" hint-placeholder-val="{{ false }}">
+    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="error" title="{{ rejTitle }}" hint-size="100%,80px">{{ doc.rej.fix }}</x-import>
+  </sc-if>
+  <sc-if value="{{ isPending }}" hint-placeholder-val="{{ false }}">
+    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="warning" title="Documento salvo e ainda não transmitido" hint-size="100%,90px">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
+        <span>Revise os dados e transmita quando estiver pronto. Nenhuma numeração foi consumida na {{ authority }}.</span>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" size="sm" loading="{{ resending }}" on-click="{{ resend }}" hint-size="100px,26px">transmitir</x-import>
+      </div>
+    </x-import>
+  </sc-if>
+  <sc-if value="{{ isProcessing }}" hint-placeholder-val="{{ false }}">
+    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="info" title="Aguardando retorno da {{ authority }}" hint-size="100%,70px">O lote foi recebido pelo provedor. A situação é atualizada automaticamente; você também pode consultar agora.</x-import>
+  </sc-if>
+
+  <div style="display:grid;grid-template-columns:{{ cols }};gap:20px;align-items:start">
+    <div style="display:grid;gap:20px;min-width:0">
+      <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px 18px;display:grid;gap:12px">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
+          <div style="display:grid;gap:6px;min-width:0">
+            <span style="font:600 11.5px/1 var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted-aa)">{{ keyLabel }}</span>
+            <div style="display:flex;gap:8px;align-items:center">
+              <code style="flex:1;min-width:0;padding:8px 10px;border-radius:var(--radius-sm);background:var(--neutral-050);border:1px solid var(--border-subtle);font:500 13px/1.5 var(--font-mono);word-break:break-all">{{ keyF }}</code>
+              <button onClick="{{ copyKey }}" title="Copiar" aria-label="Copiar chave" style="width:34px;height:34px;flex:none;border:1px solid var(--border-subtle);border-radius:var(--radius-sm);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--slate-600)" style-hover="background:var(--neutral-100)"><span aria-hidden="true" style="width:15px;height:15px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/copy.svg) center/contain no-repeat"></span></button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="display:grid;gap:6px"><span style="font:600 11.5px/1 var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted-aa)">Protocolo</span><span style="font:500 13.5px/1.3 var(--font-mono)">{{ protocol }}</span></div>
+            <div style="display:grid;gap:6px"><span style="font:600 11.5px/1 var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted-aa)">Natureza</span><span style="font:13.5px/1.3 var(--font-sans)">{{ natureza }}</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06);min-width:0">
+        <div style="padding:0 18px;overflow-x:auto">
+          <div style="height:41px;overflow:hidden;flex:none;max-width:100%"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Tabs" label="Seções do documento" tabs="{{ tabs }}" value="{{ tab }}" on-change="{{ setTab }}" hint-size="100%,40px"></x-import></div>
+        </div>
+        <div style="padding:18px">
+          <sc-if value="{{ t.resumo }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;gap:16px">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
+                <div style="padding:14px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);display:grid;gap:6px">
+                  <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">EMITENTE</span>
+                  <strong style="font:500 15px/1.3 var(--font-sans)">{{ company.razao }}</strong>
+                  <span style="font:13px/1.5 var(--font-sans);color:var(--text-muted-aa)">CNPJ <span style="font-family:var(--font-mono)">{{ company.cnpj }}</span> · IE {{ company.ie }}<br>{{ company.address }} · {{ company.city }}/{{ company.uf }}<br>{{ company.regime }}</span>
+                </div>
+                <div style="padding:14px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);display:grid;gap:6px">
+                  <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">DESTINATÁRIO</span>
+                  <strong style="font:500 15px/1.3 var(--font-sans)">{{ doc.dest }}</strong>
+                  <span style="font:13px/1.5 var(--font-sans);color:var(--text-muted-aa)">{{ client.docLabel }} <span style="font-family:var(--font-mono)">{{ doc.destDoc }}</span> · IE {{ client.ieF }}<br>{{ client.address }} {{ client.cityF }}<br>{{ client.email }}</span>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:0;border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden">
+                <sc-for list="{{ totals }}" as="x" hint-placeholder-count="5">
+                  <div style="padding:12px 14px;border-right:1px solid var(--border-subtle);display:grid;gap:5px;background:{{ x.bg }}">
+                    <span style="font:600 11px/1.2 var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted-aa)">{{ x.l }}</span>
+                    <span style="font:500 15px/1 var(--font-mono)">{{ x.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ t.itens }}" hint-placeholder-val="{{ false }}">
+            <div style="overflow-x:auto">
+              <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:640px">
+                <thead><tr style="text-align:left;color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase">
+                  <th style="padding:8px;border-bottom:1px solid var(--border-subtle)">#</th><th style="padding:8px;border-bottom:1px solid var(--border-subtle)">Código</th><th style="padding:8px;border-bottom:1px solid var(--border-subtle)">Descrição</th><th style="padding:8px;border-bottom:1px solid var(--border-subtle)">NCM</th><th style="padding:8px;border-bottom:1px solid var(--border-subtle)">CFOP</th><th style="padding:8px;border-bottom:1px solid var(--border-subtle);text-align:right">Qtd.</th><th style="padding:8px;border-bottom:1px solid var(--border-subtle);text-align:right">Unitário</th><th style="padding:8px;border-bottom:1px solid var(--border-subtle);text-align:right">Total</th>
+                </tr></thead>
+                <tbody>
+                  <sc-for list="{{ items }}" as="i" hint-placeholder-count="3">
+                    <tr style="border-bottom:1px solid var(--neutral-100)">
+                      <td style="padding:9px 8px;color:var(--text-muted-aa)">{{ i.n }}</td>
+                      <td style="padding:9px 8px;font:12.5px/1 var(--font-mono)">{{ i.code }}</td>
+                      <td style="padding:9px 8px">{{ i.desc }}</td>
+                      <td style="padding:9px 8px;font:12.5px/1 var(--font-mono)">{{ i.ncm }}</td>
+                      <td style="padding:9px 8px;font:12.5px/1 var(--font-mono)">{{ i.cfop }}</td>
+                      <td style="padding:9px 8px;text-align:right;font:12.5px/1 var(--font-mono)">{{ i.qty }} {{ i.un }}</td>
+                      <td style="padding:9px 8px;text-align:right;font:12.5px/1 var(--font-mono)">{{ i.priceF }}</td>
+                      <td style="padding:9px 8px;text-align:right;font:500 12.5px/1 var(--font-mono)">{{ i.totalF }}</td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+          </sc-if>
+          <sc-if value="{{ t.tributos }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;gap:12px">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="info" title="Valores de demonstração" live="{{ false }}" hint-size="100%,60px">Os tributos abaixo vêm da configuração de cada produto e não representam cálculo fiscal real. Na operação, o cálculo é validado pelo provedor e pela SEFAZ.</x-import>
+              <div style="overflow-x:auto">
+                <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:560px">
+                  <thead><tr style="text-align:left;color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase">
+                    <th style="padding:8px;border-bottom:1px solid var(--border-subtle)">Item</th><th style="padding:8px;border-bottom:1px solid var(--border-subtle)">ICMS / ISS</th><th style="padding:8px;border-bottom:1px solid var(--border-subtle)">PIS</th><th style="padding:8px;border-bottom:1px solid var(--border-subtle)">COFINS</th><th style="padding:8px;border-bottom:1px solid var(--border-subtle)">IPI</th>
+                  </tr></thead>
+                  <tbody>
+                    <sc-for list="{{ items }}" as="i" hint-placeholder-count="3">
+                      <tr style="border-bottom:1px solid var(--neutral-100)">
+                        <td style="padding:9px 8px">{{ i.n }} · {{ i.code }}</td><td style="padding:9px 8px;font:12.5px/1.3 var(--font-mono)">{{ i.icms }}</td><td style="padding:9px 8px;font:12.5px/1.3 var(--font-mono)">{{ i.pis }}</td><td style="padding:9px 8px;font:12.5px/1.3 var(--font-mono)">{{ i.cofins }}</td><td style="padding:9px 8px;font:12.5px/1.3 var(--font-mono)">{{ i.ipi }}</td>
+                      </tr>
+                    </sc-for>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ t.xml }}" hint-placeholder-val="{{ false }}">
+            <div style="display:grid;gap:10px">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+                <span style="font:13px/1.4 var(--font-sans);color:var(--text-muted-aa)">Trecho do XML {{ xmlLabel }} · conteúdo ilustrativo</span>
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" disabled="{{ noFiles }}" on-click="{{ dlXml }}" hint-size="110px,26px">baixar XML</x-import>
+              </div>
+              <pre style="margin:0;padding:14px 16px;border-radius:var(--radius-md);background:var(--charcoal-900);color:#e6e6e6;font:12.5px/1.6 var(--font-mono);overflow-x:auto;white-space:pre">{{ xml }}</pre>
+            </div>
+          </sc-if>
+          <sc-if value="{{ t.pdf }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;justify-content:center;background:var(--neutral-200);border-radius:var(--radius-md);padding:20px 12px">
+              <div style="position:relative;width:100%;max-width:560px;background:#fff;box-shadow:var(--shadow-panel);padding:16px;display:grid;gap:8px;font:11px/1.35 var(--font-sans);color:#222;overflow:hidden">
+                <sc-if value="{{ isHomolog }}" hint-placeholder-val="{{ true }}">
+                  <div aria-hidden="true" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none"><span style="transform:rotate(-24deg);font:700 40px/1 var(--font-display);letter-spacing:.08em;color:rgba(192,57,43,.16);white-space:nowrap">SEM VALOR FISCAL</span></div>
+                </sc-if>
+                <div style="display:grid;grid-template-columns:2fr 1fr;border:1px solid #333">
+                  <div style="padding:8px;border-right:1px solid #333"><strong style="font-size:12.5px">{{ company.razao }}</strong><br>{{ company.address }}<br>{{ company.city }}/{{ company.uf }} · CEP {{ company.cep }}</div>
+                  <div style="padding:8px;text-align:center"><strong style="font:700 16px/1 var(--font-display)">{{ pdfName }}</strong><br>Nº {{ numF }} · Série {{ doc.serie }}<br>1 – Saída</div>
+                </div>
+                <div style="border:1px solid #333;padding:6px 8px"><span style="font-size:9.5px;color:#555">CHAVE DE ACESSO</span><br><span style="font:11px/1.3 var(--font-mono)">{{ keyF }}</span></div>
+                <div style="height:34px;background:repeating-linear-gradient(90deg,#222 0 2px,#fff 2px 3px,#222 3px 4px,#fff 4px 7px,#222 7px 8px,#fff 8px 10px)"></div>
+                <div style="border:1px solid #333;padding:6px 8px"><span style="font-size:9.5px;color:#555">DESTINATÁRIO</span><br>{{ doc.dest }} · {{ doc.destDoc }}</div>
+                <div style="border:1px solid #333">
+                  <sc-for list="{{ items }}" as="i" hint-placeholder-count="3">
+                    <div style="display:grid;grid-template-columns:1fr auto auto;gap:10px;padding:4px 8px;border-bottom:1px solid #ddd"><span>{{ i.desc }}</span><span style="font-family:var(--font-mono)">{{ i.qty }} {{ i.un }}</span><span style="font-family:var(--font-mono)">{{ i.totalF }}</span></div>
+                  </sc-for>
+                  <div style="display:flex;justify-content:space-between;padding:6px 8px;font-weight:600"><span>VALOR TOTAL DA NOTA</span><span style="font-family:var(--font-mono)">{{ valueF }}</span></div>
+                </div>
+                <div style="font-size:9.5px;color:#555">Protocolo de autorização: {{ protocol }} · Pré-visualização simplificada</div>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+    </div>
+
+    <aside style="display:grid;gap:20px;min-width:0">
+      <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06)">
+        <header style="padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+          <h2 style="margin:0;font:300 19px/1.2 var(--font-sans)"><strong style="font-weight:500">Eventos</strong> fiscais</h2>
+          <span style="font:12.5px/1.3 var(--font-sans);color:var(--text-muted-aa)">Histórico de processamento, do mais recente ao mais antigo</span>
+        </header>
+        <ol style="list-style:none;margin:0;padding:16px 18px;display:grid;gap:0">
+          <sc-for list="{{ events }}" as="e" hint-placeholder-count="5">
+            <li style="display:grid;grid-template-columns:22px 1fr;gap:12px">
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <span aria-hidden="true" style="width:22px;height:22px;flex:none;border-radius:var(--radius-sm);background:{{ e.bg }};display:flex;align-items:center;justify-content:center"><span style="width:12px;height:12px;background:{{ e.fg }};mask:url({{ e.icon }}) center/contain no-repeat"></span></span>
+                <span aria-hidden="true" style="flex:1;width:2px;min-height:14px;background:{{ e.line }}"></span>
+              </div>
+              <div style="display:grid;gap:3px;padding-bottom:16px;min-width:0">
+                <span style="font:500 13.5px/1.3 var(--font-sans)">{{ e.title }}</span>
+                <span style="font:12.5px/1.45 var(--font-sans);color:var(--text-muted-aa)">{{ e.desc }}</span>
+                <span style="font:11.5px/1 var(--font-mono);color:var(--text-muted-aa)">{{ e.when }}</span>
+              </div>
+            </li>
+          </sc-for>
+        </ol>
+      </section>
+      <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px 18px;display:grid;gap:10px">
+        <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">PROCESSAMENTO</span>
+        <sc-for list="{{ meta }}" as="m" hint-placeholder-count="5">
+          <div style="display:flex;justify-content:space-between;gap:10px;font:13px/1.3 var(--font-sans)"><span style="color:var(--text-muted-aa)">{{ m.l }}</span><span style="font-family:var(--font-mono);font-size:12.5px;text-align:right">{{ m.v }}</span></div>
+        </sc-for>
+      </section>
+    </aside>
+  </div>
+
+  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Modal" open="{{ cancelOpen }}" on-close="{{ closeCancel }}" title="Solicitar cancelamento" size="md" hint-size="0,0">
+    <div style="display:grid;gap:14px">
+      <span style="font:14px/1.5 var(--font-sans)">{{ doc.type }} nº {{ numF }} · {{ doc.dest }} · {{ valueF }}</span>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="warning" title="O cancelamento é definitivo" live="{{ false }}" hint-size="100%,60px">Após homologado pela {{ authority }}, o documento não pode ser reativado. Mercadorias já em circulação exigem nota de devolução.</x-import>
+      <label style="display:grid;gap:6px;font:500 13.5px/1.2 var(--font-sans)">Justificativa (mínimo 15 caracteres)
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Textarea" rows="{{ 3 }}" value="{{ just }}" on-change="{{ onJust }}" invalid="{{ justInvalid }}" placeholder="ex.: Pedido cancelado pelo cliente antes do envio da mercadoria" hint-size="100%,80px"></x-import>
+        <span style="font:12px/1.2 var(--font-sans);color:{{ justColor }}">{{ justCount }}</span>
+      </label>
+      <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ closeCancel }}" hint-size="90px,34px">voltar</x-import>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="danger" disabled="{{ justShort }}" loading="{{ cancelling }}" on-click="{{ confirmCancel }}" hint-size="170px,34px">confirmar cancelamento</x-import>
+      </div>
+    </div>
+  </x-import>
+
+  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Modal" open="{{ cceOpen }}" on-close="{{ closeCce }}" title="Carta de correção eletrônica" size="md" hint-size="0,0">
+    <div style="display:grid;gap:14px">
+      <span style="font:13.5px/1.5 var(--font-sans);color:var(--text-muted-aa)">A CC-e corrige dados que não alteram valores, impostos, remetente ou destinatário, nem a data de emissão.</span>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Textarea" rows="{{ 4 }}" value="{{ cceText }}" on-change="{{ onCce }}" placeholder="Descreva a correção (mínimo 15 caracteres)" hint-size="100%,96px"></x-import>
+      <div style="display:flex;justify-content:flex-end;gap:8px">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ closeCce }}" hint-size="90px,34px">voltar</x-import>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" disabled="{{ cceShort }}" on-click="{{ sendCce }}" hint-size="140px,34px">transmitir CC-e</x-import>
+      </div>
+    </div>
+  </x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { tab: 'resumo', cancelOpen: false, just: '', cancelling: false, syncing: false, resending: false, cceOpen: false, cceText: '' };
+  componentDidMount() {
+    const p = ((this.props.app || {}).param || '').split(':')[1];
+    if (p === 'cancelar') this.setState({ cancelOpen: true });
+    if (p === 'eventos') setTimeout(() => { const el = document.querySelector('[data-screen-label="Detalhes do documento"] aside'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 110, behavior: 'smooth' }); }, 200);
+  }
+  renderVals() {
+    const app = this.props.app || {};
+    const D = app.data || { docs: [], companies: [], clients: [], products: [], providers: [], status: {} };
+    const brl = app.brl || (v => v), IC = app.IC || (n => n);
+    const id = (app.param || '').split(':')[0];
+    const doc = D.docs.find(d => d.id === id) || D.docs[0] || { items: [], status: 'pendente' };
+    const s = this.state;
+    const st = D.status[doc.status] || {};
+    const company = D.companies.find(c => c.id === doc.companyId) || {};
+    const k = D.clients.find(c => c.id === doc.clientId);
+    const client = k ? { ...k, docLabel: k.kind === 'PF' ? 'CPF' : 'CNPJ', ieF: k.ie || 'não informada', cityF: '· ' + k.city + '/' + k.uf } : { docLabel: '', ieF: '—', address: 'Consumidor final não identificado', cityF: '', email: '' };
+    const prov = D.providers.find(p => p.id === doc.providerId) || {};
+    const authority = doc.type === 'NFS-e' ? 'prefeitura' : 'SEFAZ';
+    const numF = String(doc.num).padStart(6, '0');
+    const authorized = ['autorizada', 'cancelada'].includes(doc.status);
+    const items = doc.items.map((it, i) => {
+      const p = D.products.find(x => x.id === it.prodId) || {};
+      return { n: i + 1, code: p.code, desc: p.desc, ncm: p.kind === 'servico' ? 'LC ' + p.lc116 : p.ncm, cfop: p.cfop, un: p.un, qty: it.qty.toLocaleString('pt-BR'), priceF: brl(it.price), totalF: brl(it.qty * it.price), icms: p.kind === 'servico' ? 'ISS ' + p.iss : p.icms, pis: p.pis, cofins: p.cofins, ipi: p.ipi };
+    });
+    const sub = doc.items.reduce((a, it) => a + it.qty * it.price, 0);
+    const pdfName = { 'NF-e': 'DANFE', 'NFC-e': 'DANFCE', 'CT-e': 'DACTE', 'MDF-e': 'DAMDFE', 'NFS-e': 'PDF' }[doc.type] || 'PDF';
+    const at = (t, add) => { const [h, m] = (doc.time || '10:00').split(':').map(Number); const tot = h * 60 + m + add; return doc.date + ' ' + String(Math.floor(tot / 60) % 24).padStart(2, '0') + ':' + String(tot % 60).padStart(2, '0') + ':' + String((add * 13) % 60).padStart(2, '0'); };
+    const T = { ok: ['var(--success-100)', 'var(--success-700)'], info: ['var(--info-100)', 'var(--info-700)'], warn: ['var(--warning-100)', 'var(--orange-800)'], err: ['var(--danger-100)', 'var(--danger-700)'], tech: ['var(--graphite-800)', '#fff'], n: ['var(--neutral-100)', 'var(--slate-600)'] };
+    const ev = (tone, icon, title, desc, add) => ({ bg: T[tone][0], fg: T[tone][1], icon: IC(icon), title, desc, when: at(0, add) });
+    let events = [ev('n', 'file-pen', 'Documento criado', 'Por Renata Moraes · origem: emissão manual', 0), ev('info', 'shield-check', 'Validação de schema concluída', 'Leiaute 4.00 · ' + items.length + ' item(ns) · sem pendências locais', 0)];
+    if (doc.status !== 'pendente') events.push(ev('info', 'send', 'Enviado ao provedor', prov.name + ' · ' + (prov.kind || '') + ' · lote ' + (40000 + doc.num), 0));
+    if (doc.status === 'erro') events.push(ev('tech', 'unplug', 'Falha técnica · ' + doc.techError.code, doc.techError.msg, 1));
+    if (doc.status === 'processando') events.push(ev('info', 'loader', 'Aguardando retorno da ' + authority, 'Recibo ' + (881200 + doc.num) + ' · consulta automática a cada 30 s', 1));
+    if (doc.status === 'rejeitada') events.push(ev('err', 'circle-x', 'Rejeição ' + doc.rej.code, doc.rej.msg, 1));
+    if (doc.status === 'denegada') events.push(ev('err', 'octagon-x', 'Uso denegado ' + doc.rej.code, doc.rej.msg, 1));
+    if (['autorizada', 'cancelada'].includes(doc.status)) {
+      events.push(ev('ok', 'circle-check', 'Autorizado pela ' + authority, 'Protocolo ' + doc.protocol, 1));
+      events.push(ev('n', 'file-down', pdfName + ' gerado', 'Arquivo disponível para download', 1));
+      if (k) events.push(ev('n', 'mail', 'Enviado ao destinatário', k.email, 2));
+    }
+    (doc.extraEvents || []).forEach(e => events.push({ ...ev(e.tone, e.icon, e.title, e.desc, 0), when: e.when }));
+    events = events.reverse().map((e, i, arr) => ({ ...e, line: i === arr.length - 1 ? 'transparent' : 'var(--neutral-300)' }));
+    const xml = doc.type === 'NFS-e'
+      ? '<CompNfse>\n  <Nfse versao="1.00">\n    <InfNfse Id="NFS' + doc.num + '">\n      <Numero>' + doc.num + '</Numero>\n      <CodigoVerificacao>' + (doc.verif || '') + '</CodigoVerificacao>\n      <ValoresNfse><ValorLiquidoNfse>' + sub.toFixed(2) + '</ValorLiquidoNfse></ValoresNfse>\n      <PrestadorServico><Cnpj>' + (company.cnpj || '').replace(/\D/g, '') + '</Cnpj></PrestadorServico>\n    </InfNfse>\n  </Nfse>\n</CompNfse>'
+      : '<nfeProc versao="4.00" xmlns="http://www.portalfiscal.inf.br/nfe">\n  <NFe>\n    <infNFe Id="NFe' + (doc.key || '') + '" versao="4.00">\n      <ide>\n        <cUF>' + (company.uf === 'SC' ? 42 : 41) + '</cUF>\n        <natOp>Venda de mercadoria</natOp>\n        <mod>' + doc.modelo + '</mod><serie>' + doc.serie + '</serie><nNF>' + doc.num + '</nNF>\n        <tpAmb>' + (doc.env === 'producao' ? 1 : 2) + '</tpAmb>\n      </ide>\n      <emit><CNPJ>' + (company.cnpj || '').replace(/\D/g, '') + '</CNPJ><xNome>' + company.razao + '</xNome></emit>\n      <dest><xNome>' + doc.dest + '</xNome></dest>\n      <total><ICMSTot><vNF>' + doc.value.toFixed(2) + '</vNF></ICMSTot></total>\n    </infNFe>\n  </NFe>\n  <protNFe><infProt><nProt>' + (doc.protocol || '') + '</nProt><cStat>' + (doc.status === 'autorizada' ? '100' : doc.rej ? doc.rej.code : '—') + '</cStat></infProt></protNFe>\n</nfeProc>';
+    const canCancel = doc.status === 'autorizada' && (doc.type === 'NFC-e' ? doc.ago === 0 : doc.ago <= 1);
+    const now = () => { const d = new Date(); return '03/11/2026 ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0'); };
+    const addEv = (patch, e) => app.updateDoc(doc.id, { ...patch, extraEvents: [...(doc.extraEvents || []), { ...e, when: now() }] });
+    const tabs = [{ id: 'resumo', label: 'Resumo' }, { id: 'itens', label: 'Itens · ' + items.length }, { id: 'tributos', label: 'Tributos' }, { id: 'xml', label: 'XML' }, { id: 'pdf', label: pdfName }];
+    const t = {}; tabs.forEach(x => t[x.id] = s.tab === x.id);
+    const envH = doc.env !== 'producao';
+    return {
+      doc, st, company, client, numF, authority, pdfName, items, events, xml, t, tabs, tab: s.tab, setTab: id => this.setState({ tab: id }),
+      crumbs: [{ label: 'Documentos fiscais', href: '#' }, { label: doc.type + ' ' + numF }],
+      back: () => app.go('documentos'),
+      envTag: envH ? { label: 'HOMOLOGAÇÃO · SEM VALOR FISCAL', bg: 'var(--warning-100)', fg: 'var(--orange-800)' } : { label: 'PRODUÇÃO', bg: 'var(--success-100)', fg: 'var(--success-700)' },
+      isHomolog: envH,
+      providerName: prov.name || '—', valueF: brl(doc.value),
+      keyLabel: doc.type === 'NFS-e' ? 'Código de verificação' : 'Chave de acesso',
+      keyF: doc.key ? doc.key.replace(/(\d{4})/g, '$1 ').trim() : (doc.verif || '—'),
+      protocol: doc.protocol || 'ainda não autorizado', natureza: doc.type === 'NFS-e' ? 'Prestação de serviço' : doc.type === 'CT-e' ? 'Prestação de serviço de transporte' : 'Venda de mercadoria',
+      totals: [{ l: 'Produtos / serviços', v: brl(sub) }, { l: 'Frete', v: brl(0) }, { l: 'Desconto', v: brl(0) }, { l: 'Tributos aprox.', v: 'via provedor' }, { l: 'Total do documento', v: brl(doc.value), bg: 'var(--neutral-050)' }].map(x => ({ bg: '#fff', ...x })),
+      noFiles: !authorized,
+      dlXml: () => app.toast('success', 'XML gerado', doc.type + ' ' + numF + ' · arquivo XML (demonstração)'),
+      dlPdf: () => app.toast('success', pdfName + ' gerado', doc.type + ' ' + numF + ' · arquivo PDF (demonstração)'),
+      syncing: s.syncing, sync: () => { this.setState({ syncing: true }); setTimeout(() => { this.setState({ syncing: false }); addEv({}, { tone: 'info', icon: 'refresh-cw', title: 'Situação consultada', desc: 'Retorno da ' + authority + ': ' + st.label.toLowerCase() }); app.toast('info', 'Situação consultada', st.label + ' na ' + authority + '.'); }, 1000); },
+      duplicate: () => app.go('emitir', 'dup:' + doc.id),
+      canCce: doc.status === 'autorizada' && doc.type === 'NF-e',
+      cce: () => this.setState({ cceOpen: true }), cceOpen: s.cceOpen, closeCce: () => this.setState({ cceOpen: false }),
+      cceText: s.cceText, onCce: e => this.setState({ cceText: e.target.value }), cceShort: s.cceText.trim().length < 15,
+      sendCce: () => { this.setState({ cceOpen: false, cceText: '' }); addEv({}, { tone: 'ok', icon: 'file-check', title: 'Carta de correção registrada', desc: 'Sequência 1 · evento 110110 homologado' }); app.toast('success', 'CC-e registrada', 'Evento vinculado à ' + doc.type + ' ' + numF + '.'); },
+      noCancel: !canCancel, cancelWhy: canCancel ? 'Prazo de referência: até 24 h após a autorização' : doc.status !== 'autorizada' ? 'Somente documentos autorizados podem ser cancelados' : 'Prazo encerrado — use carta de correção ou nota de devolução',
+      openCancel: () => this.setState({ cancelOpen: true }), cancelOpen: s.cancelOpen, closeCancel: () => this.setState({ cancelOpen: false }),
+      just: s.just, onJust: e => this.setState({ just: e.target.value }), justShort: s.just.trim().length < 15,
+      justInvalid: s.just.length > 0 && s.just.trim().length < 15, justCount: s.just.trim().length + ' / 15 caracteres mínimos', justColor: s.just.length > 0 && s.just.trim().length < 15 ? 'var(--danger-700)' : 'var(--text-muted-aa)',
+      cancelling: s.cancelling,
+      confirmCancel: () => { this.setState({ cancelling: true }); setTimeout(() => { this.setState({ cancelling: false, cancelOpen: false, just: '' }); addEv({ status: 'cancelada' }, { tone: 'n', icon: 'ban', title: 'Cancelamento homologado', desc: 'Evento 110111 · ' + s.just.trim() }); app.toast('success', 'Documento cancelado', doc.type + ' ' + numF + ' · evento homologado pela ' + authority + '.'); }, 1300); },
+      isRejected: doc.status === 'rejeitada', isDenied: doc.status === 'denegada', isTech: doc.status === 'erro', isPending: doc.status === 'pendente', isProcessing: doc.status === 'processando',
+      rejTitle: doc.rej ? (doc.status === 'denegada' ? 'Uso denegado · ' : 'Rejeição fiscal · ') + authority.toUpperCase() + ' ' + doc.rej.code + ' — ' + doc.rej.msg : '',
+      techTitle: doc.techError ? 'Falha técnica · ' + doc.techError.code + ' — o documento não chegou à ' + authority : '',
+      fixLabel: doc.rej && doc.rej.code === '233' ? 'corrigir cliente' : doc.rej && doc.rej.code === '778' ? 'corrigir produto' : 'revisar numeração',
+      fixData: () => app.go(doc.rej && doc.rej.code === '233' ? 'clientes' : doc.rej && doc.rej.code === '778' ? 'produtos' : 'empresas', doc.rej && doc.rej.code === '233' ? doc.clientId : doc.rej && doc.rej.code === '778' ? (doc.items[1] || doc.items[0]).prodId : doc.companyId),
+      resending: s.resending,
+      resend: () => { this.setState({ resending: true }); app.updateDoc(doc.id, { status: 'processando' }); setTimeout(() => { this.setState({ resending: false }); addEv({ status: 'autorizada', rej: null, techError: null, protocol: '1412600' + (49000000 + doc.num) }, { tone: 'ok', icon: 'circle-check', title: 'Autorizado após reenvio', desc: 'Protocolo 1412600' + (49000000 + doc.num) }); app.toast('success', 'Documento autorizado', doc.type + ' ' + numF + ' autorizado pela ' + authority + '.'); }, 1600); },
+      goProvider: () => app.go('integracoes', doc.providerId),
+      copyKey: () => { try { navigator.clipboard.writeText(doc.key || doc.verif || ''); } catch (e) { } app.toast('neutral', 'Copiado', 'Chave copiada para a área de transferência.'); },
+      xmlLabel: doc.type === 'NFS-e' ? 'da NFS-e' : 'autorizado (nfeProc)',
+      meta: [{ l: 'Provedor', v: prov.name || '—' }, { l: 'Integração', v: prov.kind || '—' }, { l: 'Ambiente', v: envH ? 'Homologação (2)' : 'Produção (1)' }, { l: 'Tempo de resposta', v: doc.status === 'erro' ? '30.000 ms (timeout)' : (prov.latency || 0).toLocaleString('pt-BR') + ' ms' }, { l: 'ID interno', v: 'onfe_' + doc.id + '_' + doc.num }],
+      cols: app.w >= 1180 ? 'minmax(0,1fr) 360px' : 'minmax(0,1fr)'
+    };
+  }
+}
+</script>
+</body>
+</html>

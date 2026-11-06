@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>OpenNFE</title>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+  <style>
+    html,body{margin:0;background:#f6f6f6}
+    *{box-sizing:border-box}
+    a{color:var(--info-700)}
+    a:hover{color:var(--graphite-800)}
+    button{font-family:var(--font-sans)}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:var(--neutral-050);font:var(--type-body);color:var(--text-body)">
+
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;background:rgba(31,31,31,.5);z-index:39"></div>
+  </sc-if>
+
+  <aside aria-label="Menu principal" style="position:fixed;top:0;left:0;bottom:0;width:{{ sbWidth }};transform:{{ sbTransform }};z-index:40;display:flex;flex-direction:column;background:var(--graphite-800);color:var(--text-on-dark);border-right:1px solid #2b2b2b;transition:width var(--dur-base) var(--ease-standard),transform var(--dur-base) var(--ease-standard)">
+    <div style="height:64px;flex:none;display:flex;align-items:center;gap:10px;padding:0 14px;border-bottom:1px solid var(--border-on-dark)">
+      <button onClick="{{ goDashboard }}" aria-label="OpenNFE — início" style="display:flex;align-items:center;gap:10px;border:0;background:transparent;padding:0;cursor:pointer;color:inherit;min-width:0">
+        <span style="width:36px;height:36px;flex:none;border-radius:var(--radius-sm);background:var(--info-700);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 1px 2px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font:700 15px/1 var(--font-display);letter-spacing:.04em;color:#fff">NF</span>
+        <sc-if value="{{ expanded }}" hint-placeholder-val="{{ true }}">
+          <span style="font:300 22px/1 var(--font-sans);letter-spacing:-.01em;white-space:nowrap">open<strong style="font-weight:600">nfe</strong></span>
+        </sc-if>
+      </button>
+      <sc-if value="{{ showCollapseBtn }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ toggleCollapse }}" title="Recolher menu" aria-label="Recolher menu" style="margin-left:auto;width:28px;height:28px;border:1px solid var(--border-on-dark);border-radius:var(--radius-sm);background:rgba(255,255,255,.04);color:var(--text-on-dark-muted);display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:rgba(255,255,255,.1);color:#fff">
+          <span aria-hidden="true" style="width:16px;height:16px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/chevrons-left.svg) center/contain no-repeat"></span>
+        </button>
+      </sc-if>
+      <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ closeDrawer }}" aria-label="Fechar menu" style="margin-left:auto;width:36px;height:36px;border:0;border-radius:var(--radius-sm);background:rgba(255,255,255,.06);color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer">
+          <span aria-hidden="true" style="width:18px;height:18px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/x.svg) center/contain no-repeat"></span>
+        </button>
+      </sc-if>
+    </div>
+
+    <div style="padding:14px 12px 6px;display:grid;gap:10px;flex:none">
+      <sc-if value="{{ expanded }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ goConfig }}" style="display:flex;align-items:center;gap:10px;width:100%;padding:9px 10px;border:1px solid var(--border-on-dark);border-radius:var(--radius-md);background:rgba(255,255,255,.04);color:inherit;text-align:left;cursor:pointer" style-hover="background:rgba(255,255,255,.08)">
+          <span style="width:30px;height:30px;flex:none;border-radius:var(--radius-sm);background:var(--slate-600);display:flex;align-items:center;justify-content:center;font:600 12px/1 var(--font-sans);color:#fff">CH</span>
+          <span style="min-width:0;flex:1;display:grid;gap:2px">
+            <span style="font:600 10.5px/1 var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--text-on-dark-muted)">Organização</span>
+            <span style="font:500 13.5px/1.2 var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Contábil Horizonte</span>
+          </span>
+          <span aria-hidden="true" style="width:14px;height:14px;flex:none;background:var(--text-on-dark-muted);mask:url(https://unpkg.com/lucide-static@0.544.0/icons/chevrons-up-down.svg) center/contain no-repeat"></span>
+        </button>
+      </sc-if>
+      <button onClick="{{ goEmitir }}" title="Emitir documento" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:38px;border:1px solid #23527a;border-radius:var(--radius-sm);background:linear-gradient(180deg,#3d7ea6 0%,#2f6589 100%);box-shadow:var(--shadow-button);color:#fff;font:500 14px/1 var(--font-sans);cursor:pointer" style-hover="background:linear-gradient(180deg,#2f6589 0%,#245272 100%)" style-active="box-shadow:var(--shadow-button-pressed)">
+        <span aria-hidden="true" style="width:17px;height:17px;flex:none;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/file-plus-2.svg) center/contain no-repeat"></span>
+        <sc-if value="{{ expanded }}" hint-placeholder-val="{{ true }}"><span>emitir documento</span></sc-if>
+      </button>
+    </div>
+
+    <nav style="flex:1;overflow-y:auto;padding:6px 12px 12px;display:grid;align-content:start;gap:14px">
+      <sc-for list="{{ nav }}" as="g" hint-placeholder-count="4">
+        <div style="display:grid;gap:2px">
+          <sc-if value="{{ expanded }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:6px 10px 6px;font:600 11px/1 var(--font-display);letter-spacing:.12em;color:#9ea3a6">{{ g.k }}</div>
+          </sc-if>
+          <sc-if value="{{ collapsedSep }}" hint-placeholder-val="{{ false }}">
+            <div style="height:1px;margin:4px 8px;background:var(--border-on-dark)"></div>
+          </sc-if>
+          <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+            <button onClick="{{ it.go }}" title="{{ it.label }}" aria-current="{{ it.current }}" style="position:relative;display:flex;align-items:center;gap:12px;width:100%;height:38px;padding:0 {{ itemPad }};justify-content:{{ itemJustify }};border:0;border-radius:var(--radius-sm);background:{{ it.bg }};color:{{ it.fg }};font:{{ it.fw }} 14px/1 var(--font-sans);text-align:left;cursor:pointer;transition:var(--transition-control)" style-hover="background:rgba(255,255,255,.08);color:#fff">
+              <span aria-hidden="true" style="position:absolute;left:0;top:9px;bottom:9px;width:3px;border-radius:2px;background:{{ it.bar }}"></span>
+              <span aria-hidden="true" style="width:18px;height:18px;flex:none;background:{{ it.ic }};mask:url({{ it.icon }}) center/contain no-repeat"></span>
+              <sc-if value="{{ expanded }}" hint-placeholder-val="{{ true }}">
+                <span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.label }}</span>
+                <sc-if value="{{ it.hasCount }}" hint-placeholder-val="{{ false }}">
+                  <span style="min-width:22px;height:20px;padding:0 6px;border-radius:var(--radius-pill);background:{{ it.cBg }};color:{{ it.cFg }};font:600 11.5px/20px var(--font-sans);text-align:center">{{ it.count }}</span>
+                </sc-if>
+              </sc-if>
+              <sc-if value="{{ it.showDot }}" hint-placeholder-val="{{ false }}">
+                <span style="position:absolute;top:7px;right:9px;width:8px;height:8px;border-radius:50%;background:{{ it.cBg }};box-shadow:0 0 0 2px var(--graphite-800)"></span>
+              </sc-if>
+            </button>
+          </sc-for>
+        </div>
+      </sc-for>
+    </nav>
+
+    <div style="flex:none;padding:12px;border-top:1px solid var(--border-on-dark);display:grid;gap:10px">
+      <sc-if value="{{ expanded }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:10px 12px;border-radius:var(--radius-md);background:rgba(255,255,255,.04);border:1px solid var(--border-on-dark);display:grid;gap:8px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+            <span style="font:600 10.5px/1 var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--text-on-dark-muted)">Uso do plano · nov</span>
+            <span style="font:500 12px/1 var(--font-mono);color:#fff">{{ usageLabel }}</span>
+          </div>
+          <div style="height:6px;border-radius:3px;background:rgba(255,255,255,.12);overflow:hidden"><div style="height:100%;width:{{ usagePct }};background:var(--info-500)"></div></div>
+          <div style="font:12px/1.3 var(--font-sans);color:var(--text-on-dark-muted)">Plano Profissional · renova em 01/12</div>
+        </div>
+        <a href="OpenNFE Design System.dc.html" style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:var(--radius-sm);color:var(--text-on-dark-muted);text-decoration:none;font:14px/1 var(--font-sans)" style-hover="background:rgba(255,255,255,.08);color:#fff">
+          <span aria-hidden="true" style="width:17px;height:17px;flex:none;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/swatch-book.svg) center/contain no-repeat"></span>
+          <span>design system</span>
+        </a>
+      </sc-if>
+      <sc-if value="{{ showExpandBtn }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ toggleCollapse }}" title="Expandir menu" aria-label="Expandir menu" style="height:36px;border:1px solid var(--border-on-dark);border-radius:var(--radius-sm);background:rgba(255,255,255,.04);color:var(--text-on-dark-muted);display:flex;align-items:center;justify-content:center;cursor:pointer" style-hover="background:rgba(255,255,255,.1);color:#fff">
+          <span aria-hidden="true" style="width:16px;height:16px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/chevrons-right.svg) center/contain no-repeat"></span>
+        </button>
+      </sc-if>
+    </div>
+  </aside>
+
+  <div style="margin-left:{{ mainOffset }};min-width:0;transition:margin-left var(--dur-base) var(--ease-standard)">
+    <header style="position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid var(--border-subtle);box-shadow:0 1px 2px rgba(0,0,0,.04)">
+      <div style="height:60px;display:flex;align-items:center;gap:10px;padding:0 {{ hPad }}">
+        <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ openDrawer }}" aria-label="Abrir menu" style="width:40px;height:40px;flex:none;border:1px solid var(--border-subtle);border-radius:var(--radius-sm);background:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--graphite-800)">
+            <span aria-hidden="true" style="width:20px;height:20px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/menu.svg) center/contain no-repeat"></span>
+          </button>
+        </sc-if>
+
+        <div style="position:relative;min-width:0;flex:none">
+          <button onClick="{{ toggleCompanyMenu }}" aria-haspopup="listbox" aria-expanded="{{ companyMenuOpen }}" style="display:flex;align-items:center;gap:10px;height:42px;max-width:100%;padding:0 10px 0 6px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);background:linear-gradient(180deg,#fff 0%,#f7f7f7 100%);cursor:pointer;text-align:left;color:inherit" style-hover="border-color:var(--border-strong)">
+            <span style="width:30px;height:30px;flex:none;border-radius:var(--radius-sm);background:var(--info-100);color:var(--info-700);display:flex;align-items:center;justify-content:center;font:600 12px/1 var(--font-sans)">{{ company.initials }}</span>
+            <span style="min-width:0;display:grid;gap:3px">
+              <span style="font:500 13.5px/1.1 var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:{{ companyNameMax }}">{{ company.fantasia }}</span>
+              <span style="font:400 11.5px/1 var(--font-mono);color:var(--text-muted-aa);white-space:nowrap">{{ company.cnpj }}</span>
+            </span>
+            <span aria-hidden="true" style="width:14px;height:14px;flex:none;background:var(--text-muted-aa);mask:url(https://unpkg.com/lucide-static@0.544.0/icons/chevron-down.svg) center/contain no-repeat"></span>
+          </button>
+          <sc-if value="{{ companyMenuOpen }}" hint-placeholder-val="{{ false }}">
+            <div role="listbox" aria-label="Empresa ativa" style="position:absolute;top:calc(100% + 6px);left:0;width:min(380px,calc(100vw - 24px));background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:var(--shadow-raised);padding:8px;z-index:50">
+              <div style="padding:6px 8px 8px;font:600 11px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">EMPRESA ATIVA · CNPJ EMISSOR</div>
+              <sc-for list="{{ companyOptions }}" as="c" hint-placeholder-count="4">
+                <button role="option" aria-selected="{{ c.active }}" onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:10px;width:100%;padding:8px;border:0;border-radius:var(--radius-sm);background:{{ c.bg }};cursor:pointer;text-align:left;color:inherit" style-hover="background:var(--neutral-100)">
+                  <span style="width:30px;height:30px;flex:none;border-radius:var(--radius-sm);background:var(--neutral-100);color:var(--graphite-800);display:flex;align-items:center;justify-content:center;font:600 12px/1 var(--font-sans)">{{ c.initials }}</span>
+                  <span style="flex:1;min-width:0;display:grid;gap:3px">
+                    <span style="font:500 13.5px/1.2 var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.fantasia }}</span>
+                    <span style="font:11.5px/1 var(--font-mono);color:var(--text-muted-aa)">{{ c.cnpj }} · {{ c.uf }}</span>
+                  </span>
+                  <sc-if value="{{ c.certWarn }}" hint-placeholder-val="{{ false }}">
+                    <span title="{{ c.certLabel }}" style="font:600 10.5px/1 var(--font-sans);padding:4px 6px;border-radius:var(--radius-xs);background:{{ c.certBg }};color:{{ c.certFg }}">{{ c.certShort }}</span>
+                  </sc-if>
+                  <sc-if value="{{ c.active }}" hint-placeholder-val="{{ false }}">
+                    <span aria-hidden="true" style="width:16px;height:16px;flex:none;background:var(--info-700);mask:url(https://unpkg.com/lucide-static@0.544.0/icons/check.svg) center/contain no-repeat"></span>
+                  </sc-if>
+                </button>
+              </sc-for>
+              <div style="height:1px;background:var(--border-subtle);margin:6px 0"></div>
+              <button onClick="{{ goEmpresas }}" style="width:100%;height:34px;border:0;background:transparent;border-radius:var(--radius-sm);color:var(--info-700);font:500 13.5px/1 var(--font-sans);text-align:left;padding:0 8px;cursor:pointer" style-hover="background:var(--neutral-100)">gerenciar empresas »</button>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ showSearch }}" hint-placeholder-val="{{ true }}">
+          <div style="position:relative;flex:1 1 320px;max-width:520px;min-width:160px">
+            <span aria-hidden="true" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;background:var(--text-muted-aa);mask:url(https://unpkg.com/lucide-static@0.544.0/icons/search.svg) center/contain no-repeat"></span>
+            <input value="{{ q }}" onInput="{{ onSearch }}" onFocus="{{ onSearchFocus }}" placeholder="Buscar número, chave, cliente ou produto…" aria-label="Busca global" style="width:100%;height:38px;padding:0 44px 0 36px;font:var(--type-body);font-size:14px;color:var(--text-body);background:var(--neutral-050);border:1px solid var(--border-subtle);border-radius:var(--radius-lg);box-shadow:var(--shadow-inset-field);outline:none" style-focus="border-color:var(--info-500);background:#fff">
+            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%)">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Kbd" hint-size="28px,20px">/</x-import>
+            </span>
+            <sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;top:calc(100% + 6px);left:0;right:0;background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:var(--shadow-raised);padding:6px;z-index:50">
+                <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ true }}">
+                  <sc-for list="{{ results }}" as="r" hint-placeholder-count="4">
+                    <button onClick="{{ r.go }}" style="display:flex;align-items:center;gap:10px;width:100%;padding:8px;border:0;background:transparent;border-radius:var(--radius-sm);cursor:pointer;text-align:left;color:inherit" style-hover="background:var(--neutral-100)">
+                      <span aria-hidden="true" style="width:16px;height:16px;flex:none;background:var(--slate-500);mask:url({{ r.icon }}) center/contain no-repeat"></span>
+                      <span style="flex:1;min-width:0;display:grid;gap:2px">
+                        <span style="font:500 13.5px/1.2 var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.title }}</span>
+                        <span style="font:12px/1.2 var(--font-sans);color:var(--text-muted-aa)">{{ r.sub }}</span>
+                      </span>
+                      <span style="font:600 10.5px/1 var(--font-display);letter-spacing:.1em;color:var(--text-muted-aa)">{{ r.kind }}</span>
+                    </button>
+                  </sc-for>
+                </sc-if>
+                <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:14px 10px;font:13.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">Nada encontrado para “{{ q }}”. Tente o número da nota, parte da chave de acesso ou o CNPJ.</div>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <div style="flex:1"></div>
+
+        <div role="group" aria-label="Ambiente fiscal" style="display:flex;align-items:center;flex:none;padding:3px;border-radius:var(--radius-sm);background:var(--neutral-100);border:1px solid var(--border-subtle)">
+          <button onClick="{{ setHomolog }}" aria-pressed="{{ isHomolog }}" title="Ambiente de homologação (testes)" style="height:30px;padding:0 10px;border:1px solid {{ envH.bd }};border-radius:var(--radius-xs);background:{{ envH.bg }};color:{{ envH.fg }};font:600 11.5px/1 var(--font-display);letter-spacing:.1em;cursor:pointer;display:flex;align-items:center;gap:6px">
+            <span aria-hidden="true" style="width:7px;height:7px;border-radius:50%;background:{{ envH.dot }}"></span>{{ envHLabel }}
+          </button>
+          <button onClick="{{ askProducao }}" aria-pressed="{{ isProd }}" title="Ambiente de produção (validade fiscal)" style="height:30px;padding:0 10px;border:1px solid {{ envP.bd }};border-radius:var(--radius-xs);background:{{ envP.bg }};color:{{ envP.fg }};font:600 11.5px/1 var(--font-display);letter-spacing:.1em;cursor:pointer;display:flex;align-items:center;gap:6px">
+            <span aria-hidden="true" style="width:7px;height:7px;border-radius:50%;background:{{ envP.dot }}"></span>{{ envPLabel }}
+          </button>
+        </div>
+
+        <sc-if value="{{ showHelp }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ toggleHelp }}" title="Ajuda" aria-label="Ajuda" style="width:38px;height:38px;flex:none;border:1px solid transparent;border-radius:var(--radius-sm);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--slate-600)" style-hover="background:var(--neutral-100)">
+            <span aria-hidden="true" style="width:19px;height:19px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/circle-help.svg) center/contain no-repeat"></span>
+          </button>
+        </sc-if>
+
+        <div style="position:relative;flex:none">
+          <button onClick="{{ toggleNotif }}" title="Notificações" aria-label="Notificações" style="position:relative;width:38px;height:38px;border:1px solid transparent;border-radius:var(--radius-sm);background:transparent;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--slate-600)" style-hover="background:var(--neutral-100)">
+            <span aria-hidden="true" style="width:19px;height:19px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/bell.svg) center/contain no-repeat"></span>
+            <sc-if value="{{ hasUnread }}" hint-placeholder-val="{{ true }}">
+              <span style="position:absolute;top:3px;right:2px;min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--danger-700);color:#fff;font:600 10.5px/17px var(--font-sans);box-shadow:0 0 0 2px #fff">{{ unread }}</span>
+            </sc-if>
+          </button>
+          <sc-if value="{{ notifOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:calc(100% + 8px);right:0;width:min(380px,calc(100vw - 24px));background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:var(--shadow-raised);z-index:50;overflow:hidden">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+                <span style="font:500 15px/1 var(--font-sans)">Notificações</span>
+                <button onClick="{{ markAllRead }}" style="border:0;background:transparent;color:var(--info-700);font:500 12.5px/1 var(--font-sans);cursor:pointer">marcar como lidas</button>
+              </div>
+              <sc-for list="{{ notifs }}" as="n" hint-placeholder-count="4">
+                <button onClick="{{ n.go }}" style="display:grid;grid-template-columns:auto 1fr;gap:10px;width:100%;padding:12px 14px;border:0;border-bottom:1px solid var(--neutral-100);background:{{ n.bg }};text-align:left;cursor:pointer;color:inherit" style-hover="background:var(--neutral-050)">
+                  <span aria-hidden="true" style="width:28px;height:28px;border-radius:var(--radius-sm);background:{{ n.tBg }};display:flex;align-items:center;justify-content:center">
+                    <span style="width:15px;height:15px;background:{{ n.tFg }};mask:url({{ n.icon }}) center/contain no-repeat"></span>
+                  </span>
+                  <span style="display:grid;gap:3px;min-width:0">
+                    <span style="font:500 13.5px/1.3 var(--font-sans)">{{ n.title }}</span>
+                    <span style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ n.body }}</span>
+                    <span style="font:11.5px/1 var(--font-sans);color:var(--text-muted-aa)">{{ n.when }}</span>
+                  </span>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+
+        <div style="position:relative;flex:none">
+          <button onClick="{{ toggleProfile }}" aria-label="Perfil do usuário" style="display:flex;align-items:center;gap:8px;height:40px;padding:0 6px 0 4px;border:1px solid transparent;border-radius:var(--radius-sm);background:transparent;cursor:pointer;color:inherit" style-hover="background:var(--neutral-100)">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Avatar" name="Renata Moraes" size="sm" status="online" hint-size="32px,32px"></x-import>
+            <sc-if value="{{ showProfileName }}" hint-placeholder-val="{{ true }}">
+              <span style="display:grid;gap:3px;text-align:left">
+                <span style="font:500 13px/1 var(--font-sans);white-space:nowrap">Renata Moraes</span>
+                <span style="font:11.5px/1 var(--font-sans);color:var(--text-muted-aa)">Administradora</span>
+              </span>
+            </sc-if>
+          </button>
+          <sc-if value="{{ profileOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="position:absolute;top:calc(100% + 8px);right:0;width:250px;background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:var(--shadow-raised);z-index:50;padding:6px">
+              <div style="padding:10px 10px 12px;border-bottom:1px solid var(--border-subtle);margin-bottom:6px">
+                <div style="font:500 14px/1.2 var(--font-sans)">Renata Moraes</div>
+                <div style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">renata@contabilhorizonte.com.br</div>
+              </div>
+              <sc-for list="{{ profileItems }}" as="p" hint-placeholder-count="4">
+                <button onClick="{{ p.go }}" style="display:flex;align-items:center;gap:10px;width:100%;height:36px;padding:0 10px;border:0;border-radius:var(--radius-sm);background:transparent;cursor:pointer;color:{{ p.fg }};font:14px/1 var(--font-sans);text-align:left" style-hover="background:var(--neutral-100)">
+                  <span aria-hidden="true" style="width:16px;height:16px;background:currentColor;mask:url({{ p.icon }}) center/contain no-repeat"></span>{{ p.label }}
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+
+      <sc-if value="{{ isHomolog }}" hint-placeholder-val="{{ true }}">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.HighlightBar" hint-size="100%,30px">
+          <span aria-hidden="true" style="width:15px;height:15px;flex:none;background:var(--charcoal-900);mask:url(https://unpkg.com/lucide-static@0.544.0/icons/flask-conical.svg) center/contain no-repeat"></span>
+          <strong style="font:600 13px/1 var(--font-display);letter-spacing:.1em">HOMOLOGAÇÃO</strong>
+          <span>{{ homologMsg }}</span>
+          <button onClick="{{ askProducao }}" style="border:0;background:transparent;color:var(--charcoal-900);font:500 13px/1 var(--font-sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:0;white-space:nowrap">ir para produção »</button>
+        </x-import>
+      </sc-if>
+      <sc-if value="{{ isProd }}" hint-placeholder-val="{{ false }}">
+        <div style="height:3px;background:var(--success-700)"></div>
+      </sc-if>
+    </header>
+
+    <main style="padding:{{ mainPad }};max-width:1480px;margin:0 auto;min-width:0">
+      <sc-if value="{{ r.dashboard }}" hint-placeholder-val="{{ true }}">
+        <dc-import name="NfeDashboard" app="{{ app }}" hint-size="100%,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ r.documentos }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="NfeDocumentos" app="{{ app }}" hint-size="100%,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ r.documento }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="NfeDocumentoDetalhe" app="{{ app }}" hint-size="100%,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ r.emitir }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="NfeEmissao" app="{{ app }}" hint-size="100%,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ r.empresas }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="NfeEmpresas" app="{{ app }}" hint-size="100%,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ r.clientes }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="NfeClientes" app="{{ app }}" hint-size="100%,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ r.produtos }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="NfeProdutos" app="{{ app }}" hint-size="100%,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ r.importacao }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="NfeImportacao" app="{{ app }}" hint-size="100%,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ r.relatorios }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="NfeRelatorios" app="{{ app }}" hint-size="100%,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ r.integracoes }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="NfeIntegracoes" app="{{ app }}" hint-size="100%,900px"></dc-import>
+      </sc-if>
+      <sc-if value="{{ r.configuracoes }}" hint-placeholder-val="{{ false }}">
+        <dc-import name="NfeConfiguracoes" app="{{ app }}" hint-size="100%,900px"></dc-import>
+      </sc-if>
+    </main>
+  </div>
+
+  <sc-if value="{{ anyMenuOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeMenus }}" style="position:fixed;inset:0;z-index:25"></div>
+  </sc-if>
+
+  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Modal" open="{{ envModal }}" on-close="{{ closeEnvModal }}" title="Mudar para produção" size="sm" hint-size="0,0">
+    <div style="display:grid;gap:14px">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="warning" title="Documentos emitidos em produção têm validade fiscal" hint-size="100%,70px">Cada transmissão é enviada à SEFAZ ou à prefeitura e gera obrigações reais para <strong>{{ company.razao }}</strong>. Cancelamentos seguem prazos legais.</x-import>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Checkbox" label="Entendo e quero emitir em produção" checked="{{ envAck }}" on-change="{{ toggleEnvAck }}" hint-size="100%,24px"></x-import>
+      <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ closeEnvModal }}" hint-size="90px,34px">continuar em homologação</x-import>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" disabled="{{ envAckMissing }}" on-click="{{ confirmProducao }}" hint-size="140px,34px">ativar produção</x-import>
+      </div>
+    </div>
+  </x-import>
+
+  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Modal" open="{{ helpOpen }}" on-close="{{ toggleHelp }}" title="Central de ajuda" size="md" hint-size="0,0">
+    <div style="display:grid;gap:10px">
+      <sc-for list="{{ helpItems }}" as="h" hint-placeholder-count="4">
+        <div style="display:grid;gap:4px;padding:12px 14px;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+          <strong style="font:500 14.5px/1.3 var(--font-sans)">{{ h.t }}</strong>
+          <span style="font:13.5px/1.5 var(--font-sans);color:var(--text-muted-aa)">{{ h.d }}</span>
+        </div>
+      </sc-for>
+      <div style="display:flex;gap:8px;align-items:center;font:13px/1.4 var(--font-sans);color:var(--text-muted-aa)">Atalhos: <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Kbd" hint-size="20px,20px">/</x-import> busca · <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Kbd" hint-size="20px,20px">N</x-import> nova emissão</div>
+    </div>
+  </x-import>
+
+  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toast" items="{{ toasts }}" on-dismiss="{{ dismissToast }}" position="bottom-end" hint-size="0,0"></x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const IC = n => 'https://unpkg.com/lucide-static@0.544.0/icons/' + n + '.svg';
+const brl = v => (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+
+const STATUS = {
+  autorizada: { label: 'Autorizada', bg: 'var(--success-100)', fg: 'var(--success-700)', dot: 'var(--success-500)', icon: IC('circle-check') },
+  processando: { label: 'Processando', bg: 'var(--info-100)', fg: 'var(--info-700)', dot: 'var(--info-500)', icon: IC('loader') },
+  pendente: { label: 'Pendente', bg: 'var(--warning-100)', fg: 'var(--orange-800)', dot: 'var(--amber-500)', icon: IC('clock') },
+  rejeitada: { label: 'Rejeitada', bg: 'var(--danger-100)', fg: 'var(--danger-700)', dot: 'var(--danger-500)', icon: IC('circle-x') },
+  erro: { label: 'Falha técnica', bg: 'var(--graphite-800)', fg: '#fff', dot: 'var(--slate-500)', icon: IC('unplug') },
+  denegada: { label: 'Denegada', bg: 'var(--danger-700)', fg: '#fff', dot: 'var(--danger-700)', icon: IC('octagon-x') },
+  cancelada: { label: 'Cancelada', bg: 'var(--neutral-100)', fg: 'var(--text-muted-aa)', dot: 'var(--neutral-500)', icon: IC('ban') }
+};
+
+const COMPANIES = [
+  { id: 'c1', razao: 'Horizonte Distribuidora de Alimentos Ltda', fantasia: 'Horizonte Alimentos', cnpj: '24.513.887/0001-04', ie: '90.551.204-71', im: '—', uf: 'PR', city: 'Curitiba', address: 'Rua Desembargador Westphalen, 1450 · Rebouças', cep: '80230-100', regime: 'Lucro presumido', crt: '3 · Regime normal', cert: { until: '14/08/2027', days: 284, state: 'ok' }, providerId: 'p1', types: ['NF-e', 'NFC-e'], serie: '1', next: 1249, env: 'homologacao', email: 'fiscal@horizontealimentos.com.br', phone: '(41) 3022-4180' },
+  { id: 'c2', razao: 'Ateliê Pinhão Comércio de Móveis Ltda', fantasia: 'Ateliê Pinhão', cnpj: '31.906.442/0001-58', ie: '90.732.118-02', im: '—', uf: 'PR', city: 'São José dos Pinhais', address: 'Av. Rui Barbosa, 3120 · Centro', cep: '83005-010', regime: 'Simples Nacional', crt: '1 · Simples Nacional', cert: { until: '15/11/2026', days: 12, state: 'warn' }, providerId: 'p2', types: ['NF-e'], serie: '1', next: 412, env: 'homologacao', email: 'contato@ateliepinhao.com.br', phone: '(41) 3283-7710' },
+  { id: 'c3', razao: 'Serra Verde Serviços Digitais Ltda', fantasia: 'Serra Verde Digital', cnpj: '40.118.223/0001-37', ie: 'Isento', im: '0441.902-8', uf: 'SC', city: 'Florianópolis', address: 'Rod. SC-401, 8600 · Santo Antônio de Lisboa', cep: '88050-000', regime: 'Simples Nacional', crt: '1 · Simples Nacional', cert: { until: '02/03/2027', days: 119, state: 'ok' }, providerId: 'p1', types: ['NFS-e'], serie: 'A', next: 88, env: 'homologacao', email: 'financeiro@serraverde.dev', phone: '(48) 3207-1102' },
+  { id: 'c4', razao: 'Cooperativa Agroindustrial Vale do Iguaçu', fantasia: 'Coop. Vale do Iguaçu', cnpj: '08.775.310/0001-92', ie: '10.228.540-63', im: '—', uf: 'PR', city: 'Ponta Grossa', address: 'Rod. BR-376, km 502 · Distrito Industrial', cep: '84043-000', regime: 'Lucro real', crt: '3 · Regime normal', cert: { until: '28/10/2026', days: -6, state: 'expired' }, providerId: 'p3', types: ['NF-e', 'CT-e', 'MDF-e'], serie: '2', next: 5310, env: 'homologacao', email: 'nfe@valedoiguacu.coop.br', phone: '(42) 3219-5500' }
+];
+
+const CLIENTS = [
+  { id: 'k1', name: 'Mercado Bom Preço Ltda', kind: 'PJ', doc: '55.221.904/0001-10', ie: '90.112.334-55', email: 'compras@bompreco.com.br', phone: '(41) 3344-2100', city: 'Curitiba', uf: 'PR', address: 'Rua XV de Novembro, 820 · Centro', cep: '80020-310', contrib: 'Contribuinte ICMS' },
+  { id: 'k2', name: 'Padaria Trigo de Ouro ME', kind: 'PJ', doc: '19.884.551/0001-73', ie: '90.448.120-19', email: 'trigodeouro@email.com', phone: '(41) 3256-0091', city: 'Curitiba', uf: 'PR', address: 'Av. Sete de Setembro, 4410 · Batel', cep: '80240-000', contrib: 'Contribuinte ICMS' },
+  { id: 'k3', name: 'Restaurante Cantina Batel Ltda', kind: 'PJ', doc: '27.640.018/0001-45', ie: '', email: 'adm@cantinabatel.com.br', phone: '(41) 3018-6620', city: 'Curitiba', uf: 'PR', address: 'Rua Bispo Dom José, 2250 · Batel', cep: '80440-080', contrib: 'Contribuinte ICMS' },
+  { id: 'k4', name: 'Mariana Albuquerque Souza', kind: 'PF', doc: '418.302.559-07', ie: '', email: 'mariana.souza@email.com', phone: '(41) 99812-4471', city: 'Curitiba', uf: 'PR', address: 'Rua Padre Anchieta, 1580 · Bigorrilho', cep: '80730-000', contrib: 'Não contribuinte' },
+  { id: 'k5', name: 'Hotel Araucária Palace S.A.', kind: 'PJ', doc: '06.117.229/0001-60', ie: '90.003.771-40', email: 'suprimentos@araucariapalace.com.br', phone: '(41) 3091-2000', city: 'Curitiba', uf: 'PR', address: 'Rua Comendador Araújo, 99 · Centro', cep: '80420-000', contrib: 'Contribuinte ICMS' },
+  { id: 'k6', name: 'Construtora Campos Gerais Ltda', kind: 'PJ', doc: '33.502.871/0001-26', ie: '10.445.902-11', email: 'obras@camposgerais.eng.br', phone: '(42) 3025-8810', city: 'Ponta Grossa', uf: 'PR', address: 'Av. Vicente Machado, 1200 · Centro', cep: '84010-000', contrib: 'Contribuinte ICMS' },
+  { id: 'k7', name: 'Farmácia Saúde Viva Ltda', kind: 'PJ', doc: '44.019.663/0001-88', ie: '254.889.102', email: 'nf@saudeviva.com.br', phone: '(48) 3028-5544', city: 'Florianópolis', uf: 'SC', address: 'Rua Felipe Schmidt, 515 · Centro', cep: '88010-001', contrib: 'Contribuinte ICMS' },
+  { id: 'k8', name: 'João Pedro Kowalski', kind: 'PF', doc: '702.118.430-91', ie: '', email: 'jp.kowalski@email.com', phone: '(41) 99645-1208', city: 'São José dos Pinhais', uf: 'PR', address: 'Rua Joinville, 2711 · São Pedro', cep: '83020-000', contrib: 'Não contribuinte' }
+];
+
+const PRODUCTS = [
+  { id: 'r1', code: 'ALM-0012', desc: 'Arroz agulhinha tipo 1 · fardo 6×5 kg', kind: 'produto', ncm: '1006.30.21', cest: '—', cfop: '5102', un: 'FD', origem: '0 · Nacional', price: 162.9, status: 'ativo', icms: 'CST 00 · 12%', pis: 'CST 01 · 0,65%', cofins: 'CST 01 · 3%', ipi: 'Não tributado' },
+  { id: 'r2', code: 'ALM-0027', desc: 'Feijão carioca tipo 1 · fardo 10×1 kg', kind: 'produto', ncm: '0713.33.19', cest: '—', cfop: '5102', un: 'FD', origem: '0 · Nacional', price: 89.5, status: 'ativo', icms: 'CST 00 · 12%', pis: 'CST 01 · 0,65%', cofins: 'CST 01 · 3%', ipi: 'Não tributado' },
+  { id: 'r3', code: 'ALM-0103', desc: 'Óleo de soja refinado 900 ml · cx 20 un', kind: 'produto', ncm: '1507.90.11', cest: '17.019.00', cfop: '5405', un: 'CX', origem: '0 · Nacional', price: 148.0, status: 'ativo', icms: 'CST 60 · ST retido', pis: 'CST 01 · 0,65%', cofins: 'CST 01 · 3%', ipi: 'Não tributado' },
+  { id: 'r4', code: 'BEB-0310', desc: 'Café torrado e moído 500 g · cx 10 un', kind: 'produto', ncm: '0901.21.00', cest: '—', cfop: '5102', un: 'CX', origem: '0 · Nacional', price: 214.0, status: 'ativo', icms: 'CST 00 · 18%', pis: 'CST 01 · 0,65%', cofins: 'CST 01 · 3%', ipi: 'Não tributado' },
+  { id: 'r5', code: 'MOV-1004', desc: 'Cadeira em pinus maciço · acabamento natural', kind: 'produto', ncm: '9401.61.00', cest: '—', cfop: '5101', un: 'UN', origem: '0 · Nacional', price: 389.0, status: 'ativo', icms: 'CSOSN 101 · crédito 2,56%', pis: 'CST 49', cofins: 'CST 49', ipi: 'CST 99' },
+  { id: 'r6', code: 'MOV-1022', desc: 'Mesa de jantar 6 lugares · imbuia', kind: 'produto', ncm: '9403.60.00', cest: '—', cfop: '5101', un: 'UN', origem: '0 · Nacional', price: 2890.0, status: 'ativo', icms: 'CSOSN 101 · crédito 2,56%', pis: 'CST 49', cofins: 'CST 49', ipi: 'CST 99' },
+  { id: 'r7', code: 'SRV-0001', desc: 'Desenvolvimento de software sob encomenda', kind: 'servico', ncm: '—', cest: '—', cfop: '—', un: 'H', origem: '—', price: 185.0, status: 'ativo', lc116: '1.04', iss: '2% · retido: não', cnae: '6201-5/01', pis: '—', cofins: '—', icms: '—', ipi: '—' },
+  { id: 'r8', code: 'SRV-0004', desc: 'Suporte técnico e manutenção de sistemas', kind: 'servico', ncm: '—', cest: '—', cfop: '—', un: 'MÊS', origem: '—', price: 1450.0, status: 'ativo', lc116: '1.07', iss: '2% · retido: não', cnae: '6209-1/00', pis: '—', cofins: '—', icms: '—', ipi: '—' },
+  { id: 'r9', code: 'SRV-0009', desc: 'Consultoria em tecnologia da informação', kind: 'servico', ncm: '—', cest: '—', cfop: '—', un: 'H', origem: '—', price: 240.0, status: 'inativo', lc116: '1.06', iss: '2% · retido: sim', cnae: '6204-0/00', pis: '—', cofins: '—', icms: '—', ipi: '—' },
+  { id: 'r10', code: 'ALM-0150', desc: 'Açúcar cristal 5 kg · fardo 6 un', kind: 'produto', ncm: '1701.14.00', cest: '—', cfop: '5102', un: 'FD', origem: '0 · Nacional', price: 118.4, status: 'ativo', icms: 'CST 00 · 12%', pis: 'CST 01 · 0,65%', cofins: 'CST 01 · 3%', ipi: 'Não tributado' }
+];
+
+const PROVIDERS = [
+  { id: 'p1', name: 'Focus NFe', kind: 'API REST', status: 'conectado', envs: ['Homologação', 'Produção'], docs: ['NF-e', 'NFC-e', 'NFS-e', 'CT-e', 'MDF-e'], sync: 'há 2 min', latency: 320, uptime: '99,96%', companies: ['c1', 'c3'], active: true, site: 'doc.focusnfe.com.br' },
+  { id: 'p2', name: 'Fiscalia API', kind: 'API REST', status: 'degradado', envs: ['Homologação', 'Produção'], docs: ['NF-e', 'NFC-e'], sync: 'há 18 min', latency: 2840, uptime: '97,10%', companies: ['c2'], active: true, demo: true },
+  { id: 'p3', name: 'Emissor direto SEFAZ', kind: 'Webservice SOAP', status: 'conectado', envs: ['Homologação', 'Produção'], docs: ['NF-e', 'CT-e', 'MDF-e'], sync: 'há 6 min', latency: 610, uptime: '99,80%', companies: ['c4'], active: true, demo: true },
+  { id: 'p4', name: 'NotaHub', kind: 'API REST', status: 'inativo', envs: ['Homologação'], docs: ['NFS-e'], sync: '—', latency: 0, uptime: '—', companies: [], active: false, demo: true }
+];
+
+const REJ = {
+  '233': { code: '233', msg: 'IE do destinatário não cadastrada', fix: 'Confirme a inscrição estadual do cliente no cadastro ou marque-o como não contribuinte. Depois, reenvie o documento.', field: 'Destinatário · Inscrição estadual' },
+  '778': { code: '778', msg: 'Informado NCM inexistente', fix: 'O NCM de um item não existe na tabela vigente. Revise o cadastro do produto e reenvie.', field: 'Item 2 · NCM' },
+  '539': { code: '539', msg: 'Duplicidade de NF-e, com diferença na chave de acesso', fix: 'Já existe nota com esse número e série. Consulte a numeração e ajuste a próxima nota da série.', field: 'Número / série' },
+  '302': { code: '302', msg: 'Uso denegado: irregularidade fiscal do destinatário', fix: 'A SEFAZ bloqueou a operação por situação cadastral do destinatário. Não é possível cancelar nem reenviar com o mesmo número.', field: 'Destinatário' }
+};
+
+function onlyDigits(s) { return (s || '').replace(/\D/g, ''); }
+function makeKey(c, modelo, serie, num, seed) {
+  const uf = c.uf === 'SC' ? '42' : '41';
+  const s = String(serie).replace(/\D/g, '') || '1';
+  const k = uf + '2611' + onlyDigits(c.cnpj) + modelo + s.padStart(3, '0') + String(num).padStart(9, '0') + '1' + String(10000000 + seed * 7919).slice(-8);
+  let sum = 0; for (let i = 0; i < k.length; i++) sum += +k[i] * (2 + (i % 8));
+  return (k + (sum % 10)).slice(0, 44);
+}
+
+function buildDocs() {
+  const seeds = [
+    ['c1', 'NF-e', 1248, 'k1', 0, '10:42', 'autorizada', 'p1', [['r1', 40], ['r2', 30], ['r4', 12]]],
+    ['c1', 'NF-e', 1247, 'k3', 0, '09:18', 'rejeitada', 'p1', [['r3', 6], ['r1', 4]], '233'],
+    ['c3', 'NFS-e', 87, 'k7', 0, '08:55', 'processando', 'p1', [['r8', 1]]],
+    ['c1', 'NFC-e', 3391, null, 0, '08:31', 'autorizada', 'p1', [['r4', 1]]],
+    ['c2', 'NF-e', 411, 'k8', 1, '17:40', 'erro', 'p2', [['r5', 4], ['r6', 1]]],
+    ['c1', 'NF-e', 1246, 'k5', 1, '15:02', 'autorizada', 'p1', [['r1', 20], ['r10', 15], ['r4', 8]]],
+    ['c4', 'NF-e', 5309, 'k6', 1, '11:27', 'pendente', 'p3', [['r1', 120]]],
+    ['c1', 'NF-e', 1245, 'k2', 2, '16:12', 'cancelada', 'p1', [['r2', 10]]],
+    ['c3', 'NFS-e', 86, 'k7', 2, '10:05', 'autorizada', 'p1', [['r7', 64]]],
+    ['c1', 'NF-e', 1244, 'k1', 3, '14:48', 'rejeitada', 'p1', [['r3', 10], ['r2', 12]], '778'],
+    ['c2', 'NF-e', 410, 'k4', 3, '09:30', 'autorizada', 'p2', [['r5', 6]]],
+    ['c4', 'CT-e', 902, 'k6', 4, '18:22', 'autorizada', 'p3', [['r1', 1]]],
+    ['c1', 'NF-e', 1243, 'k5', 4, '13:10', 'autorizada', 'p1', [['r4', 30], ['r10', 20]]],
+    ['c4', 'NF-e', 5308, 'k6', 5, '10:44', 'denegada', 'p3', [['r1', 60]], '302'],
+    ['c1', 'NFC-e', 3390, null, 5, '19:51', 'autorizada', 'p1', [['r10', 2]]],
+    ['c3', 'NFS-e', 85, 'k7', 6, '09:02', 'autorizada', 'p1', [['r8', 1]]],
+    ['c1', 'NF-e', 1242, 'k2', 7, '11:36', 'autorizada', 'p1', [['r1', 8], ['r2', 8]]],
+    ['c2', 'NF-e', 409, 'k8', 8, '15:15', 'autorizada', 'p2', [['r6', 2]]],
+    ['c4', 'MDF-e', 77, null, 9, '07:40', 'autorizada', 'p3', [['r1', 1]]],
+    ['c1', 'NF-e', 1241, 'k1', 10, '10:20', 'pendente', 'p1', [['r4', 5]]]
+  ];
+  const base = new Date(2026, 10, 3);
+  return seeds.map((s, i) => {
+    const [cid, type, num, kid, ago, hm, status, pid, its, rej] = s;
+    const c = COMPANIES.find(x => x.id === cid);
+    const k = CLIENTS.find(x => x.id === kid);
+    const d = new Date(base); d.setDate(d.getDate() - ago);
+    const dd = String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + d.getFullYear();
+    const items = its.map(([pidr, q]) => { const p = PRODUCTS.find(x => x.id === pidr); return { prodId: pidr, qty: q, price: p.price }; });
+    let value = items.reduce((a, it) => a + it.qty * it.price, 0);
+    if (type === 'CT-e') value = 3480; if (type === 'MDF-e') value = 0;
+    const modelo = { 'NF-e': '55', 'NFC-e': '65', 'CT-e': '57', 'MDF-e': '58', 'NFS-e': '—' }[type];
+    const serie = type === 'NFS-e' ? c.serie : type === 'NFC-e' ? '2' : c.serie;
+    return {
+      id: 'd' + (i + 1), type, modelo, num, serie, companyId: cid, clientId: kid,
+      dest: k ? k.name : (type === 'MDF-e' ? 'Manifesto de carga' : 'Consumidor final'), destDoc: k ? k.doc : '—',
+      date: dd, time: hm, ago, value, status, providerId: pid, env: 'homologacao',
+      key: type === 'NFS-e' ? null : makeKey(c, modelo, serie, num, i + 3),
+      verif: type === 'NFS-e' ? ('SV' + (4400 + num) + '-X' + (i * 37 % 97)) : null,
+      protocol: ['autorizada', 'cancelada', 'denegada'].includes(status) ? '1412600' + String(48812390 + i * 1313) : null,
+      items, rej: rej ? REJ[rej] : null,
+      techError: status === 'erro' ? { code: 'HTTP 504', msg: 'Tempo de resposta do provedor Fiscalia API esgotado (30 s).', fix: 'O documento não chegou à SEFAZ. Nenhuma numeração foi consumida. Reenvie agora ou aguarde a nova tentativa automática.' } : null
+    };
+  });
+}
+
+class Component extends DCLogic {
+  state = (() => {
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem('opennfe.nav') || '{}'); } catch (e) { }
+    return {
+      route: saved.route || 'dashboard', param: saved.param || null, env: 'homologacao', companyId: 'c1',
+      collapsed: !!saved.collapsed, drawer: false, w: typeof window !== 'undefined' ? window.innerWidth : 1440,
+      menu: null, q: '', toasts: [], envModal: false, envAck: false, helpOpen: false, read: false,
+      docs: buildDocs(), clients: CLIENTS.slice(), products: PRODUCTS.slice(), companies: COMPANIES.map(c => ({ ...c })), providers: PROVIDERS.map(p => ({ ...p }))
+    };
+  })();
+
+  componentDidMount() {
+    this._r = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this._r);
+    this._k = e => {
+      const tag = (e.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') { if (e.key === 'Escape') this.setState({ menu: null }); return; }
+      if (e.key === '/') { e.preventDefault(); const i = document.querySelector('input[aria-label="Busca global"]'); i && i.focus(); }
+      if (e.key === 'n' || e.key === 'N') this.go('emitir');
+      if (e.key === 'Escape') this.setState({ menu: null, drawer: false });
+    };
+    window.addEventListener('keydown', this._k);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._r); window.removeEventListener('keydown', this._k); }
+
+  persist(p) { try { localStorage.setItem('opennfe.nav', JSON.stringify({ route: this.state.route, param: this.state.param, collapsed: this.state.collapsed, ...p })); } catch (e) { } }
+  go = (route, param = null) => { this.setState({ route, param, drawer: false, menu: null, q: '' }); this.persist({ route, param }); try { window.scrollTo(0, 0); } catch (e) { } };
+  toast = (tone, title, message) => {
+    const id = Date.now() + Math.random();
+    this.setState(s => ({ toasts: [...s.toasts, { id, tone, title, message }] }));
+    setTimeout(() => this.setState(s => ({ toasts: s.toasts.filter(t => t.id !== id) })), 4800);
+  };
+
+  renderVals() {
+    const s = this.state;
+    const mobile = s.w < 760, tablet = s.w < 1100;
+    const collapsed = !mobile && (s.collapsed || (tablet && s.collapsed !== false && s.w < 1100 && s.collapsedAuto !== false && s.collapsed));
+    const isCollapsed = mobile ? false : (s.collapsed || (tablet && !s.forceExpand));
+    const expanded = mobile || !isCollapsed;
+    const sbW = mobile ? 280 : (isCollapsed ? 68 : 256);
+    const company = s.companies.find(c => c.id === s.companyId) || s.companies[0];
+    company.initials = company.fantasia.split(/\s+/).filter(w => w.length > 2 || /[A-Z]/.test(w[0])).slice(0, 2).map(w => w[0]).join('').toUpperCase();
+    const docsC = s.docs.filter(d => d.companyId === company.id);
+    const attention = docsC.filter(d => ['rejeitada', 'erro', 'pendente'].includes(d.status)).length;
+    const provWarn = s.providers.some(p => p.active && p.status !== 'conectado');
+    const activeRoute = s.route === 'documento' ? 'documentos' : s.route;
+    const mk = (id, label, icon, extra = {}) => {
+      const act = activeRoute === id;
+      return {
+        id, label, icon: IC(icon), go: () => this.go(id), current: act ? 'page' : undefined,
+        bg: act ? 'rgba(255,255,255,.10)' : 'transparent', fg: act ? '#fff' : '#c9cbcd', fw: act ? 500 : 400,
+        ic: act ? 'var(--amber-300)' : '#9ea3a6', bar: act ? 'var(--amber-400)' : 'transparent',
+        hasCount: !!extra.count, count: extra.count, cBg: extra.cBg || 'var(--danger-500)', cFg: extra.cFg || '#fff',
+        showDot: !expanded && !!extra.count
+      };
+    };
+    const nav = [
+      { k: 'OPERAÇÃO', items: [mk('dashboard', 'Dashboard', 'layout-dashboard'), mk('documentos', 'Documentos fiscais', 'files', { count: attention || null, cBg: 'var(--amber-400)', cFg: 'var(--charcoal-900)' }), mk('emitir', 'Emitir documento', 'file-plus')] },
+      { k: 'CADASTROS', items: [mk('empresas', 'Empresas', 'building-2', company.cert.state !== 'ok' || s.companies.some(c => c.cert.state === 'expired') ? { count: s.companies.filter(c => c.cert.state !== 'ok').length, cBg: 'var(--danger-500)' } : {}), mk('clientes', 'Clientes', 'users'), mk('produtos', 'Produtos e serviços', 'package')] },
+      { k: 'FERRAMENTAS', items: [mk('importacao', 'Importação de XML', 'file-up'), mk('relatorios', 'Relatórios', 'chart-column'), mk('integracoes', 'Integrações', 'plug', provWarn ? { count: '!', cBg: 'var(--amber-400)', cFg: 'var(--charcoal-900)' } : {})] },
+      { k: 'SISTEMA', items: [mk('configuracoes', 'Configurações', 'settings')] }
+    ];
+    const isHomolog = s.env === 'homologacao';
+    const envH = isHomolog ? { bg: 'var(--grad-highlight-bar)', fg: 'var(--charcoal-900)', bd: 'var(--orange-700)', dot: 'var(--charcoal-900)' } : { bg: 'transparent', fg: 'var(--text-muted-aa)', bd: 'transparent', dot: 'var(--neutral-500)' };
+    const envP = !isHomolog ? { bg: 'var(--success-700)', fg: '#fff', bd: '#2d5216', dot: '#bfe3a5' } : { bg: 'transparent', fg: 'var(--text-muted-aa)', bd: 'transparent', dot: 'var(--neutral-500)' };
+
+    const q = s.q.trim().toLowerCase();
+    let results = [];
+    if (q.length >= 2) {
+      const qd = q.replace(/\D/g, '');
+      s.docs.forEach(d => { if (String(d.num).includes(q) || d.dest.toLowerCase().includes(q) || (qd.length > 3 && d.key && d.key.includes(qd))) results.push({ kind: d.type, title: d.type + ' nº ' + d.num + ' · ' + d.dest, sub: d.date + ' · ' + brl(d.value) + ' · ' + STATUS[d.status].label, icon: IC('file-text'), go: () => this.go('documento', d.id) }); });
+      s.clients.forEach(c => { if (c.name.toLowerCase().includes(q) || (qd.length > 3 && onlyDigits(c.doc).includes(qd))) results.push({ kind: 'CLIENTE', title: c.name, sub: c.doc + ' · ' + c.city + '/' + c.uf, icon: IC('user'), go: () => this.go('clientes', c.id) }); });
+      s.products.forEach(p => { if (p.desc.toLowerCase().includes(q) || p.code.toLowerCase().includes(q)) results.push({ kind: p.kind === 'servico' ? 'SERVIÇO' : 'PRODUTO', title: p.desc, sub: p.code + ' · ' + brl(p.price), icon: IC(p.kind === 'servico' ? 'briefcase' : 'package'), go: () => this.go('produtos', p.id) }); });
+      results = results.slice(0, 7);
+    }
+    const notifs = [
+      { title: 'Certificado A1 vencido', body: 'Coop. Vale do Iguaçu não consegue emitir até renovar o certificado.', when: 'há 6 dias', icon: IC('shield-alert'), tBg: 'var(--danger-100)', tFg: 'var(--danger-700)', go: () => this.go('empresas', 'c4') },
+      { title: 'NF-e 1247 rejeitada · cód. 233', body: 'IE do destinatário não cadastrada. Corrija o cliente e reenvie.', when: 'hoje, 09:18', icon: IC('circle-x'), tBg: 'var(--danger-100)', tFg: 'var(--danger-700)', go: () => this.go('documento', 'd2') },
+      { title: 'Fiscalia API com lentidão', body: 'Tempo médio de 2,8 s nas últimas 2 h. 1 documento aguardando reenvio.', when: 'há 18 min', icon: IC('activity'), tBg: 'var(--warning-100)', tFg: 'var(--orange-800)', go: () => this.go('integracoes', 'p2') },
+      { title: 'Certificado vence em 12 dias', body: 'Ateliê Pinhão · renove antes de 15/11/2026.', when: 'ontem', icon: IC('shield'), tBg: 'var(--warning-100)', tFg: 'var(--orange-800)', go: () => this.go('empresas', 'c2') }
+    ].map(n => ({ ...n, bg: s.read ? '#fff' : 'rgba(61,126,166,.05)' }));
+
+    const app = {
+      data: { companies: s.companies, clients: s.clients, products: s.products, providers: s.providers, docs: s.docs, status: STATUS, rej: REJ },
+      env: s.env, isHomolog, company, companyId: company.id, mobile, tablet, w: s.w, param: s.param,
+      go: this.go, toast: this.toast, brl, IC,
+      setCompany: id => { this.setState({ companyId: id }); },
+      addDoc: d => { const id = 'd' + (s.docs.length + 100 + Math.floor(Math.random() * 900)); this.setState(st => ({ docs: [{ ...d, id }, ...st.docs] })); return id; },
+      updateDoc: (id, patch) => this.setState(st => ({ docs: st.docs.map(d => d.id === id ? { ...d, ...patch } : d) })),
+      addClient: c => { const id = 'k' + (s.clients.length + 1) + Date.now() % 1000; this.setState(st => ({ clients: [{ ...c, id }, ...st.clients] })); return id; },
+      updateClient: (id, patch) => this.setState(st => ({ clients: st.clients.map(c => c.id === id ? { ...c, ...patch } : c) })),
+      addProduct: p => { const id = 'r' + Date.now() % 100000; this.setState(st => ({ products: [{ ...p, id }, ...st.products] })); return id; },
+      updateProduct: (id, patch) => this.setState(st => ({ products: st.products.map(c => c.id === id ? { ...c, ...patch } : c) })),
+      addCompany: c => { const id = 'c' + Date.now() % 100000; this.setState(st => ({ companies: [...st.companies, { ...c, id }] })); return id; },
+      updateCompany: (id, patch) => this.setState(st => ({ companies: st.companies.map(c => c.id === id ? { ...c, ...patch } : c) })),
+      addProvider: p => { const id = 'p' + Date.now() % 100000; this.setState(st => ({ providers: [...st.providers, { ...p, id }] })); return id; },
+      updateProvider: (id, patch) => this.setState(st => ({ providers: st.providers.map(c => c.id === id ? { ...c, ...patch } : c) }))
+    };
+
+    const r = {}; ['dashboard', 'documentos', 'documento', 'emitir', 'empresas', 'clientes', 'produtos', 'importacao', 'relatorios', 'integracoes', 'configuracoes'].forEach(k => r[k] = s.route === k);
+    const used = 1284 + s.docs.length - 20;
+    return {
+      r, app, nav, expanded, mobile, company,
+      sbWidth: sbW + 'px', sbTransform: mobile && !s.drawer ? 'translateX(-100%)' : 'none',
+      mainOffset: mobile ? '0px' : sbW + 'px', drawerOpen: mobile && s.drawer,
+      showCollapseBtn: !mobile && expanded, showExpandBtn: !mobile && !expanded, collapsedSep: !expanded,
+      itemPad: expanded ? '12px' : '0px', itemJustify: expanded ? 'flex-start' : 'center',
+      hPad: mobile ? '12px' : '20px', mainPad: mobile ? '16px 14px 48px' : (tablet ? '22px 20px 56px' : '26px 32px 64px'),
+      companyNameMax: mobile ? '110px' : (tablet ? '150px' : '220px'),
+      showSearch: !mobile, showHelp: !mobile, showProfileName: s.w >= 1280,
+      usageLabel: used.toLocaleString('pt-BR') + ' / 2.000', usagePct: Math.round(used / 20) + '%',
+      toggleCollapse: () => { const v = !isCollapsed; this.setState({ collapsed: v, forceExpand: !v }); this.persist({ collapsed: v }); },
+      openDrawer: () => this.setState({ drawer: true }), closeDrawer: () => this.setState({ drawer: false }),
+      goDashboard: () => this.go('dashboard'), goEmitir: () => this.go('emitir'), goConfig: () => this.go('configuracoes'), goEmpresas: () => this.go('empresas'),
+      companyMenuOpen: s.menu === 'company', toggleCompanyMenu: () => this.setState({ menu: s.menu === 'company' ? null : 'company' }),
+      companyOptions: s.companies.map(c => ({
+        ...c, initials: c.fantasia.split(/\s+/).filter(w => w.length > 2).slice(0, 2).map(w => w[0]).join('').toUpperCase(),
+        active: c.id === company.id, bg: c.id === company.id ? 'var(--info-100)' : 'transparent',
+        certWarn: c.cert.state !== 'ok', certShort: c.cert.state === 'expired' ? 'CERT. VENCIDO' : c.cert.days + ' DIAS',
+        certLabel: 'Certificado digital: ' + c.cert.until, certBg: c.cert.state === 'expired' ? 'var(--danger-100)' : 'var(--warning-100)', certFg: c.cert.state === 'expired' ? 'var(--danger-700)' : 'var(--orange-800)',
+        pick: () => { this.setState({ companyId: c.id, menu: null }); this.toast('info', 'Empresa ativa alterada', c.fantasia + ' · ' + c.cnpj); }
+      })),
+      q: s.q, onSearch: e => this.setState({ q: e.target.value, menu: 'search' }), onSearchFocus: () => this.setState({ menu: 'search' }),
+      searchOpen: s.menu === 'search' && q.length >= 2, results, hasResults: results.length > 0, noResults: results.length === 0,
+      isHomolog, isProd: !isHomolog, envH, envP, envHLabel: mobile ? 'HOM' : 'HOMOLOGAÇÃO', envPLabel: mobile ? 'PROD' : 'PRODUÇÃO',
+      homologMsg: mobile ? 'sem validade fiscal' : 'ambiente de testes · documentos emitidos aqui não têm validade fiscal',
+      setHomolog: () => { if (!isHomolog) { this.setState({ env: 'homologacao' }); this.toast('warning', 'Ambiente de homologação', 'Emissões a partir de agora são apenas testes.'); } },
+      askProducao: () => { if (isHomolog) this.setState({ envModal: true, envAck: false, menu: null }); },
+      envModal: s.envModal, envAck: s.envAck, envAckMissing: !s.envAck,
+      toggleEnvAck: e => this.setState({ envAck: e.target.checked }),
+      closeEnvModal: () => this.setState({ envModal: false }),
+      confirmProducao: () => { this.setState({ env: 'producao', envModal: false }); this.toast('success', 'Produção ativa', 'Documentos transmitidos terão validade fiscal.'); },
+      helpOpen: s.helpOpen, toggleHelp: () => this.setState({ helpOpen: !s.helpOpen }),
+      helpItems: [
+        { t: 'Rejeição fiscal × falha técnica', d: 'Rejeição é a resposta da SEFAZ/prefeitura a um dado inválido — corrija o campo indicado e reenvie. Falha técnica é um problema de comunicação com o provedor — o documento não chegou ao fisco e pode ser reenviado sem alterações.' },
+        { t: 'Homologação e produção', d: 'Homologação é o ambiente de testes, sinalizado pela faixa âmbar no topo. Em produção a faixa some e o indicador fica verde.' },
+        { t: 'Provedores fiscais', d: 'Cada empresa usa um provedor configurado em Integrações. Trocar de provedor não altera o fluxo de emissão.' },
+        { t: 'Prazos de cancelamento', d: 'NF-e pode ser cancelada em até 24 h após a autorização (prazo de referência; confirme a regra da sua UF).' }
+      ],
+      notifOpen: s.menu === 'notif', toggleNotif: () => this.setState({ menu: s.menu === 'notif' ? null : 'notif' }),
+      notifs: notifs.map(n => ({ ...n, go: () => { n.go(); this.setState({ read: true }); } })), unread: s.read ? 0 : notifs.length, hasUnread: !s.read,
+      markAllRead: () => this.setState({ read: true }),
+      profileOpen: s.menu === 'profile', toggleProfile: () => this.setState({ menu: s.menu === 'profile' ? null : 'profile' }),
+      profileItems: [
+        { label: 'Meu perfil', icon: IC('user'), fg: 'var(--text-body)', go: () => this.go('configuracoes', 'seguranca') },
+        { label: 'Configurações', icon: IC('settings'), fg: 'var(--text-body)', go: () => this.go('configuracoes') },
+        { label: 'Design system', icon: IC('swatch-book'), fg: 'var(--text-body)', go: () => { window.location.href = 'OpenNFE Design System.dc.html'; } },
+        { label: 'Sair', icon: IC('log-out'), fg: 'var(--danger-700)', go: () => { this.setState({ menu: null }); this.toast('neutral', 'Sessão de demonstração', 'Em produção, isso encerraria a sessão.'); } }
+      ],
+      anyMenuOpen: !!s.menu && s.menu !== 'search' || (s.menu === 'search' && q.length >= 2),
+      closeMenus: () => this.setState({ menu: null }),
+      toasts: s.toasts, dismissToast: id => this.setState(st => ({ toasts: st.toasts.filter(t => t.id !== id) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

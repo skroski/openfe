@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+</helmet>
+<div style="display:grid;gap:18px;min-width:0" data-screen-label="Importação de XML">
+  <div style="display:grid;gap:6px">
+    <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">FERRAMENTAS</span>
+    <h1 style="margin:0;font:300 30px/1.1 var(--font-sans);color:var(--text-heading)"><strong style="font-weight:500">Importação</strong> de XML</h1>
+    <span style="font:14px/1.4 var(--font-sans);color:var(--text-muted-aa)">Traga documentos emitidos em outros sistemas. Cada arquivo é validado, deduplicado pela chave de acesso e vinculado à empresa pelo CNPJ.</span>
+  </div>
+
+  <div onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}" style="display:grid;justify-items:center;gap:10px;padding:34px 20px;text-align:center;border:2px dashed {{ dzBd }};border-radius:var(--radius-md);background:{{ dzBg }};transition:var(--transition-control)">
+    <span aria-hidden="true" style="width:46px;height:46px;border-radius:var(--radius-md);background:#fff;border:1px solid var(--border-subtle);display:flex;align-items:center;justify-content:center"><span style="width:22px;height:22px;background:var(--info-700);mask:url(https://unpkg.com/lucide-static@0.544.0/icons/file-up.svg) center/contain no-repeat"></span></span>
+    <strong style="font:500 17px/1.3 var(--font-sans)">Arraste arquivos XML ou ZIP para cá</strong>
+    <span style="font:13.5px/1.5 var(--font-sans);color:var(--text-muted-aa)">NF-e, NFC-e, CT-e e NFS-e (padrão nacional) · até 500 arquivos ou 50 MB por lote</span>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center">
+      <div style="width:260px"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.FileInput" accept=".xml,.zip" multiple="{{ true }}" on-change="{{ onFiles }}" hint-size="260px,34px"></x-import></div>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ useSample }}" hint-size="190px,34px">usar lote de exemplo</x-import>
+    </div>
+  </div>
+
+  <sc-if value="{{ hasBatch }}" hint-placeholder-val="{{ false }}">
+    <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06)">
+      <header style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+        <div style="display:grid;gap:3px">
+          <h2 style="margin:0;font:300 19px/1.2 var(--font-sans)"><strong style="font-weight:500">Lote</strong> {{ batchName }}</h2>
+          <span style="font:12.5px/1.3 var(--font-sans);color:var(--text-muted-aa)">{{ batchSub }}</span>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="ghost" size="sm" on-click="{{ clearBatch }}" hint-size="90px,26px">descartar lote</x-import>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" size="sm" disabled="{{ cantImport }}" loading="{{ importing }}" on-click="{{ doImport }}" hint-size="170px,26px">{{ importLabel }}</x-import>
+        </div>
+      </header>
+      <div style="padding:14px 18px;display:grid;gap:14px">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Progress" value="{{ progress }}" max="{{ 100 }}" label="{{ progressLabel }}" show-value="{{ true }}" hint-size="100%,30px"></x-import>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ summary }}" as="x" hint-placeholder-count="4">
+            <span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px;border-radius:var(--radius-sm);background:{{ x.bg }};color:{{ x.fg }};font:500 13px/1 var(--font-sans)"><strong style="font:600 14px/1 var(--font-mono)">{{ x.n }}</strong>{{ x.l }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:860px">
+          <thead><tr style="text-align:left;color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase;border-top:1px solid var(--border-subtle)">
+            <th style="padding:9px 18px;border-bottom:1px solid var(--border-subtle)">Arquivo</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle)">Documento</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle)">Emitente</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle);text-align:right">Valor</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle)">Validação</th><th style="padding:9px 18px 9px 12px;border-bottom:1px solid var(--border-subtle);text-align:right"></th>
+          </tr></thead>
+          <tbody>
+            <sc-for list="{{ files }}" as="f" hint-placeholder-count="6">
+              <tr style="border-bottom:1px solid var(--neutral-100)">
+                <td style="padding:9px 18px"><div style="display:flex;gap:10px;align-items:center"><span style="width:30px;height:22px;flex:none;border-radius:var(--radius-xs);background:var(--neutral-200);display:flex;align-items:center;justify-content:center;font:600 9.5px/1 var(--font-display);letter-spacing:.06em">XML</span><span style="font:12.5px/1.3 var(--font-mono);word-break:break-all">{{ f.name }}</span></div></td>
+                <td style="padding:9px 12px;white-space:nowrap">{{ f.docTxt }}</td>
+                <td style="padding:9px 12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ f.emit }}</td>
+                <td style="padding:9px 12px;text-align:right;font:500 12.5px/1 var(--font-mono);white-space:nowrap">{{ f.valueF }}</td>
+                <td style="padding:9px 12px">
+                  <sc-if value="{{ f.pending }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;gap:8px;align-items:center;color:var(--text-muted-aa)"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Loading" size="xs" label="Validando" hint-size="14px,14px"></x-import>validando…</span></sc-if>
+                  <sc-if value="{{ f.done }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:grid;gap:3px"><span style="display:inline-flex;width:fit-content;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:var(--radius-pill);background:{{ f.bg }};color:{{ f.fg }};font:600 11px/1 var(--font-display);letter-spacing:.06em;text-transform:uppercase">{{ f.label }}</span><span style="font:12px/1.35 var(--font-sans);color:var(--text-muted-aa)">{{ f.msg }}</span></div>
+                  </sc-if>
+                </td>
+                <td style="padding:9px 18px 9px 12px;text-align:right"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="xs" disabled="{{ f.noView }}" on-click="{{ f.view }}" hint-size="80px,24px">visualizar</x-import></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </sc-if>
+
+  <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06)">
+    <header style="padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+      <h2 style="margin:0;font:300 19px/1.2 var(--font-sans)"><strong style="font-weight:500">Histórico</strong> de importações</h2>
+    </header>
+    <div style="overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:760px">
+        <thead><tr style="text-align:left;color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase">
+          <th style="padding:9px 18px;border-bottom:1px solid var(--border-subtle)">Data</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle)">Usuário</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle)">Origem</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle);text-align:right">Arquivos</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle);text-align:right">Importados</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle);text-align:right">Duplicados</th><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle);text-align:right">Erros</th><th style="padding:9px 18px 9px 12px;border-bottom:1px solid var(--border-subtle)">Status</th>
+        </tr></thead>
+        <tbody>
+          <sc-for list="{{ history }}" as="h" hint-placeholder-count="4">
+            <tr style="border-bottom:1px solid var(--neutral-100)">
+              <td style="padding:9px 18px;white-space:nowrap;font:12.5px/1 var(--font-mono)">{{ h.date }}</td><td style="padding:9px 12px">{{ h.user }}</td><td style="padding:9px 12px">{{ h.src }}</td>
+              <td style="padding:9px 12px;text-align:right;font:12.5px/1 var(--font-mono)">{{ h.files }}</td><td style="padding:9px 12px;text-align:right;font:12.5px/1 var(--font-mono);color:var(--success-700)">{{ h.ok }}</td><td style="padding:9px 12px;text-align:right;font:12.5px/1 var(--font-mono)">{{ h.dup }}</td><td style="padding:9px 12px;text-align:right;font:12.5px/1 var(--font-mono);color:{{ h.errFg }}">{{ h.err }}</td>
+              <td style="padding:9px 18px 9px 12px"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:var(--radius-pill);background:{{ h.bg }};color:{{ h.fg }};font:600 11px/1 var(--font-display);letter-spacing:.06em;text-transform:uppercase">{{ h.status }}</span></td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Modal" open="{{ previewOpen }}" on-close="{{ closePreview }}" title="{{ pvTitle }}" size="md" hint-size="0,0">
+    <div style="display:grid;gap:10px">
+      <sc-for list="{{ pvRows }}" as="r" hint-placeholder-count="6">
+        <div style="display:grid;grid-template-columns:150px 1fr;gap:10px;padding:6px 0;border-bottom:1px solid var(--neutral-100);font:13.5px/1.35 var(--font-sans)"><span style="color:var(--text-muted-aa)">{{ r.l }}</span><span style="font-family:{{ r.ff }};word-break:break-all">{{ r.v }}</span></div>
+      </sc-for>
+    </div>
+  </x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const SAMPLE = [
+  { name: '41261024513887000104550010000012310001234567-nfe.xml', type: 'NF-e', num: 1231, emit: 'Horizonte Alimentos', value: 6420.5, res: 'ok' },
+  { name: '41261024513887000104550010000012320001234568-nfe.xml', type: 'NF-e', num: 1232, emit: 'Horizonte Alimentos', value: 1890.0, res: 'ok' },
+  { name: '41261024513887000104550010000012480001234569-nfe.xml', type: 'NF-e', num: 1248, emit: 'Horizonte Alimentos', value: 18450.9, res: 'dup' },
+  { name: '41261031906442000158550010000004050009981232-nfe.xml', type: 'NF-e', num: 405, emit: 'Ateliê Pinhão', value: 3890.0, res: 'ok' },
+  { name: 'cte_000898_valedoiguacu.xml', type: 'CT-e', num: 898, emit: 'Coop. Vale do Iguaçu', value: 2950.0, res: 'ok' },
+  { name: 'nfe_fornecedor_sem_assinatura.xml', type: 'NF-e', num: 77120, emit: 'Distribuidora Litoral Ltda', value: 912.4, res: 'sig' },
+  { name: '35261099887766000155550010000331200004455661-nfe.xml', type: 'NF-e', num: 33120, emit: 'CNPJ 99.887.766/0001-55', value: 15200.0, res: 'other' },
+  { name: 'planilha_vendas_outubro.xml', type: '—', num: null, emit: '—', value: null, res: 'schema' }
+];
+const RES = {
+  ok: { label: 'Válido', bg: 'var(--success-100)', fg: 'var(--success-700)', msg: 'Schema e assinatura conferidos · pronto para importar' },
+  dup: { label: 'Duplicado', bg: 'var(--warning-100)', fg: 'var(--orange-800)', msg: 'Chave de acesso já existe no OpenNFE · será ignorado' },
+  sig: { label: 'Inválido', bg: 'var(--danger-100)', fg: 'var(--danger-700)', msg: 'Assinatura digital ausente ou corrompida · solicite o XML original ao emitente' },
+  other: { label: 'Sem empresa', bg: 'var(--neutral-100)', fg: 'var(--text-muted-aa)', msg: 'Emitente e destinatário não pertencem às empresas cadastradas' },
+  schema: { label: 'Inválido', bg: 'var(--danger-100)', fg: 'var(--danger-700)', msg: 'Não é um documento fiscal (falha no schema) · verifique o arquivo' }
+};
+class Component extends DCLogic {
+  state = { batch: null, checked: 0, drag: false, importing: false, preview: null, history: [
+    { date: '01/11/2026 16:20', user: 'Renata Moraes', src: 'upload · 42 arquivos', files: 42, ok: 39, dup: 3, err: 0, status: 'concluída' },
+    { date: '28/10/2026 09:02', user: 'Carlos Tavares', src: 'ZIP · fornecedores_out.zip', files: 118, ok: 104, dup: 9, err: 5, status: 'com erros' },
+    { date: '14/10/2026 11:47', user: 'Renata Moraes', src: 'upload · 6 arquivos', files: 6, ok: 6, dup: 0, err: 0, status: 'concluída' },
+    { date: '02/10/2026 08:15', user: 'Integração · webhook', src: 'API · lote 0912', files: 230, ok: 228, dup: 2, err: 0, status: 'concluída' }
+  ] };
+  componentWillUnmount() { clearInterval(this._i); }
+  start(list, name) {
+    clearInterval(this._i);
+    this.setState({ batch: { name, files: list }, checked: 0 });
+    this._i = setInterval(() => { this.setState(s => { const n = s.checked + 1; if (n >= list.length) clearInterval(this._i); return { checked: n }; }); }, 320);
+  }
+  fromFiles(fl) {
+    const arr = Array.from(fl || []);
+    if (!arr.length) return;
+    const list = arr.map((f, i) => { const isXml = /\.xml$/i.test(f.name); const base = SAMPLE[i % 5]; return { ...base, name: f.name, res: isXml ? (i % 6 === 2 ? 'dup' : 'ok') : 'schema' }; });
+    this.start(list, 'upload · ' + arr.length + ' arquivo(s)');
+  }
+  renderVals() {
+    const app = this.props.app || {};
+    const brl = app.brl || (v => v);
+    const s = this.state, b = s.batch;
+    const files = b ? b.files.map((f, i) => {
+      const done = i < s.checked, r = RES[f.res];
+      return { ...f, pending: !done, done, label: r.label, bg: r.bg, fg: r.fg, msg: r.msg, docTxt: f.num ? f.type + ' nº ' + f.num : '—', valueF: f.value != null ? brl(f.value) : '—', noView: !done || f.res === 'schema', view: () => this.setState({ preview: f }) };
+    }) : [];
+    const doneFiles = b ? b.files.slice(0, s.checked) : [];
+    const cnt = k => doneFiles.filter(f => k.includes(f.res)).length;
+    const okN = cnt(['ok']);
+    const finished = b && s.checked >= b.files.length;
+    const pv = s.preview;
+    const H = { 'concluída': ['var(--success-100)', 'var(--success-700)'], 'com erros': ['var(--warning-100)', 'var(--orange-800)'] };
+    return {
+      dzBd: s.drag ? 'var(--info-700)' : 'var(--border-strong)', dzBg: s.drag ? 'var(--info-100)' : '#fff',
+      onDragOver: e => { e.preventDefault(); if (!s.drag) this.setState({ drag: true }); }, onDragLeave: () => this.setState({ drag: false }),
+      onDrop: e => { e.preventDefault(); this.setState({ drag: false }); this.fromFiles(e.dataTransfer.files); },
+      onFiles: e => this.fromFiles(e.target.files),
+      useSample: () => this.start(SAMPLE, 'exemplo_outubro.zip'),
+      hasBatch: !!b, batchName: b ? b.name : '', batchSub: b ? b.files.length + ' arquivo(s) · iniciado agora por Renata Moraes' : '',
+      progress: b ? Math.round(s.checked / b.files.length * 100) : 0, progressLabel: finished ? 'Validação concluída' : 'Validando arquivos…',
+      summary: [{ n: okN, l: 'válidos', bg: 'var(--success-100)', fg: 'var(--success-700)' }, { n: cnt(['dup']), l: 'duplicados', bg: 'var(--warning-100)', fg: 'var(--orange-800)' }, { n: cnt(['sig', 'schema']), l: 'inválidos', bg: 'var(--danger-100)', fg: 'var(--danger-700)' }, { n: cnt(['other']), l: 'sem empresa vinculada', bg: 'var(--neutral-100)', fg: 'var(--text-muted-aa)' }],
+      files, cantImport: !finished || okN === 0, importing: s.importing, importLabel: 'importar ' + okN + ' válido(s)',
+      clearBatch: () => { clearInterval(this._i); this.setState({ batch: null, checked: 0 }); },
+      doImport: () => { this.setState({ importing: true }); setTimeout(() => { const d = cnt(['dup']), e = cnt(['sig', 'schema', 'other']); this.setState(x => ({ importing: false, batch: null, checked: 0, history: [{ date: '03/11/2026 ' + new Date().toTimeString().slice(0, 5), user: 'Renata Moraes', src: b.name, files: b.files.length, ok: okN, dup: d, err: e, status: e ? 'com erros' : 'concluída' }, ...x.history] })); app.toast('success', 'Importação concluída', okN + ' documento(s) importado(s) · ' + d + ' duplicado(s) ignorado(s).'); }, 1100); },
+      history: s.history.map(h => ({ ...h, bg: H[h.status][0], fg: H[h.status][1], errFg: h.err ? 'var(--danger-700)' : 'var(--text-body)' })),
+      previewOpen: !!pv, closePreview: () => this.setState({ preview: null }), pvTitle: pv ? (pv.type + ' nº ' + pv.num) : '',
+      pvRows: pv ? [{ l: 'Arquivo', v: pv.name, ff: 'var(--font-mono)' }, { l: 'Tipo', v: pv.type }, { l: 'Emitente', v: pv.emit }, { l: 'Valor total', v: pv.value != null ? brl(pv.value) : '—' }, { l: 'Chave de acesso', v: /^\d{44}/.test(pv.name) ? pv.name.slice(0, 44).replace(/(\d{4})/g, '$1 ').trim() : 'não identificada', ff: 'var(--font-mono)' }, { l: 'Resultado', v: RES[pv.res].label + ' · ' + RES[pv.res].msg }].map(r => ({ ff: 'var(--font-sans)', ...r })) : []
+    };
+  }
+}
+</script>
+</body>
+</html>

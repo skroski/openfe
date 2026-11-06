@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+</helmet>
+<div style="display:grid;gap:18px;min-width:0" data-screen-label="Relatórios">
+  <div style="display:grid;gap:6px">
+    <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">FERRAMENTAS</span>
+    <h1 style="margin:0;font:300 30px/1.1 var(--font-sans);color:var(--text-heading)"><strong style="font-weight:500">Relatórios</strong> fiscais</h1>
+  </div>
+  <div style="display:grid;grid-template-columns:{{ cols }};gap:20px;align-items:start">
+    <nav aria-label="Relatórios disponíveis" style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:6px;display:{{ navDisplay }};gap:2px;overflow-x:auto">
+      <sc-for list="{{ reports }}" as="r" hint-placeholder-count="7">
+        <button onClick="{{ r.pick }}" aria-current="{{ r.cur }}" style="display:flex;align-items:center;gap:10px;min-height:40px;padding:8px 10px;border:0;border-radius:var(--radius-sm);background:{{ r.bg }};color:{{ r.fg }};font:{{ r.fw }} 14px/1.2 var(--font-sans);text-align:left;cursor:pointer;white-space:nowrap;flex:none" style-hover="background:var(--neutral-100)">
+          <span aria-hidden="true" style="width:16px;height:16px;flex:none;background:currentColor;mask:url({{ r.icon }}) center/contain no-repeat"></span>{{ r.label }}
+        </button>
+      </sc-for>
+    </nav>
+    <div style="display:grid;gap:16px;min-width:0">
+      <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06)">
+        <header style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+          <div style="display:grid;gap:3px"><h2 style="margin:0;font:300 21px/1.2 var(--font-sans)"><strong style="font-weight:500">{{ cur.lead }}</strong> {{ cur.rest }}</h2><span style="font:12.5px/1.3 var(--font-sans);color:var(--text-muted-aa)">{{ cur.desc }}</span></div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ exCsv }}" hint-size="60px,26px">CSV</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ exXlsx }}" hint-size="60px,26px">XLSX</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" size="sm" on-click="{{ exPdf }}" hint-size="60px,26px">PDF</x-import>
+          </div>
+        </header>
+        <div style="padding:12px 18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,170px),1fr));gap:10px 12px;border-bottom:1px solid var(--border-subtle)">
+          <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa)">De<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" type="date" value="{{ from }}" on-change="{{ onFrom }}" hint-size="100%,34px"></x-import></label>
+          <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa)">Até<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" type="date" value="{{ to }}" on-change="{{ onTo }}" hint-size="100%,34px"></x-import></label>
+          <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa)">Empresa<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ companyOpts }}" value="{{ company }}" on-change="{{ onCompany }}" hint-size="100%,34px"></x-import></label>
+          <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa)">Tipo<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ typeOpts }}" value="{{ type }}" on-change="{{ onType }}" hint-size="100%,34px"></x-import></label>
+        </div>
+        <div style="padding:16px 18px;display:grid;gap:16px">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Stats" items="{{ stats }}" hint-size="100%,96px"></x-import>
+          <sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:36px 16px;text-align:center;border:1px dashed var(--border-strong);border-radius:var(--radius-md);font:14px/1.5 var(--font-sans);color:var(--text-muted-aa)">Nenhum registro para os filtros selecionados.</div>
+          </sc-if>
+          <sc-if value="{{ notEmpty }}" hint-placeholder-val="{{ true }}">
+            <div style="overflow-x:auto;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+              <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:620px">
+                <thead><tr style="text-align:left;background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase">
+                  <sc-for list="{{ head }}" as="h" hint-placeholder-count="4"><th style="padding:9px 12px;border-bottom:1px solid var(--border-subtle);text-align:{{ h.a }};white-space:nowrap">{{ h.l }}</th></sc-for>
+                </tr></thead>
+                <tbody>
+                  <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+                    <tr onClick="{{ r.open }}" style="border-bottom:1px solid var(--neutral-100);cursor:{{ r.cursor }}" style-hover="background:var(--neutral-050)">
+                      <td style="padding:9px 12px;font-weight:500">{{ r.a }}</td>
+                      <td style="padding:9px 12px;color:var(--text-muted-aa)">{{ r.b }}</td>
+                      <td style="padding:9px 12px;text-align:right;font:12.5px/1 var(--font-mono)">{{ r.c }}</td>
+                      <td style="padding:9px 12px;text-align:right;font:500 12.5px/1 var(--font-mono);white-space:nowrap">{{ r.d }}</td>
+                      <td style="padding:9px 12px;width:28%"><div style="height:8px;border-radius:2px;background:var(--neutral-100);overflow:hidden"><div style="height:100%;width:{{ r.pct }};background:{{ r.color }}"></div></div></td>
+                    </tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+          </sc-if>
+          <span style="font:12px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ footnote }}</span>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const REPORTS = [
+  ['periodo', 'Emissões', 'por período', 'Quantidade e valor autorizados por semana', 'calendar-range'],
+  ['empresa', 'Faturamento', 'por empresa', 'Valor autorizado por CNPJ emissor', 'building-2'],
+  ['destinatario', 'Emissões', 'por destinatário', 'Clientes com maior volume no período', 'users'],
+  ['tipo', 'Emissões', 'por tipo', 'Distribuição entre NF-e, NFC-e, NFS-e, CT-e e MDF-e', 'layers'],
+  ['rejeicoes', 'Rejeições', 'e falhas', 'Códigos de rejeição fiscal e falhas técnicas', 'circle-x'],
+  ['cancelamentos', 'Cancelamentos', 'e denegações', 'Eventos de cancelamento homologados e usos denegados', 'ban'],
+  ['pendentes', 'Documentos', 'pendentes', 'Rascunhos, em processamento e aguardando reenvio', 'clock']
+];
+class Component extends DCLogic {
+  state = { r: 'periodo', from: '2026-10-01', to: '2026-11-03', company: 'todas', type: '' };
+  componentDidMount() { const p = (this.props.app || {}).param; if (p && REPORTS.some(r => r[0] === p)) this.setState({ r: p }); }
+  renderVals() {
+    const app = this.props.app || {};
+    const D = app.data || { docs: [], companies: [], clients: [], status: {} };
+    const brl = app.brl || (v => v), IC = app.IC || (n => n);
+    const s = this.state;
+    const toIso = d => d.date.split('/').reverse().join('-');
+    const docs = D.docs.filter(d => (s.company === 'todas' || d.companyId === s.company) && (!s.type || d.type === s.type) && (!s.from || toIso(d) >= s.from) && (!s.to || toIso(d) <= s.to));
+    const auth = docs.filter(d => d.status === 'autorizada');
+    const sum = a => a.reduce((x, d) => x + d.value, 0);
+    const comp = id => (D.companies.find(c => c.id === id) || {}).fantasia || '—';
+    let head = ['Item', 'Detalhe', 'Qtd.', 'Valor', 'Participação'], rows = [], stats = [], foot = 'Dados demonstrativos gerados a partir dos documentos do protótipo.';
+    const pctOf = (v, max) => (max ? Math.max(2, v / max * 100) : 0) + '%';
+    const groupBy = (arr, key) => { const m = {}; arr.forEach(d => { const k = key(d); (m[k] = m[k] || []).push(d); }); return Object.entries(m); };
+    if (s.r === 'periodo') {
+      const g = groupBy(docs, d => { const day = +d.date.slice(0, 2); return day <= 2 && d.date.slice(3, 5) === '11' ? 'Semana 45 · 02–03/11' : 'Semana 44 · 26/10–01/11'; });
+      const max = Math.max(...g.map(([, a]) => sum(a.filter(d => d.status === 'autorizada'))), 1);
+      head = ['Período', 'Situação', 'Docs', 'Autorizado', 'Volume'];
+      rows = g.map(([k, a]) => { const v = sum(a.filter(d => d.status === 'autorizada')); return { a: k, b: a.filter(d => d.status === 'autorizada').length + ' autorizados · ' + a.filter(d => ['rejeitada', 'erro'].includes(d.status)).length + ' com problema', c: a.length, d: brl(v), pct: pctOf(v, max), color: 'var(--info-700)' }; });
+    } else if (s.r === 'empresa') {
+      const g = groupBy(auth, d => d.companyId); const max = Math.max(...g.map(([, a]) => sum(a)), 1);
+      head = ['Empresa', 'CNPJ', 'Docs', 'Faturamento', 'Participação'];
+      rows = g.sort((x, y) => sum(y[1]) - sum(x[1])).map(([k, a]) => ({ a: comp(k), b: (D.companies.find(c => c.id === k) || {}).cnpj, c: a.length, d: brl(sum(a)), pct: pctOf(sum(a), max), color: 'var(--info-700)' }));
+    } else if (s.r === 'destinatario') {
+      const g = groupBy(auth, d => d.dest); const max = Math.max(...g.map(([, a]) => sum(a)), 1);
+      head = ['Destinatário', 'CPF/CNPJ', 'Docs', 'Valor', 'Participação'];
+      rows = g.sort((x, y) => sum(y[1]) - sum(x[1])).map(([k, a]) => ({ a: k, b: a[0].destDoc, c: a.length, d: brl(sum(a)), pct: pctOf(sum(a), max), color: 'var(--graphite-800)', open: a[0].clientId ? () => app.go('clientes', a[0].clientId) : undefined }));
+    } else if (s.r === 'tipo') {
+      const g = groupBy(docs, d => d.type); const max = Math.max(...g.map(([, a]) => a.length), 1);
+      head = ['Tipo', 'Autorizados', 'Docs', 'Valor', 'Volume'];
+      rows = g.map(([k, a]) => ({ a: k, b: a.filter(d => d.status === 'autorizada').length + ' de ' + a.length, c: a.length, d: brl(sum(a)), pct: pctOf(a.length, max), color: 'var(--slate-500)' }));
+    } else if (s.r === 'rejeicoes') {
+      const a = docs.filter(d => ['rejeitada', 'erro', 'denegada'].includes(d.status));
+      head = ['Documento', 'Motivo', 'Código', 'Valor', 'Natureza'];
+      rows = a.map(d => ({ a: d.type + ' ' + d.num + ' · ' + comp(d.companyId), b: d.rej ? d.rej.msg : d.techError.msg, c: d.rej ? 'SEFAZ ' + d.rej.code : d.techError.code, d: brl(d.value), pct: '100%', color: d.status === 'erro' ? 'var(--graphite-800)' : 'var(--danger-500)', open: () => app.go('documento', d.id) }));
+      foot = 'Barra vermelha: rejeição fiscal (corrigir dado e reenviar). Barra grafite: falha técnica (reenviar sem alterações).';
+    } else if (s.r === 'cancelamentos') {
+      const a = docs.filter(d => ['cancelada', 'denegada'].includes(d.status));
+      head = ['Documento', 'Evento', 'Data', 'Valor', ''];
+      rows = a.map(d => ({ a: d.type + ' ' + d.num + ' · ' + d.dest, b: d.status === 'cancelada' ? 'Cancelamento homologado (110111)' : 'Uso denegado (' + d.rej.code + ')', c: d.date, d: brl(d.value), pct: '100%', color: 'var(--neutral-400)', open: () => app.go('documento', d.id) }));
+    } else {
+      const a = docs.filter(d => ['pendente', 'processando', 'erro'].includes(d.status));
+      head = ['Documento', 'Situação', 'Desde', 'Valor', ''];
+      rows = a.map(d => ({ a: d.type + ' ' + d.num + ' · ' + comp(d.companyId), b: (D.status[d.status] || {}).label, c: d.date, d: brl(d.value), pct: '100%', color: d.status === 'processando' ? 'var(--info-500)' : d.status === 'erro' ? 'var(--graphite-800)' : 'var(--amber-400)', open: () => app.go('documento', d.id) }));
+    }
+    rows = rows.map(r => ({ cursor: r.open ? 'pointer' : 'default', ...r }));
+    stats = [{ label: 'Documentos no filtro', value: String(docs.length) }, { label: 'Autorizados', value: String(auth.length), desc: brl(sum(auth)), trend: 'up' }, { label: 'Com problema', value: String(docs.filter(d => ['rejeitada', 'erro', 'denegada'].includes(d.status)).length), trend: 'down', desc: 'rejeições, falhas e denegações' }, { label: 'Linhas no relatório', value: String(rows.length) }];
+    const cur = REPORTS.find(r => r[0] === s.r);
+    const wide = (app.w || 1400) >= 1100;
+    const ex = k => () => app.toast('success', 'Exportação ' + k + ' gerada', cur[1] + ' ' + cur[2] + ' · ' + rows.length + ' linha(s) (demonstração)');
+    return {
+      cols: wide ? '240px minmax(0,1fr)' : 'minmax(0,1fr)', navDisplay: wide ? 'grid' : 'flex',
+      reports: REPORTS.map(r => ({ label: r[1] + ' ' + r[2], icon: IC(r[4]), cur: s.r === r[0] ? 'page' : undefined, bg: s.r === r[0] ? 'var(--info-100)' : 'transparent', fg: s.r === r[0] ? 'var(--info-700)' : 'var(--text-body)', fw: s.r === r[0] ? 500 : 400, pick: () => this.setState({ r: r[0] }) })),
+      cur: { lead: cur[1], rest: cur[2], desc: cur[3] },
+      from: s.from, to: s.to, onFrom: e => this.setState({ from: e.target.value }), onTo: e => this.setState({ to: e.target.value }),
+      company: s.company, onCompany: e => this.setState({ company: e.target.value }), companyOpts: [{ value: 'todas', label: 'Todas as empresas' }, ...D.companies.map(c => ({ value: c.id, label: c.fantasia }))],
+      type: s.type, onType: e => this.setState({ type: e.target.value }), typeOpts: [{ value: '', label: 'Todos os tipos' }, ...['NF-e', 'NFC-e', 'NFS-e', 'CT-e', 'MDF-e'].map(t => ({ value: t, label: t }))],
+      head: head.map((l, i) => ({ l, a: i >= 2 && i <= 3 ? 'right' : 'left' })), rows, stats, empty: rows.length === 0, notEmpty: rows.length > 0, footnote: foot,
+      exCsv: ex('CSV'), exXlsx: ex('XLSX'), exPdf: ex('PDF')
+    };
+  }
+}
+</script>
+</body>
+</html>

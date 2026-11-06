@@ -1,0 +1,1110 @@
+{
+  "version": "6.0",
+  "nxVersion": "24.0.4",
+  "pathMappings": {
+    "@opennfe/shared": [
+      "./libs/shared/src/index.ts"
+    ],
+    "@opennfe/shared/server": [
+      "./libs/shared/src/server.ts"
+    ],
+    "@opennfe/fiscal": [
+      "./libs/fiscal/src/index.ts"
+    ],
+    "@opennfe/providers": [
+      "./libs/providers/src/index.ts"
+    ],
+    "@opennfe/database": [
+      "./libs/database/src/index.ts"
+    ]
+  },
+  "nxJsonPlugins": [
+    {
+      "name": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "lint"
+      }
+    },
+    {
+      "name": "@nx/webpack/plugin",
+      "options": {
+        "buildTargetName": "build",
+        "serveTargetName": "serve",
+        "previewTargetName": "preview",
+        "buildDepsTargetName": "build-deps",
+        "watchDepsTargetName": "watch-deps",
+        "serveStaticTargetName": "serve-static"
+      }
+    },
+    {
+      "name": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      }
+    }
+  ],
+  "fileMap": {
+    "nonProjectFiles": [
+      {
+        "file": ".editorconfig",
+        "hash": "5443105041930014821"
+      },
+      {
+        "file": ".env.example",
+        "hash": "6682745852617629131"
+      },
+      {
+        "file": ".gitignore",
+        "hash": "9928673004667191403"
+      },
+      {
+        "file": ".prettierignore",
+        "hash": "4806318144369935397"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "16267754514737964994"
+      },
+      {
+        "file": ".vscode/launch.json",
+        "hash": "11911801181309274062"
+      },
+      {
+        "file": "DEVELOPMENT.md",
+        "hash": "2908939375849820188"
+      },
+      {
+        "file": "design-reference/.thumbnail",
+        "hash": "7817685553390610108"
+      },
+      {
+        "file": "design-reference/NfeClientes.dc.html",
+        "hash": "9035012684261225434"
+      },
+      {
+        "file": "design-reference/NfeConfiguracoes.dc.html",
+        "hash": "7845331108946561117"
+      },
+      {
+        "file": "design-reference/NfeDashboard.dc.html",
+        "hash": "18027015824704838037"
+      },
+      {
+        "file": "design-reference/NfeDocumentoDetalhe.dc.html",
+        "hash": "10845493591022623093"
+      },
+      {
+        "file": "design-reference/NfeDocumentos.dc.html",
+        "hash": "17915011175438367781"
+      },
+      {
+        "file": "design-reference/NfeEmissao.dc.html",
+        "hash": "18290838698788091486"
+      },
+      {
+        "file": "design-reference/NfeEmpresas.dc.html",
+        "hash": "4982256411977315817"
+      },
+      {
+        "file": "design-reference/NfeImportacao.dc.html",
+        "hash": "16735249675860165018"
+      },
+      {
+        "file": "design-reference/NfeIntegracoes.dc.html",
+        "hash": "1067824367249326927"
+      },
+      {
+        "file": "design-reference/NfeProdutos.dc.html",
+        "hash": "7185701423785031275"
+      },
+      {
+        "file": "design-reference/NfeRelatorios.dc.html",
+        "hash": "7344031642027584451"
+      },
+      {
+        "file": "design-reference/OpenNFE Design System.dc.html",
+        "hash": "698128687840691119"
+      },
+      {
+        "file": "design-reference/OpenNFE.dc.html",
+        "hash": "5132207699754075556"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_adherence.oxlintrc.json",
+        "hash": "7660157563473259781"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js",
+        "hash": "7194858268701789749"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_manifest.json",
+        "hash": "12348595191782266251"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/readme.md",
+        "hash": "9531017648170764555"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css",
+        "hash": "198251265470598406"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css",
+        "hash": "9296212020559650980"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css",
+        "hash": "14934225975189629043"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css",
+        "hash": "10978485217311688495"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css",
+        "hash": "12728357232290870860"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css",
+        "hash": "14199684132777999316"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css",
+        "hash": "18321901169661015660"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css",
+        "hash": "7441608978569851697"
+      },
+      {
+        "file": "design-reference/support.js",
+        "hash": "14640174182844953874"
+      },
+      {
+        "file": "docker/docker-compose.yml",
+        "hash": "14719069719726246128"
+      },
+      {
+        "file": "docs/API.md",
+        "hash": "9342222593210185780"
+      },
+      {
+        "file": "docs/ARCHITECTURE.md",
+        "hash": "17687977753591575927"
+      },
+      {
+        "file": "docs/DATABASE.md",
+        "hash": "5797814949851530740"
+      },
+      {
+        "file": "docs/PRD.md",
+        "hash": "2131474363515875420"
+      },
+      {
+        "file": "docs/PROVIDERS.md",
+        "hash": "14769840639895691244"
+      },
+      {
+        "file": "docs/SECURITY.md",
+        "hash": "14385278779829559724"
+      },
+      {
+        "file": "eslint.config.mjs",
+        "hash": "12926286793420397906"
+      },
+      {
+        "file": "jest.config.ts",
+        "hash": "6870352021923392442"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "9430166341120122740"
+      },
+      {
+        "file": "nx.json",
+        "hash": "17477786919773191578"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "18312066278950104235"
+      },
+      {
+        "file": "package.json",
+        "hash": "18162572172733395942"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "950848304108897294"
+      },
+      {
+        "file": "vitest.config.ts",
+        "hash": "7747400676042857361"
+      }
+    ],
+    "projectFileMap": {
+      "web": [
+        {
+          "file": "apps/web/.postcssrc.json",
+          "hash": "4165803757389925959"
+        },
+        {
+          "file": "apps/web/eslint.config.mjs",
+          "hash": "17918432245055023638",
+          "deps": [
+            "npm:@nx/eslint-plugin"
+          ]
+        },
+        {
+          "file": "apps/web/project.json",
+          "hash": "3555547514708459532"
+        },
+        {
+          "file": "apps/web/public/favicon.ico",
+          "hash": "9303420814833116677"
+        },
+        {
+          "file": "apps/web/src/app/app.config.server.ts",
+          "hash": "16664769899172877666",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/ssr"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/app.config.ts",
+          "hash": "5748714325256253611",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "npm:@angular/common",
+            "npm:@angular/platform-browser"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/app.css",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/web/src/app/app.html",
+          "hash": "17816966185630879015"
+        },
+        {
+          "file": "apps/web/src/app/app.routes.server.ts",
+          "hash": "16960858348243221237",
+          "deps": [
+            "npm:@angular/ssr"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/app.routes.ts",
+          "hash": "9071474376368989415",
+          "deps": [
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/app.spec.ts",
+          "hash": "18440479386742326523",
+          "deps": [
+            "npm:@angular/compiler",
+            "npm:vitest"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/app.ts",
+          "hash": "16530716323073860533",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/core/layout/app-layout.component.ts",
+          "hash": "14280766209158772744",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/core/services/fiscal-api.service.ts",
+          "hash": "7277964551183316293",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "shared",
+            "npm:rxjs"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/companies/companies.component.ts",
+          "hash": "16638705122199200910",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/customers/customers.component.ts",
+          "hash": "3690402649120066674",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/dashboard/dashboard.component.ts",
+          "hash": "2500709733169267096",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/documents/documents.component.ts",
+          "hash": "15271910704102741514",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@angular/forms",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/imports/imports.component.ts",
+          "hash": "8335982729867168942",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/integrations/integrations.component.ts",
+          "hash": "10575047576893998675",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/issuance/issuance.component.ts",
+          "hash": "15665344722376678311",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/router",
+            "npm:@angular/forms",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/products/products.component.ts",
+          "hash": "10800593618063617179",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common",
+            "npm:@angular/forms"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/reports/reports.component.ts",
+          "hash": "7406210744937544200",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/settings/settings.component.ts",
+          "hash": "2313881109831257072",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/icon.component.ts",
+          "hash": "16276377051906501511",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/common"
+          ]
+        },
+        {
+          "file": "apps/web/src/index.html",
+          "hash": "3373382062822948571"
+        },
+        {
+          "file": "apps/web/src/main.server.ts",
+          "hash": "2790221776171602446",
+          "deps": [
+            "npm:@angular/platform-browser"
+          ]
+        },
+        {
+          "file": "apps/web/src/main.ts",
+          "hash": "3314327030169821486",
+          "deps": [
+            "npm:@angular/platform-browser"
+          ]
+        },
+        {
+          "file": "apps/web/src/server.ts",
+          "hash": "4425888484242007746",
+          "deps": [
+            "npm:@angular/ssr",
+            "npm:express"
+          ]
+        },
+        {
+          "file": "apps/web/src/styles.css",
+          "hash": "569159666570467770"
+        },
+        {
+          "file": "apps/web/tsconfig.app.json",
+          "hash": "2438757114263802077"
+        },
+        {
+          "file": "apps/web/tsconfig.json",
+          "hash": "4069448406902918869"
+        }
+      ],
+      "providers": [
+        {
+          "file": "libs/providers/README.md",
+          "hash": "1200423322977624925"
+        },
+        {
+          "file": "libs/providers/eslint.config.mjs",
+          "hash": "2624537849564014525"
+        },
+        {
+          "file": "libs/providers/project.json",
+          "hash": "7443939102484400694"
+        },
+        {
+          "file": "libs/providers/src/index.ts",
+          "hash": "12978854975961429811",
+          "deps": [
+            "fiscal",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/providers/src/lib/providers.spec.ts",
+          "hash": "15152530507222245767",
+          "deps": [
+            "npm:vitest",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/providers/src/lib/providers.ts",
+          "hash": "2668822909891686444"
+        },
+        {
+          "file": "libs/providers/tsconfig.json",
+          "hash": "11893191431783790763"
+        },
+        {
+          "file": "libs/providers/tsconfig.lib.json",
+          "hash": "15798669420171897096"
+        }
+      ],
+      "api": [
+        {
+          "file": "apps/api/eslint.config.mjs",
+          "hash": "2624537849564014525"
+        },
+        {
+          "file": "apps/api/jest.config.cts",
+          "hash": "12275937276257766864"
+        },
+        {
+          "file": "apps/api/package.json",
+          "hash": "17262054605274993631",
+          "deps": [
+            "npm:@nestjs/testing",
+            "npm:@nestjs/common",
+            "npm:@nestjs/core",
+            "npm:@nestjs/platform-express",
+            "npm:reflect-metadata",
+            "npm:rxjs",
+            "npm:tslib"
+          ]
+        },
+        {
+          "file": "apps/api/project.json",
+          "hash": "9081966572731639317"
+        },
+        {
+          "file": "apps/api/src/app/app.controller.spec.ts",
+          "hash": "7647647754668916054",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/api/src/app/app.controller.ts",
+          "hash": "15276891910009544695",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/app/app.module.ts",
+          "hash": "7126195908269882170",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/config"
+          ]
+        },
+        {
+          "file": "apps/api/src/app/app.service.spec.ts",
+          "hash": "13111976464657524091",
+          "deps": [
+            "npm:@nestjs/testing"
+          ]
+        },
+        {
+          "file": "apps/api/src/app/app.service.ts",
+          "hash": "9967902337593410053",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/api/src/main.ts",
+          "hash": "17277411698889871558",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/core",
+            "npm:@nestjs/swagger"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/auth/auth.controller.ts",
+          "hash": "17047846018016214350",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/swagger"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/auth/auth.module.ts",
+          "hash": "11795992610868908822",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/jwt"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/auth/auth.service.ts",
+          "hash": "16382776783316599751",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/jwt",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/auth/current-tenant.decorator.ts",
+          "hash": "5689622341523501522",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/certificates/certificates.controller.ts",
+          "hash": "10210514836865953498",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/swagger"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/certificates/certificates.module.ts",
+          "hash": "15634039972093973414",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/certificates/certificates.service.ts",
+          "hash": "17658292269893357497",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/companies/companies.controller.ts",
+          "hash": "8702611812774182898",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/swagger",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/companies/companies.module.ts",
+          "hash": "217814335876673602",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/companies/companies.service.ts",
+          "hash": "7247620340175520570",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/customers/customers.controller.ts",
+          "hash": "10363206404860401976",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/swagger",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/customers/customers.module.ts",
+          "hash": "13354387407603122089",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/customers/customers.service.ts",
+          "hash": "12667832037664561377",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/documents/documents.controller.ts",
+          "hash": "4049505563333409825",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/swagger",
+            "npm:express",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/documents/documents.module.ts",
+          "hash": "14741544758528811210",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/documents/documents.service.ts",
+          "hash": "5825919056439890491",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared",
+            "fiscal",
+            "providers"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/documents/tenant-isolation.spec.ts",
+          "hash": "632163471692931318",
+          "deps": [
+            "npm:vitest",
+            "npm:@nestjs/common",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/imports/imports.controller.ts",
+          "hash": "17517573737667763484",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/swagger"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/imports/imports.module.ts",
+          "hash": "4219366434091211930",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/imports/imports.service.spec.ts",
+          "hash": "7250290583686835984",
+          "deps": [
+            "npm:vitest",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/imports/imports.service.ts",
+          "hash": "11581448915379948143",
+          "deps": [
+            "npm:@nestjs/common",
+            "fiscal",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/products/products.controller.ts",
+          "hash": "2653094471740308661",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/swagger",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/products/products.module.ts",
+          "hash": "285034556841423072",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/products/products.service.ts",
+          "hash": "9555982010415153632",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/providers/providers.controller.ts",
+          "hash": "805303316323105810",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/swagger",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/providers/providers.module.ts",
+          "hash": "16936153495405943071",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/providers/providers.service.ts",
+          "hash": "4854962966047001620",
+          "deps": [
+            "npm:@nestjs/common",
+            "providers",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/queue/fiscal-queue.service.spec.ts",
+          "hash": "242007159744278956",
+          "deps": [
+            "npm:vitest",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/queue/fiscal-queue.service.ts",
+          "hash": "1061890643438024341",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared",
+            "providers",
+            "fiscal"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/queue/queue.module.ts",
+          "hash": "1205141894793404242",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/reports/reports.controller.ts",
+          "hash": "10724284978904884764",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:express",
+            "npm:@nestjs/swagger"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/reports/reports.module.ts",
+          "hash": "11822859422302286731",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/reports/reports.service.ts",
+          "hash": "15719589649234375981",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/reports/zip-builder.spec.ts",
+          "hash": "9169722181480715454",
+          "deps": [
+            "npm:vitest"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/reports/zip-builder.ts",
+          "hash": "4042501551292607840"
+        },
+        {
+          "file": "apps/api/src/modules/webhooks/webhooks.controller.ts",
+          "hash": "15651934859875129200",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@nestjs/swagger"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/webhooks/webhooks.module.ts",
+          "hash": "14761525362286426405",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/webhooks/webhooks.service.spec.ts",
+          "hash": "12015406972815569368",
+          "deps": [
+            "npm:vitest",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/src/modules/webhooks/webhooks.service.ts",
+          "hash": "1694071147529137251",
+          "deps": [
+            "npm:@nestjs/common",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/api/tsconfig.app.json",
+          "hash": "15416670199580449218"
+        },
+        {
+          "file": "apps/api/tsconfig.json",
+          "hash": "2210884497023322903"
+        },
+        {
+          "file": "apps/api/tsconfig.spec.json",
+          "hash": "16343900797785896307"
+        },
+        {
+          "file": "apps/api/webpack.config.js",
+          "hash": "5823274778110364646",
+          "deps": [
+            "npm:@nx/webpack"
+          ]
+        }
+      ],
+      "database": [
+        {
+          "file": "libs/database/README.md",
+          "hash": "14973314855003427360"
+        },
+        {
+          "file": "libs/database/eslint.config.mjs",
+          "hash": "2624537849564014525"
+        },
+        {
+          "file": "libs/database/prisma/schema.prisma",
+          "hash": "3802476624958848861"
+        },
+        {
+          "file": "libs/database/project.json",
+          "hash": "15435767894715537611"
+        },
+        {
+          "file": "libs/database/src/database.module.ts",
+          "hash": "3854116159227282401",
+          "deps": [
+            "npm:@nestjs/common"
+          ]
+        },
+        {
+          "file": "libs/database/src/index.ts",
+          "hash": "10301170634930259682",
+          "deps": [
+            "npm:@nestjs/common",
+            "npm:@prisma/client"
+          ]
+        },
+        {
+          "file": "libs/database/src/lib/database.ts",
+          "hash": "7359317065646903957"
+        },
+        {
+          "file": "libs/database/tsconfig.json",
+          "hash": "11893191431783790763"
+        },
+        {
+          "file": "libs/database/tsconfig.lib.json",
+          "hash": "15798669420171897096"
+        }
+      ],
+      "fiscal": [
+        {
+          "file": "libs/fiscal/README.md",
+          "hash": "15229112645184888511"
+        },
+        {
+          "file": "libs/fiscal/eslint.config.mjs",
+          "hash": "2624537849564014525"
+        },
+        {
+          "file": "libs/fiscal/project.json",
+          "hash": "3761439016686248175"
+        },
+        {
+          "file": "libs/fiscal/src/index.ts",
+          "hash": "5365661466029629436",
+          "deps": [
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/fiscal/src/lib/fiscal.spec.ts",
+          "hash": "15382657249258176780",
+          "deps": [
+            "npm:vitest",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/fiscal/src/lib/fiscal.ts",
+          "hash": "13921772962296941459"
+        },
+        {
+          "file": "libs/fiscal/src/lib/parser/nfe-xml-parser.spec.ts",
+          "hash": "11941382257705348469",
+          "deps": [
+            "npm:vitest",
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/fiscal/src/lib/parser/nfe-xml-parser.ts",
+          "hash": "2163226893401853857",
+          "deps": [
+            "shared"
+          ]
+        },
+        {
+          "file": "libs/fiscal/tsconfig.json",
+          "hash": "11893191431783790763"
+        },
+        {
+          "file": "libs/fiscal/tsconfig.lib.json",
+          "hash": "15798669420171897096"
+        }
+      ],
+      "worker": [
+        {
+          "file": "apps/worker/project.json",
+          "hash": "18106998283902791326"
+        },
+        {
+          "file": "apps/worker/src/main.ts",
+          "hash": "12554297944535324110",
+          "deps": [
+            "npm:@nestjs/common",
+            "providers",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/worker/tsconfig.app.json",
+          "hash": "15727378403584483088"
+        },
+        {
+          "file": "apps/worker/tsconfig.json",
+          "hash": "14965573243554529923"
+        },
+        {
+          "file": "apps/worker/webpack.config.js",
+          "hash": "12967827066890930627",
+          "deps": [
+            "npm:@nx/webpack"
+          ]
+        }
+      ],
+      "shared": [
+        {
+          "file": "libs/shared/README.md",
+          "hash": "11786132251247811791"
+        },
+        {
+          "file": "libs/shared/eslint.config.mjs",
+          "hash": "2624537849564014525"
+        },
+        {
+          "file": "libs/shared/project.json",
+          "hash": "2214406144155872643"
+        },
+        {
+          "file": "libs/shared/src/index.ts",
+          "hash": "9994885006767527591"
+        },
+        {
+          "file": "libs/shared/src/lib/shared.ts",
+          "hash": "3815621113879200261"
+        },
+        {
+          "file": "libs/shared/src/security/encryption.service.spec.ts",
+          "hash": "7149278354638340173",
+          "deps": [
+            "npm:vitest"
+          ]
+        },
+        {
+          "file": "libs/shared/src/security/encryption.service.ts",
+          "hash": "300933230114448633"
+        },
+        {
+          "file": "libs/shared/src/server.ts",
+          "hash": "2072586480980773657"
+        },
+        {
+          "file": "libs/shared/tsconfig.json",
+          "hash": "11893191431783790763"
+        },
+        {
+          "file": "libs/shared/tsconfig.lib.json",
+          "hash": "15798669420171897096"
+        }
+      ]
+    }
+  },
+  "externalNodesHash": "4225086616810749535"
+}

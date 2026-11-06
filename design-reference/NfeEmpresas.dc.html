@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+</helmet>
+<div style="display:grid;gap:18px;min-width:0" data-screen-label="Empresas">
+  <sc-if value="{{ isList }}" hint-placeholder-val="{{ true }}">
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+      <div style="display:grid;gap:6px">
+        <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">CADASTROS</span>
+        <h1 style="margin:0;font:300 30px/1.1 var(--font-sans);color:var(--text-heading)"><strong style="font-weight:500">Empresas</strong> emissoras</h1>
+        <span style="font:14px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ countText }}</span>
+      </div>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" on-click="{{ newCompany }}" hint-size="140px,34px">nova empresa</x-import>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px">
+      <sc-for list="{{ cards }}" as="c" hint-placeholder-count="4">
+        <article style="background:#fff;border:{{ c.bd }};border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06);display:grid;grid-template-rows:auto 1fr auto">
+          <div style="display:flex;gap:12px;padding:16px 16px 12px;align-items:flex-start">
+            <span style="width:42px;height:42px;flex:none;border-radius:var(--radius-sm);background:{{ c.tileBg }};color:{{ c.tileFg }};display:flex;align-items:center;justify-content:center;font:600 14px/1 var(--font-sans)">{{ c.initials }}</span>
+            <div style="flex:1;min-width:0;display:grid;gap:4px">
+              <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+                <strong style="font:500 16px/1.2 var(--font-sans)">{{ c.fantasia }}</strong>
+                <sc-if value="{{ c.active }}" hint-placeholder-val="{{ false }}"><span style="height:20px;display:inline-flex;align-items:center;padding:0 8px;border-radius:var(--radius-pill);background:var(--info-700);color:#fff;font:600 10.5px/1 var(--font-display);letter-spacing:.1em">ATIVA</span></sc-if>
+              </div>
+              <span style="font:12.5px/1.35 var(--font-sans);color:var(--text-muted-aa);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.razao }}</span>
+              <span style="font:12.5px/1 var(--font-mono);color:var(--text-body)">{{ c.cnpj }} · {{ c.city }}/{{ c.uf }}</span>
+            </div>
+          </div>
+          <dl style="margin:0;padding:0 16px 14px;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font:13px/1.3 var(--font-sans)">
+            <dt style="color:var(--text-muted-aa)">Regime</dt><dd style="margin:0">{{ c.regime }}</dd>
+            <dt style="color:var(--text-muted-aa)">Documentos</dt><dd style="margin:0;display:flex;gap:4px;flex-wrap:wrap"><sc-for list="{{ c.types }}" as="t" hint-placeholder-count="2"><span style="padding:2px 6px;border-radius:var(--radius-xs);background:var(--neutral-100);font:600 11px/1.3 var(--font-display);letter-spacing:.05em">{{ t }}</span></sc-for></dd>
+            <dt style="color:var(--text-muted-aa)">Provedor</dt><dd style="margin:0">{{ c.provider }}</dd>
+            <dt style="color:var(--text-muted-aa)">Certificado</dt><dd style="margin:0;color:{{ c.certFg }};font-weight:500">{{ c.certTxt }}</dd>
+          </dl>
+          <div style="display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border-subtle);background:var(--neutral-050);flex-wrap:wrap">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ c.edit }}" hint-size="80px,26px">editar</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ c.cert }}" hint-size="120px,26px">certificado</x-import>
+            <div style="flex:1"></div>
+            <sc-if value="{{ c.notActive }}" hint-placeholder-val="{{ true }}">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="ghost" size="sm" on-click="{{ c.activate }}" hint-size="120px,26px">definir como ativa</x-import>
+            </sc-if>
+          </div>
+        </article>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ isEdit }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <button onClick="{{ back }}" aria-label="Voltar" style="width:34px;height:34px;border:1px solid var(--border-subtle);border-radius:var(--radius-sm);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--slate-600)"><span aria-hidden="true" style="width:16px;height:16px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/arrow-left.svg) center/contain no-repeat"></span></button>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Breadcrumbs" items="{{ crumbs }}" hint-size="220px,18px"></x-import>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+      <div style="display:grid;gap:6px">
+        <h1 style="margin:0;font:300 28px/1.1 var(--font-sans);color:var(--text-heading)"><strong style="font-weight:500">{{ editTitle }}</strong></h1>
+        <span style="font:14px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ editSub }}</span>
+      </div>
+      <div style="display:flex;gap:8px">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ back }}" hint-size="90px,34px">cancelar</x-import>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" on-click="{{ save }}" hint-size="90px,34px">salvar</x-import>
+      </div>
+    </div>
+    <sc-if value="{{ certAlert }}" hint-placeholder-val="{{ false }}">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="{{ certAlertTone }}" title="{{ certAlertTitle }}" hint-size="100%,60px">{{ certAlertBody }}</x-import>
+    </sc-if>
+    <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06)">
+      <div style="padding:0 18px;overflow-x:auto"><div style="height:41px;overflow:hidden;flex:none;max-width:100%"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Tabs" label="Seções da empresa" tabs="{{ tabs }}" value="{{ tab }}" on-change="{{ setTab }}" hint-size="100%,40px"></x-import></div></div>
+      <div style="padding:20px;display:grid;gap:16px">
+        <sc-if value="{{ t.dados }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px 18px">
+            <sc-for list="{{ fDados }}" as="x" hint-placeholder-count="6">
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">{{ x.label }}
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ x.value }}" on-change="{{ x.set }}" invalid="{{ x.invalid }}" placeholder="{{ x.ph }}" hint-size="100%,34px"></x-import>
+                <sc-if value="{{ x.invalid }}" hint-placeholder-val="{{ false }}"><span style="font:12px/1.3 var(--font-sans);color:var(--danger-700)">{{ x.err }}</span></sc-if>
+              </label>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ t.endereco }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:14px 18px">
+            <sc-for list="{{ fEnd }}" as="x" hint-placeholder-count="4">
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">{{ x.label }}
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ x.value }}" on-change="{{ x.set }}" placeholder="{{ x.ph }}" hint-size="100%,34px"></x-import>
+              </label>
+            </sc-for>
+            <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">UF
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ ufOpts }}" value="{{ form.uf }}" on-change="{{ onUf }}" hint-size="100%,34px"></x-import>
+            </label>
+          </div>
+        </sc-if>
+        <sc-if value="{{ t.fiscal }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:16px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px 18px">
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Regime tributário
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ regimeOpts }}" value="{{ form.regime }}" on-change="{{ onRegime }}" hint-size="100%,34px"></x-import>
+              </label>
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Código de regime (CRT)
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ crt }}" disabled="{{ true }}" hint-size="100%,34px"></x-import>
+              </label>
+              <sc-for list="{{ fFiscal }}" as="x" hint-placeholder-count="4">
+                <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">{{ x.label }}
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ x.value }}" on-change="{{ x.set }}" placeholder="{{ x.ph }}" hint-size="100%,34px"></x-import>
+                </label>
+              </sc-for>
+            </div>
+            <fieldset style="margin:0;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:12px 16px;display:flex;flex-wrap:wrap;gap:6px 22px">
+              <legend style="padding:0 6px;font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">DOCUMENTOS HABILITADOS</legend>
+              <sc-for list="{{ typeChecks }}" as="x" hint-placeholder-count="5">
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Checkbox" label="{{ x.label }}" checked="{{ x.on }}" on-change="{{ x.toggle }}" hint-size="90px,24px"></x-import>
+              </sc-for>
+            </fieldset>
+          </div>
+        </sc-if>
+        <sc-if value="{{ t.certificado }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px">
+            <div style="padding:16px;border:1px solid {{ certCard.bd }};border-radius:var(--radius-md);background:{{ certCard.bg }};display:grid;gap:8px;align-content:start">
+              <div style="display:flex;gap:10px;align-items:center">
+                <span aria-hidden="true" style="width:34px;height:34px;border-radius:var(--radius-sm);background:#fff;display:flex;align-items:center;justify-content:center"><span style="width:18px;height:18px;background:{{ certCard.fg }};mask:url(https://unpkg.com/lucide-static@0.544.0/icons/shield-check.svg) center/contain no-repeat"></span></span>
+                <div style="display:grid;gap:3px"><strong style="font:500 15px/1.2 var(--font-sans)">Certificado A1 · e-CNPJ</strong><span style="font:600 12px/1 var(--font-sans);color:{{ certCard.fg }}">{{ certCard.status }}</span></div>
+              </div>
+              <dl style="margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 12px;font:13px/1.3 var(--font-sans)">
+                <dt style="color:var(--text-muted-aa)">Titular</dt><dd style="margin:0">{{ form.razao }}</dd>
+                <dt style="color:var(--text-muted-aa)">CNPJ</dt><dd style="margin:0;font-family:var(--font-mono)">{{ form.cnpj }}</dd>
+                <dt style="color:var(--text-muted-aa)">Validade</dt><dd style="margin:0">{{ certUntil }}</dd>
+                <dt style="color:var(--text-muted-aa)">Emissora</dt><dd style="margin:0">AC demonstrativa</dd>
+              </dl>
+            </div>
+            <div style="display:grid;gap:12px;align-content:start">
+              <span style="font:500 14px/1.3 var(--font-sans)">Enviar novo certificado</span>
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.FileInput" accept=".pfx,.p12" on-change="{{ onCertFile }}" hint-size="100%,34px"></x-import>
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Senha do certificado
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" type="password" value="{{ certPass }}" on-change="{{ onCertPass }}" hint-size="100%,34px"></x-import>
+              </label>
+              <span style="font:12.5px/1.5 var(--font-sans);color:var(--text-muted-aa)">Arquivo .pfx ou .p12. O certificado é armazenado criptografado e enviado apenas ao provedor associado. Use um certificado de teste neste protótipo.</span>
+              <div><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" disabled="{{ noCert }}" loading="{{ certLoading }}" on-click="{{ uploadCert }}" hint-size="160px,34px">validar e salvar</x-import></div>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ t.provedor }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:16px">
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px 18px">
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Provedor fiscal
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ providerOpts }}" value="{{ form.providerId }}" on-change="{{ onProvider }}" hint-size="100%,34px"></x-import>
+              </label>
+              <div style="display:grid;gap:6px">
+                <span style="font:500 13px/1.2 var(--font-sans)">Ambiente de emissão padrão</span>
+                <div style="display:flex;gap:18px;flex-wrap:wrap;padding-top:4px">
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Radio" name="env" label="Homologação" checked="{{ envH }}" on-change="{{ setEnvH }}" hint-size="120px,24px"></x-import>
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Radio" name="env" label="Produção" checked="{{ envP }}" on-change="{{ setEnvP }}" hint-size="100px,24px"></x-import>
+                </div>
+              </div>
+            </div>
+            <sc-if value="{{ provUnsupported }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="warning" title="Provedor não suporta todos os documentos habilitados" live="{{ false }}" hint-size="100%,56px">{{ provUnsupportedMsg }}</x-import>
+            </sc-if>
+            <div style="padding:12px 14px;border-radius:var(--radius-md);background:var(--neutral-050);border:1px solid var(--border-subtle);font:13px/1.5 var(--font-sans);color:var(--text-muted-aa)">A troca de provedor não altera o fluxo de emissão. Documentos já autorizados continuam consultáveis pelo provedor original. Credenciais e logs ficam em <a href="#" onClick="{{ goInteg }}">Integrações</a>.</div>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const UFS = ['AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'];
+const EMPTY = { razao: '', fantasia: '', cnpj: '', ie: '', im: '', uf: 'PR', city: '', address: '', cep: '', regime: 'Simples Nacional', crt: '1 · Simples Nacional', cert: { until: '—', days: 0, state: 'expired' }, providerId: '', types: ['NF-e'], serie: '1', next: 1, env: 'homologacao', email: '', phone: '' };
+class Component extends DCLogic {
+  state = { view: 'list', tab: 'dados', form: null, certFile: null, certPass: '', certLoading: false, tried: false };
+  componentDidMount() {
+    const app = this.props.app || {};
+    if (app.param && app.param.startsWith('c')) this.open(app.param, 'certificado');
+  }
+  open(id, tab) {
+    const D = (this.props.app || {}).data || { companies: [] };
+    const c = id === 'nova' ? { ...EMPTY } : D.companies.find(x => x.id === id);
+    if (!c) return;
+    const cert = c.cert || {};
+    this.setState({ view: id, tab: tab || (cert.state !== 'ok' && id !== 'nova' ? 'certificado' : 'dados'), form: { ...c, types: [...c.types] }, tried: false, certFile: null, certPass: '' });
+    try { window.scrollTo(0, 0); } catch (e) { }
+  }
+  renderVals() {
+    const app = this.props.app || {};
+    const D = app.data || { companies: [], providers: [] };
+    const s = this.state, f = s.form || EMPTY;
+    const initials = n => (n || '').split(/\s+/).filter(w => w.length > 2).slice(0, 2).map(w => w[0]).join('').toUpperCase() || '—';
+    const provName = id => (D.providers.find(p => p.id === id) || {}).name || 'não configurado';
+    const certInfo = c => c.cert.state === 'expired' ? ['Vencido em ' + c.cert.until, 'var(--danger-700)'] : c.cert.state === 'warn' ? ['Vence em ' + c.cert.days + ' dias · ' + c.cert.until, 'var(--orange-800)'] : ['Válido até ' + c.cert.until, 'var(--success-700)'];
+    const cards = D.companies.map(c => {
+      const active = c.id === app.companyId; const [certTxt, certFg] = certInfo(c);
+      return { ...c, active, notActive: !active, initials: initials(c.fantasia), provider: provName(c.providerId), certTxt, certFg,
+        bd: active ? '2px solid var(--info-700)' : '1px solid var(--border-subtle)', tileBg: active ? 'var(--info-700)' : 'var(--neutral-100)', tileFg: active ? '#fff' : 'var(--graphite-800)',
+        edit: () => this.open(c.id, 'dados'), cert: () => this.open(c.id, 'certificado'),
+        activate: () => { app.setCompany(c.id); app.toast('info', 'Empresa ativa alterada', c.fantasia + ' · ' + c.cnpj); } };
+    });
+    const setF = k => e => { const v = e.target.value; this.setState(x => ({ form: { ...x.form, [k]: v } })); };
+    const cnpjOk = f.cnpj.replace(/\D/g, '').length === 14;
+    const fDados = [
+      { k: 'razao', label: 'Razão social', ph: 'Nome empresarial completo', invalid: s.tried && f.razao.trim().length < 3, err: 'Informe a razão social.' },
+      { k: 'fantasia', label: 'Nome fantasia', ph: '' },
+      { k: 'cnpj', label: 'CNPJ', ph: '00.000.000/0000-00', invalid: s.tried && !cnpjOk, err: 'CNPJ deve ter 14 dígitos.' },
+      { k: 'email', label: 'E-mail fiscal', ph: 'fiscal@empresa.com.br' },
+      { k: 'phone', label: 'Telefone', ph: '(41) 0000-0000' }
+    ].map(x => ({ invalid: false, err: '', ...x, value: f[x.k], set: setF(x.k) }));
+    const fEnd = [{ k: 'cep', label: 'CEP', ph: '00000-000' }, { k: 'address', label: 'Logradouro, número e bairro', ph: '' }, { k: 'city', label: 'Município', ph: '' }].map(x => ({ ...x, value: f[x.k], set: setF(x.k) }));
+    const fFiscal = [{ k: 'ie', label: 'Inscrição estadual', ph: 'ou “Isento”' }, { k: 'im', label: 'Inscrição municipal', ph: 'obrigatória para NFS-e' }, { k: 'serie', label: 'Série padrão', ph: '1' }, { k: 'next', label: 'Próximo número', ph: '1' }].map(x => ({ ...x, value: String(f[x.k] ?? ''), set: setF(x.k) }));
+    const crtMap = { 'Simples Nacional': '1 · Simples Nacional', 'Simples Nacional · excesso de sublimite': '2 · Simples excesso de sublimite', 'MEI': '4 · MEI', 'Lucro presumido': '3 · Regime normal', 'Lucro real': '3 · Regime normal' };
+    const prov = D.providers.find(p => p.id === f.providerId);
+    const unsupported = prov ? f.types.filter(t => !prov.docs.includes(t)) : [];
+    const isNew = s.view === 'nova';
+    const tabs = [{ id: 'dados', label: 'Dados gerais' }, { id: 'endereco', label: 'Endereço' }, { id: 'fiscal', label: 'Configuração fiscal' }, { id: 'certificado', label: 'Certificado digital' }, { id: 'provedor', label: 'Provedor e ambiente' }];
+    const t = {}; tabs.forEach(x => t[x.id] = s.tab === x.id);
+    const cs = (f.cert || {}).state;
+    return {
+      isList: s.view === 'list', isEdit: s.view !== 'list',
+      countText: D.companies.length + ' empresas · a empresa ativa define o CNPJ usado em emissões e filtros',
+      cards, newCompany: () => this.open('nova', 'dados'),
+      back: () => { this.setState({ view: 'list' }); },
+      crumbs: [{ label: 'Empresas', href: '#' }, { label: isNew ? 'Nova empresa' : f.fantasia }],
+      editTitle: isNew ? 'Nova empresa' : f.fantasia, editSub: isNew ? 'Preencha as seções; o certificado pode ser enviado depois.' : f.razao + ' · ' + f.cnpj,
+      tabs, tab: s.tab, t, setTab: id => this.setState({ tab: id }), form: f,
+      fDados, fEnd, fFiscal, ufOpts: UFS.map(u => ({ value: u, label: u })), onUf: setF('uf'),
+      regimeOpts: Object.keys(crtMap).map(k => ({ value: k, label: k })), onRegime: e => { const v = e.target.value; this.setState(x => ({ form: { ...x.form, regime: v, crt: crtMap[v] } })); }, crt: crtMap[f.regime] || f.crt,
+      typeChecks: ['NF-e', 'NFC-e', 'NFS-e', 'CT-e', 'MDF-e'].map(ty => ({ label: ty, on: f.types.includes(ty), toggle: e => { const on = e.target.checked; this.setState(x => ({ form: { ...x.form, types: on ? [...x.form.types, ty] : x.form.types.filter(z => z !== ty) } })); } })),
+      certAlert: !isNew && cs !== 'ok', certAlertTone: cs === 'expired' ? 'error' : 'warning',
+      certAlertTitle: cs === 'expired' ? 'Certificado vencido · emissões bloqueadas' : 'Certificado próximo do vencimento',
+      certAlertBody: cs === 'expired' ? 'Envie um novo certificado A1 na aba Certificado digital para voltar a emitir.' : 'Renove antes de ' + (f.cert || {}).until + ' para não interromper as emissões.',
+      certCard: cs === 'expired' ? { bd: 'var(--danger-700)', bg: 'var(--danger-100)', fg: 'var(--danger-700)', status: 'VENCIDO' } : cs === 'warn' ? { bd: 'var(--orange-700)', bg: 'var(--warning-100)', fg: 'var(--orange-800)', status: 'VENCE EM ' + f.cert.days + ' DIAS' } : { bd: 'var(--success-700)', bg: 'var(--success-100)', fg: 'var(--success-700)', status: 'VÁLIDO' },
+      certUntil: (f.cert || {}).until,
+      onCertFile: e => this.setState({ certFile: (e.target.files || [])[0] || null }), certPass: s.certPass, onCertPass: e => this.setState({ certPass: e.target.value }),
+      noCert: !s.certFile || s.certPass.length < 4, certLoading: s.certLoading,
+      uploadCert: () => { this.setState({ certLoading: true }); setTimeout(() => { const cert = { until: '03/11/2027', days: 365, state: 'ok' }; this.setState(x => ({ certLoading: false, certFile: null, certPass: '', form: { ...x.form, cert } })); if (!isNew) app.updateCompany(s.view, { cert }); app.toast('success', 'Certificado validado', 'Válido até 03/11/2027 · titular confere com o CNPJ.'); }, 1200); },
+      providerOpts: [{ value: '', label: 'Selecione um provedor' }, ...D.providers.filter(p => p.active).map(p => ({ value: p.id, label: p.name + (p.demo ? ' (demo)' : '') + ' · ' + p.kind }))], onProvider: setF('providerId'),
+      envH: f.env !== 'producao', envP: f.env === 'producao', setEnvH: () => this.setState(x => ({ form: { ...x.form, env: 'homologacao' } })), setEnvP: () => this.setState(x => ({ form: { ...x.form, env: 'producao' } })),
+      provUnsupported: unsupported.length > 0, provUnsupportedMsg: (prov ? prov.name : '') + ' não emite ' + unsupported.join(', ') + '. Escolha outro provedor ou desabilite esses documentos.',
+      goInteg: e => { e && e.preventDefault && e.preventDefault(); app.go('integracoes'); },
+      save: () => {
+        if (f.razao.trim().length < 3 || !cnpjOk) { this.setState({ tried: true, tab: 'dados' }); app.toast('error', 'Revise os dados gerais', 'Razão social e CNPJ são obrigatórios.'); return; }
+        const data = { ...f, next: parseInt(f.next, 10) || 1, crt: crtMap[f.regime] || f.crt };
+        if (isNew) { app.addCompany(data); app.toast('success', 'Empresa cadastrada', f.fantasia || f.razao); }
+        else { app.updateCompany(s.view, data); app.toast('success', 'Alterações salvas', f.fantasia); }
+        this.setState({ view: 'list' });
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+</helmet>
+<div style="display:grid;gap:18px;min-width:0" data-screen-label="Emitir documento">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+    <div style="display:grid;gap:6px">
+      <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">NOVA EMISSÃO · {{ envKicker }}</span>
+      <h1 style="margin:0;font:300 30px/1.1 var(--font-sans);color:var(--text-heading)"><strong style="font-weight:500">Emitir</strong> documento fiscal</h1>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="ghost" on-click="{{ discard }}" hint-size="100px,34px">descartar</x-import>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ saveDraft }}" disabled="{{ noDraft }}" hint-size="140px,34px">salvar rascunho</x-import>
+    </div>
+  </div>
+
+  <sc-if value="{{ wideSteps }}" hint-placeholder-val="{{ true }}">
+    <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px 10px">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Steps" steps="{{ stepLabels }}" current="{{ step }}" label="Etapas da emissão" hint-size="100%,56px"></x-import>
+    </div>
+  </sc-if>
+  <sc-if value="{{ narrowSteps }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:12px 14px;display:grid;gap:8px">
+      <div style="display:flex;justify-content:space-between;gap:8px;font:13.5px/1.2 var(--font-sans)"><strong style="font-weight:600">{{ stepTitle }}</strong><span style="color:var(--text-muted-aa)">Etapa {{ stepN }} de 8</span></div>
+      <div style="height:6px;border-radius:3px;background:var(--neutral-100);overflow:hidden"><div style="height:100%;width:{{ stepPct }};background:var(--info-700)"></div></div>
+    </div>
+  </sc-if>
+
+  <div style="display:grid;grid-template-columns:{{ layoutCols }};gap:20px;align-items:start">
+    <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06);min-width:0">
+      <header style="padding:16px 20px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+        <h2 style="margin:0;font:300 21px/1.2 var(--font-sans)"><strong style="font-weight:500">{{ stepN }}. {{ stepTitle }}</strong></h2>
+        <span style="font:13px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ stepHint }}</span>
+      </header>
+      <div style="padding:20px;display:grid;gap:16px">
+        <sc-if value="{{ hasErrors }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="error" title="Revise antes de continuar" hint-size="100%,70px">
+            <ul style="margin:0;padding-left:18px;display:grid;gap:2px">
+              <sc-for list="{{ errors }}" as="e" hint-placeholder-count="1"><li>{{ e }}</li></sc-for>
+            </ul>
+          </x-import>
+        </sc-if>
+
+        <sc-if value="{{ s0 }}" hint-placeholder-val="{{ true }}">
+          <div role="radiogroup" aria-label="Empresa emissora" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:12px">
+            <sc-for list="{{ companyCards }}" as="c" hint-placeholder-count="4">
+              <button role="radio" aria-checked="{{ c.sel }}" aria-disabled="{{ c.blocked }}" onClick="{{ c.pick }}" style="display:grid;gap:8px;padding:14px;border:{{ c.bd }};border-radius:var(--radius-md);background:{{ c.bg }};text-align:left;cursor:{{ c.cursor }};color:inherit;opacity:{{ c.op }}">
+                <div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start">
+                  <strong style="font:500 15px/1.25 var(--font-sans)">{{ c.fantasia }}</strong>
+                  <span aria-hidden="true" style="width:18px;height:18px;flex:none;border-radius:50%;border:2px solid {{ c.radio }};box-shadow:inset 0 0 0 3px #fff;background:{{ c.radioFill }}"></span>
+                </div>
+                <span style="font:12.5px/1.3 var(--font-mono);color:var(--text-muted-aa)">{{ c.cnpj }} · {{ c.uf }}</span>
+                <span style="font:12.5px/1.3 var(--font-sans);color:var(--text-muted-aa)">{{ c.regime }} · {{ c.typesTxt }}</span>
+                <span style="font:500 12px/1.2 var(--font-sans);color:{{ c.certFg }}">{{ c.certTxt }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s1 }}" hint-placeholder-val="{{ false }}">
+          <div role="radiogroup" aria-label="Tipo de documento" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,220px),1fr));gap:12px">
+            <sc-for list="{{ typeCards }}" as="t" hint-placeholder-count="5">
+              <button role="radio" aria-checked="{{ t.sel }}" onClick="{{ t.pick }}" style="display:grid;gap:8px;padding:14px;border:{{ t.bd }};border-radius:var(--radius-md);background:{{ t.bg }};text-align:left;cursor:{{ t.cursor }};color:inherit;opacity:{{ t.op }}">
+                <div style="display:flex;justify-content:space-between;align-items:center">
+                  <span style="font:700 20px/1 var(--font-display);letter-spacing:.03em">{{ t.id }}</span>
+                  <span aria-hidden="true" style="width:20px;height:20px;background:var(--slate-500);mask:url({{ t.icon }}) center/contain no-repeat"></span>
+                </div>
+                <span style="font:500 13.5px/1.3 var(--font-sans)">{{ t.name }}</span>
+                <span style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ t.desc }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s2 }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:12px">
+            <sc-if value="{{ allowAnon }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toggle" label="Consumidor final não identificado" checked="{{ anon }}" on-change="{{ toggleAnon }}" hint-size="300px,24px"></x-import>
+            </sc-if>
+            <sc-if value="{{ showClientSearch }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <div style="flex:1;min-width:220px">
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" placeholder="Buscar cliente por nome, CPF ou CNPJ" value="{{ cq }}" on-change="{{ onCq }}" aria-label="Buscar cliente" hint-size="100%,34px"></x-import>
+                </div>
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ openNewClient }}" hint-size="140px,34px">novo cliente</x-import>
+              </div>
+              <div style="display:grid;gap:6px;max-height:360px;overflow:auto;padding:2px">
+                <sc-for list="{{ clientList }}" as="k" hint-placeholder-count="5">
+                  <button onClick="{{ k.pick }}" aria-pressed="{{ k.sel }}" style="display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 12px;border:{{ k.bd }};border-radius:var(--radius-md);background:{{ k.bg }};cursor:pointer;text-align:left;color:inherit">
+                    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Avatar" name="{{ k.name }}" size="sm" hint-size="32px,32px"></x-import>
+                    <span style="display:grid;gap:3px;min-width:0">
+                      <span style="font:500 14px/1.2 var(--font-sans)">{{ k.name }}</span>
+                      <span style="font:12.5px/1.3 var(--font-sans);color:var(--text-muted-aa)"><span style="font-family:var(--font-mono)">{{ k.doc }}</span> · IE {{ k.ieF }} · {{ k.city }}/{{ k.uf }}</span>
+                    </span>
+                    <span style="font:600 11px/1 var(--font-display);letter-spacing:.08em;padding:4px 6px;border-radius:var(--radius-xs);background:var(--neutral-100)">{{ k.kind }}</span>
+                  </button>
+                </sc-for>
+                <sc-if value="{{ noClients }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:20px;text-align:center;border:1px dashed var(--border-strong);border-radius:var(--radius-md);font:13.5px/1.5 var(--font-sans);color:var(--text-muted-aa)">Nenhum cliente encontrado. Cadastre um novo destinatário para continuar.</div>
+                </sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{ ieWarn }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="warning" title="Inscrição estadual ausente" live="{{ false }}" hint-size="100%,70px">Este cliente é contribuinte de ICMS, mas não tem IE cadastrada. A SEFAZ tende a rejeitar (cód. 233). Corrija o cadastro ou marque-o como não contribuinte.</x-import>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s3 }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:14px">
+            <div style="position:relative">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" placeholder="{{ prodPlaceholder }}" value="{{ pq }}" on-change="{{ onPq }}" aria-label="Buscar produto" hint-size="100%,34px"></x-import>
+              <sc-if value="{{ showProdResults }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:calc(100% + 4px);left:0;right:0;z-index:10;background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:var(--shadow-raised);padding:6px;max-height:280px;overflow:auto">
+                  <sc-for list="{{ prodResults }}" as="p" hint-placeholder-count="4">
+                    <button onClick="{{ p.add }}" style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;width:100%;padding:8px;border:0;background:transparent;border-radius:var(--radius-sm);cursor:pointer;text-align:left;color:inherit" style-hover="background:var(--neutral-100)">
+                      <span aria-hidden="true" style="width:16px;height:16px;background:var(--slate-500);mask:url({{ p.icon }}) center/contain no-repeat"></span>
+                      <span style="display:grid;gap:2px;min-width:0"><span style="font:500 13.5px/1.2 var(--font-sans)">{{ p.desc }}</span><span style="font:12px/1.2 var(--font-mono);color:var(--text-muted-aa)">{{ p.code }} · {{ p.fiscal }}</span></span>
+                      <span style="font:500 13px/1 var(--font-mono)">{{ p.priceF }}</span>
+                    </button>
+                  </sc-for>
+                  <sc-if value="{{ noProdResults }}" hint-placeholder-val="{{ false }}"><div style="padding:10px;font:13px/1.4 var(--font-sans);color:var(--text-muted-aa)">Nenhum item encontrado no catálogo.</div></sc-if>
+                </div>
+              </sc-if>
+            </div>
+            <sc-if value="{{ hasItems }}" hint-placeholder-val="{{ false }}">
+              <div style="overflow-x:auto;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+                <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:620px">
+                  <thead><tr style="text-align:left;background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase">
+                    <th style="padding:9px 10px">Item</th><th style="padding:9px 10px;width:150px">Quantidade</th><th style="padding:9px 10px;width:130px">Unitário (R$)</th><th style="padding:9px 10px;text-align:right">Total</th><th style="padding:9px 10px;width:44px"></th>
+                  </tr></thead>
+                  <tbody>
+                    <sc-for list="{{ itemRows }}" as="i" hint-placeholder-count="2">
+                      <tr style="border-top:1px solid var(--neutral-100)">
+                        <td style="padding:8px 10px"><div style="display:grid;gap:2px"><span style="font-weight:500">{{ i.desc }}</span><span style="font:12px/1.2 var(--font-mono);color:var(--text-muted-aa)">{{ i.code }} · {{ i.fiscal }}</span></div></td>
+                        <td style="padding:8px 10px">
+                          <div style="display:flex;align-items:center;gap:4px">
+                            <button onClick="{{ i.dec }}" aria-label="Diminuir" style="width:28px;height:30px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:#fff;cursor:pointer;font:500 16px/1 var(--font-sans)">−</button>
+                            <input value="{{ i.qty }}" onInput="{{ i.setQty }}" inputMode="decimal" aria-label="Quantidade" style="width:54px;height:30px;text-align:center;border:1px solid {{ i.qtyBd }};border-radius:var(--radius-lg);box-shadow:var(--shadow-inset-field);font:500 13px/1 var(--font-mono)">
+                            <button onClick="{{ i.inc }}" aria-label="Aumentar" style="width:28px;height:30px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);background:#fff;cursor:pointer;font:500 16px/1 var(--font-sans)">+</button>
+                            <span style="font:12px/1 var(--font-sans);color:var(--text-muted-aa)">{{ i.un }}</span>
+                          </div>
+                        </td>
+                        <td style="padding:8px 10px"><input value="{{ i.price }}" onInput="{{ i.setPrice }}" inputMode="decimal" aria-label="Valor unitário" style="width:100%;height:30px;padding:0 8px;text-align:right;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);box-shadow:var(--shadow-inset-field);font:500 13px/1 var(--font-mono)"></td>
+                        <td style="padding:8px 10px;text-align:right;font:500 13px/1 var(--font-mono);white-space:nowrap">{{ i.totalF }}</td>
+                        <td style="padding:8px 6px"><button onClick="{{ i.remove }}" aria-label="Remover item" title="Remover" style="width:30px;height:30px;border:0;border-radius:var(--radius-sm);background:transparent;color:var(--danger-700);cursor:pointer;display:flex;align-items:center;justify-content:center" style-hover="background:var(--danger-100)"><span aria-hidden="true" style="width:15px;height:15px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/trash-2.svg) center/contain no-repeat"></span></button></td>
+                      </tr>
+                    </sc-for>
+                  </tbody>
+                  <tfoot><tr style="border-top:1px solid var(--border-subtle);background:var(--neutral-050)"><td colspan="3" style="padding:10px;font-weight:500">Subtotal · {{ itemCount }} item(ns)</td><td style="padding:10px;text-align:right;font:600 14px/1 var(--font-mono)">{{ subF }}</td><td></td></tr></tfoot>
+                </table>
+              </div>
+            </sc-if>
+            <sc-if value="{{ noItems }}" hint-placeholder-val="{{ true }}">
+              <div style="padding:28px 16px;text-align:center;border:1px dashed var(--border-strong);border-radius:var(--radius-md);display:grid;gap:6px;justify-items:center">
+                <span aria-hidden="true" style="width:22px;height:22px;background:var(--slate-500);mask:url(https://unpkg.com/lucide-static@0.544.0/icons/package-plus.svg) center/contain no-repeat"></span>
+                <strong style="font:500 15px/1.3 var(--font-sans)">Nenhum item adicionado</strong>
+                <span style="font:13px/1.5 var(--font-sans);color:var(--text-muted-aa)">Busque no catálogo acima. Os dados fiscais do item vêm do cadastro de produtos e serviços.</span>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s4 }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:16px">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="info" title="Dados de demonstração" live="{{ false }}" hint-size="100%,60px">Alíquotas e CSTs abaixo vêm do cadastro dos itens. O protótipo não calcula tributos — o cálculo real é feito pelo motor fiscal e validado pelo provedor.</x-import>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px 16px">
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Natureza da operação
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ naturezaOpts }}" value="{{ trib.natureza }}" on-change="{{ onNatureza }}" hint-size="100%,34px"></x-import>
+              </label>
+              <sc-if value="{{ isGoods }}" hint-placeholder-val="{{ true }}">
+                <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Finalidade
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ finalidadeOpts }}" value="{{ trib.finalidade }}" on-change="{{ onFinalidade }}" hint-size="100%,34px"></x-import>
+                </label>
+                <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Presença do comprador
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ presencaOpts }}" value="{{ trib.presenca }}" on-change="{{ onPresenca }}" hint-size="100%,34px"></x-import>
+                </label>
+              </sc-if>
+              <sc-if value="{{ isService }}" hint-placeholder-val="{{ false }}">
+                <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Local da prestação
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ trib.local }}" on-change="{{ onLocal }}" hint-size="100%,34px"></x-import>
+                </label>
+                <div style="display:flex;align-items:flex-end;padding-bottom:4px">
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toggle" label="ISS retido pelo tomador" checked="{{ trib.issRetido }}" on-change="{{ onIss }}" hint-size="220px,24px"></x-import>
+                </div>
+              </sc-if>
+            </div>
+            <div style="overflow-x:auto;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+              <table style="width:100%;border-collapse:collapse;font:13px/1.3 var(--font-sans);min-width:560px">
+                <thead><tr style="text-align:left;background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:9px 10px">Item</th><th style="padding:9px 10px">{{ codeCol }}</th><th style="padding:9px 10px">{{ taxCol }}</th><th style="padding:9px 10px">PIS / COFINS</th></tr></thead>
+                <tbody>
+                  <sc-for list="{{ itemRows }}" as="i" hint-placeholder-count="2">
+                    <tr style="border-top:1px solid var(--neutral-100)"><td style="padding:9px 10px">{{ i.desc }}</td><td style="padding:9px 10px;font:12.5px/1.3 var(--font-mono)">{{ i.cfopF }}</td><td style="padding:9px 10px;font:12.5px/1.3 var(--font-mono)">{{ i.tax }}</td><td style="padding:9px 10px;font:12.5px/1.3 var(--font-mono)">{{ i.pisCofins }}</td></tr>
+                  </sc-for>
+                </tbody>
+              </table>
+            </div>
+            <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Informações complementares
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Textarea" rows="{{ 2 }}" value="{{ trib.info }}" on-change="{{ onInfo }}" placeholder="Texto impresso no documento (opcional)" hint-size="100%,64px"></x-import>
+            </label>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s5 }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:18px">
+            <sc-if value="{{ hasTransport }}" hint-placeholder-val="{{ true }}">
+              <fieldset style="border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px 16px;display:grid;gap:12px;margin:0">
+                <legend style="padding:0 6px;font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">TRANSPORTE</legend>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px 16px">
+                  <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Modalidade do frete
+                    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ freteOpts }}" value="{{ tr.modal }}" on-change="{{ onModal }}" hint-size="100%,34px"></x-import>
+                  </label>
+                  <sc-if value="{{ hasCarrier }}" hint-placeholder-val="{{ false }}">
+                    <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Transportadora
+                      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ tr.transp }}" on-change="{{ onTransp }}" placeholder="Razão social ou CNPJ" invalid="{{ transpInvalid }}" hint-size="100%,34px"></x-import>
+                    </label>
+                    <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Placa do veículo
+                      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ tr.placa }}" on-change="{{ onPlaca }}" placeholder="ABC1D23" hint-size="100%,34px"></x-import>
+                    </label>
+                    <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Volumes · peso bruto (kg)
+                      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ tr.vol }}" on-change="{{ onVol }}" placeholder="ex.: 12 · 340" hint-size="100%,34px"></x-import>
+                    </label>
+                  </sc-if>
+                </div>
+              </fieldset>
+            </sc-if>
+            <sc-if value="{{ noTransport }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="neutral" title="Transporte não se aplica" live="{{ false }}" hint-size="100%,50px">{{ noTransportMsg }}</x-import>
+            </sc-if>
+            <fieldset style="border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px 16px;display:grid;gap:12px;margin:0">
+              <legend style="padding:0 6px;font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">VALORES ADICIONAIS (R$)</legend>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));gap:12px 16px">
+                <sc-for list="{{ extraFields }}" as="x" hint-placeholder-count="4">
+                  <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">{{ x.label }}
+                    <input value="{{ x.value }}" onInput="{{ x.set }}" inputMode="decimal" style="height:34px;padding:0 12px;text-align:right;border:1px solid var(--border-subtle);border-radius:var(--radius-lg);box-shadow:var(--shadow-inset-field);font:500 13.5px/1 var(--font-mono);color:var(--text-body)">
+                  </label>
+                </sc-for>
+              </div>
+            </fieldset>
+            <fieldset style="border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px 16px;display:grid;gap:12px;margin:0">
+              <legend style="padding:0 6px;font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">PAGAMENTO</legend>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:12px 16px">
+                <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Forma de pagamento
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ payOpts }}" value="{{ pay.forma }}" on-change="{{ onPay }}" hint-size="100%,34px"></x-import>
+                </label>
+                <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Parcelas
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ parcOpts }}" value="{{ pay.parc }}" on-change="{{ onParc }}" hint-size="100%,34px"></x-import>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s6 }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:16px">
+            <sc-if value="{{ isHomolog }}" hint-placeholder-val="{{ true }}">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="warning" title="Transmissão em homologação" live="{{ false }}" hint-size="100%,56px">Este documento será enviado ao ambiente de testes e não terá validade fiscal.</x-import>
+            </sc-if>
+            <sc-if value="{{ isProd }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="success" title="Transmissão em produção" live="{{ false }}" hint-size="100%,56px">Este documento terá validade fiscal assim que autorizado.</x-import>
+            </sc-if>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px">
+              <sc-for list="{{ summaryBlocks }}" as="b" hint-placeholder-count="4">
+                <div style="padding:12px 14px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);display:grid;gap:5px;align-content:start">
+                  <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:600 11.5px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">{{ b.k }}</span><button onClick="{{ b.edit }}" style="border:0;background:transparent;color:var(--info-700);font:500 12.5px/1 var(--font-sans);cursor:pointer;padding:0">editar</button></div>
+                  <strong style="font:500 14px/1.3 var(--font-sans)">{{ b.v }}</strong>
+                  <span style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ b.sub }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden">
+              <sc-for list="{{ totalRows }}" as="t" hint-placeholder-count="5">
+                <div style="display:flex;justify-content:space-between;gap:10px;padding:9px 14px;border-bottom:1px solid var(--neutral-100);background:{{ t.bg }};font:{{ t.fw }} 14px/1.2 var(--font-sans)"><span>{{ t.l }}</span><span style="font-family:var(--font-mono)">{{ t.v }}</span></div>
+              </sc-for>
+            </div>
+            <div style="display:grid;gap:8px">
+              <span style="font:600 11.5px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">VERIFICAÇÕES PRÉVIAS</span>
+              <sc-for list="{{ checks }}" as="c" hint-placeholder-count="4">
+                <div style="display:flex;gap:10px;align-items:flex-start;font:13.5px/1.4 var(--font-sans)">
+                  <span aria-hidden="true" style="width:18px;height:18px;flex:none;border-radius:var(--radius-xs);background:{{ c.bg }};display:flex;align-items:center;justify-content:center;color:#fff;font:700 11px/1 var(--font-sans)">{{ c.g }}</span>
+                  <span>{{ c.t }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <div style="padding:10px 12px;border-radius:var(--radius-md);background:var(--neutral-050);border:1px dashed var(--border-strong);display:grid;gap:6px">
+              <span style="font:600 11px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">SIMULAÇÃO DO PROTÓTIPO</span>
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toggle" size="sm" label="Simular falha técnica do provedor (timeout)" checked="{{ simFail }}" on-change="{{ toggleSim }}" hint-size="300px,24px"></x-import>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ s7 }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:18px">
+            <ol style="list-style:none;margin:0;padding:0;display:grid;gap:10px">
+              <sc-for list="{{ phases }}" as="p" hint-placeholder-count="5">
+                <li style="display:flex;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md);background:{{ p.bg }}">
+                  <span aria-hidden="true" style="width:24px;height:24px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;background:{{ p.dotBg }};color:#fff;font:700 12px/1 var(--font-sans)">{{ p.g }}</span>
+                  <span style="flex:1;display:grid;gap:2px"><span style="font:500 14px/1.2 var(--font-sans)">{{ p.t }}</span><span style="font:12.5px/1.3 var(--font-sans);color:var(--text-muted-aa)">{{ p.d }}</span></span>
+                  <sc-if value="{{ p.running }}" hint-placeholder-val="{{ false }}"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Loading" size="sm" label="Processando" hint-size="18px,18px"></x-import></sc-if>
+                </li>
+              </sc-for>
+            </ol>
+            <sc-if value="{{ resOk }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;gap:12px;padding:18px;border:1px solid var(--success-700);border-radius:var(--radius-md);background:var(--success-100)">
+                <strong style="font:500 19px/1.2 var(--font-sans);color:var(--success-700)">{{ resTitle }}</strong>
+                <span style="font:13.5px/1.5 var(--font-sans)">{{ resBody }}</span>
+                <code style="padding:8px 10px;background:#fff;border-radius:var(--radius-sm);font:12.5px/1.5 var(--font-mono);word-break:break-all">{{ resKey }}</code>
+                <div style="display:flex;gap:8px;flex-wrap:wrap">
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" on-click="{{ openResult }}" hint-size="140px,34px">ver documento</x-import>
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ dlResult }}" hint-size="140px,34px">baixar {{ pdfName }}</x-import>
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="ghost" on-click="{{ restart }}" hint-size="120px,34px">nova emissão</x-import>
+                </div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ resRej }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="error" title="{{ resTitle }}" hint-size="100%,110px">
+                <div style="display:grid;gap:8px"><span>{{ resBody }}</span>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" size="sm" on-click="{{ backToClient }}" hint-size="160px,26px">corrigir destinatário</x-import><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ openResult }}" hint-size="140px,26px">ver documento</x-import></div>
+                </div>
+              </x-import>
+            </sc-if>
+            <sc-if value="{{ resErr }}" hint-placeholder-val="{{ false }}">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="neutral" title="{{ resTitle }}" hint-size="100%,110px">
+                <div style="display:grid;gap:8px"><span>{{ resBody }}</span>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" size="sm" on-click="{{ retry }}" hint-size="120px,26px">tentar de novo</x-import><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ openResult }}" hint-size="140px,26px">ver documento</x-import></div>
+                </div>
+              </x-import>
+            </sc-if>
+          </div>
+        </sc-if>
+      </div>
+      <sc-if value="{{ showFooter }}" hint-placeholder-val="{{ true }}">
+        <footer style="display:flex;justify-content:space-between;gap:10px;padding:14px 20px;border-top:1px solid var(--border-subtle);background:var(--neutral-050);flex-wrap:wrap">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="{{ btnSize }}" disabled="{{ isFirst }}" on-click="{{ prev }}" hint-size="100px,34px">voltar</x-import>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" size="{{ btnSize }}" on-click="{{ next }}" hint-size="140px,34px">{{ nextLabel }}</x-import>
+        </footer>
+      </sc-if>
+    </section>
+
+    <aside style="position:{{ asidePos }};top:110px;display:grid;gap:12px;min-width:0">
+      <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06)">
+        <header style="padding:12px 16px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)"><h2 style="margin:0;font:300 17px/1.2 var(--font-sans)"><strong style="font-weight:500">Resumo</strong> da operação</h2></header>
+        <div style="padding:12px 16px;display:grid;gap:10px">
+          <sc-for list="{{ sideRows }}" as="r" hint-placeholder-count="5">
+            <div style="display:grid;gap:2px"><span style="font:600 11px/1 var(--font-sans);letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted-aa)">{{ r.k }}</span><span style="font:13.5px/1.35 var(--font-sans);color:{{ r.fg }}">{{ r.v }}</span></div>
+          </sc-for>
+          <div style="display:flex;justify-content:space-between;align-items:baseline;padding-top:10px;border-top:1px solid var(--border-subtle)"><span style="font:500 13.5px/1 var(--font-sans)">Total</span><strong style="font:700 24px/1 var(--font-display);font-variant-numeric:tabular-nums">{{ totalF }}</strong></div>
+        </div>
+      </section>
+      <div style="padding:10px 14px;border-radius:var(--radius-md);background:{{ envBox.bg }};color:{{ envBox.fg }};font:500 12.5px/1.4 var(--font-sans);border:1px solid {{ envBox.bd }}">{{ envBox.t }}</div>
+    </aside>
+  </div>
+
+  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Modal" open="{{ newClientOpen }}" on-close="{{ closeNewClient }}" title="Novo cliente" size="md" hint-size="0,0">
+    <div style="display:grid;gap:12px">
+      <div style="height:41px;overflow:hidden;flex:none;max-width:100%"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Tabs" variant="boxed" tabs="{{ kindTabs }}" value="{{ nc.kind }}" on-change="{{ ncKind }}" hint-size="200px,40px"></x-import></div>
+      <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">{{ ncNameLabel }}<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ nc.name }}" on-change="{{ ncName }}" hint-size="100%,34px"></x-import></label>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px">
+        <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">{{ ncDocLabel }}<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ nc.doc }}" on-change="{{ ncDoc }}" style="font-family:var(--font-mono)" hint-size="100%,34px"></x-import></label>
+        <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">E-mail<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" type="email" value="{{ nc.email }}" on-change="{{ ncEmail }}" hint-size="100%,34px"></x-import></label>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ closeNewClient }}" hint-size="90px,34px">cancelar</x-import>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" disabled="{{ ncInvalid }}" on-click="{{ saveNewClient }}" hint-size="160px,34px">salvar e selecionar</x-import>
+      </div>
+    </div>
+  </x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const STEPS = [
+  ['Empresa', 'Empresa emissora', 'Escolha o CNPJ que emitirá o documento. Empresas sem certificado válido não podem emitir.'],
+  ['Tipo', 'Tipo de documento', 'Os tipos disponíveis dependem da empresa e do provedor configurado.'],
+  ['Destinatário', 'Destinatário', 'Busque um cliente cadastrado ou cadastre um novo.'],
+  ['Itens', 'Produtos ou serviços', 'Adicione itens do catálogo e ajuste quantidades e valores.'],
+  ['Tributação', 'Tributação', 'Confirme a natureza da operação e a configuração fiscal dos itens.'],
+  ['Valores', 'Valores e transporte', 'Informe frete, descontos, transporte e forma de pagamento quando aplicável.'],
+  ['Resumo', 'Conferir resumo', 'Revise tudo antes de transmitir. Você pode voltar a qualquer etapa.'],
+  ['Transmitir', 'Transmissão', 'Acompanhe o envio ao provedor e o retorno da autoridade fiscal.']
+];
+const num = v => { const n = parseFloat(String(v).replace(/\./g, '').replace(',', '.')); return isNaN(n) ? 0 : n; };
+const blank = () => ({ step: 0, companyId: null, type: null, clientId: null, anon: false, cq: '', pq: '', items: [], trib: { natureza: 'venda', finalidade: '1', presenca: '1', info: '', local: 'Florianópolis/SC', issRetido: false }, tr: { modal: '9', transp: '', placa: '', vol: '' }, extra: { frete: '0,00', seguro: '0,00', desconto: '0,00', outras: '0,00' }, pay: { forma: '17', parc: '1' }, errors: [], simFail: false, phase: -1, result: null, docId: null, newClientOpen: false, nc: { kind: 'PJ', name: '', doc: '', email: '' } });
+
+class Component extends DCLogic {
+  state = blank();
+  componentDidMount() {
+    const app = this.props.app || {};
+    const p = app.param || '';
+    if (p.startsWith('dup:')) {
+      const d = ((app.data || {}).docs || []).find(x => x.id === p.slice(4));
+      if (d) this.setState({ companyId: d.companyId, type: d.type, clientId: d.clientId, anon: !d.clientId, items: d.items.map(i => ({ ...i, qty: String(i.qty).replace('.', ','), price: i.price.toFixed(2).replace('.', ',') })), step: 3 });
+    } else if (app.company && app.company.cert.state !== 'expired') this.setState({ companyId: app.companyId });
+  }
+  componentWillUnmount() { clearTimeout(this._t); }
+  validate(step) {
+    const s = this.state, e = [];
+    const D = (this.props.app || {}).data || {};
+    if (step === 0 && !s.companyId) e.push('Selecione a empresa emissora.');
+    if (step === 1 && !s.type) e.push('Selecione o tipo de documento.');
+    if (step === 2 && !s.clientId && !(s.type === 'NFC-e' && s.anon)) e.push(s.type === 'NFC-e' ? 'Selecione um cliente ou ative “consumidor final não identificado”.' : 'Selecione o destinatário.');
+    if (step === 3) {
+      if (!s.items.length) e.push('Adicione ao menos um item.');
+      s.items.forEach((it, i) => { if (num(it.qty) <= 0) e.push('Item ' + (i + 1) + ': quantidade deve ser maior que zero.'); if (num(it.price) <= 0) e.push('Item ' + (i + 1) + ': valor unitário deve ser maior que zero.'); });
+      const p0 = s.items.map(it => (D.products || []).find(p => p.id === it.prodId)).find(p => p && p.status === 'inativo');
+      if (p0) e.push('“' + p0.desc + '” está inativo no catálogo.');
+    }
+    if (step === 5 && ['0', '1', '2'].includes(s.tr.modal) && s.type === 'NF-e' && !s.tr.transp.trim()) e.push('Informe a transportadora para a modalidade de frete escolhida.');
+    if (step === 5 && num(s.extra.desconto) > this.sub()) e.push('O desconto não pode ser maior que o subtotal.');
+    return e;
+  }
+  sub() { return this.state.items.reduce((a, it) => a + num(it.qty) * num(it.price), 0); }
+  transmit() {
+    const app = this.props.app;
+    const s = this.state;
+    const D = app.data;
+    const c = D.companies.find(x => x.id === s.companyId);
+    const k = D.clients.find(x => x.id === s.clientId);
+    const rejects = s.type === 'NF-e' && k && k.kind === 'PJ' && !k.ie && k.contrib === 'Contribuinte ICMS';
+    const outcome = s.simFail ? 'erro' : rejects ? 'rejeitada' : 'autorizada';
+    this.setState({ step: 7, phase: 0, result: null, errors: [] });
+    const tick = ph => {
+      this._t = setTimeout(() => {
+        if (ph < 4 && !(outcome === 'erro' && ph === 2)) { this.setState({ phase: ph + 1 }); tick(ph + 1); return; }
+        const total = this.total();
+        const modelo = { 'NF-e': '55', 'NFC-e': '65', 'NFS-e': '—', 'CT-e': '57', 'MDF-e': '58' }[s.type];
+        const n = c.next;
+        const digits = (c.uf === 'SC' ? '42' : '41') + '2611' + c.cnpj.replace(/\D/g, '') + (modelo === '—' ? '00' : modelo) + String(c.serie).replace(/\D/g, '1').padStart(3, '0') + String(n).padStart(9, '0') + '1' + String(Date.now()).slice(-9);
+        const doc = {
+          type: s.type, modelo, num: n, serie: s.type === 'NFC-e' ? '2' : c.serie, companyId: c.id, clientId: s.clientId,
+          dest: k ? k.name : 'Consumidor final', destDoc: k ? k.doc : '—', date: '03/11/2026', time: new Date().toTimeString().slice(0, 5), ago: 0,
+          value: total, status: outcome, providerId: c.providerId, env: app.env, key: s.type === 'NFS-e' ? null : digits.slice(0, 44), verif: s.type === 'NFS-e' ? 'SV' + n + '-A' + (n % 97) : null,
+          protocol: outcome === 'autorizada' ? '1412600' + String(Date.now()).slice(-8) : null,
+          items: s.items.map(it => ({ prodId: it.prodId, qty: num(it.qty), price: num(it.price) })),
+          rej: outcome === 'rejeitada' ? D.rej['233'] : null,
+          techError: outcome === 'erro' ? { code: 'HTTP 504', msg: 'Tempo de resposta do provedor esgotado (30 s).', fix: 'O documento não chegou à autoridade fiscal. Reenvie agora ou aguarde a nova tentativa automática.' } : null
+        };
+        const id = app.addDoc(doc);
+        if (outcome !== 'erro') app.updateCompany(c.id, { next: n + 1 });
+        this.setState({ phase: 5, result: outcome, docId: id, resDoc: doc });
+        app.toast(outcome === 'autorizada' ? 'success' : outcome === 'rejeitada' ? 'error' : 'neutral', outcome === 'autorizada' ? 'Documento autorizado' : outcome === 'rejeitada' ? 'Rejeição fiscal' : 'Falha técnica', s.type + ' nº ' + n);
+      }, 650);
+    };
+    tick(0);
+  }
+  total() { const x = this.state.extra; return Math.max(0, this.sub() + num(x.frete) + num(x.seguro) + num(x.outras) - num(x.desconto)); }
+  renderVals() {
+    const app = this.props.app || {};
+    const D = app.data || { companies: [], clients: [], products: [], providers: [] };
+    const brl = app.brl || (v => v), IC = app.IC || (n => n);
+    const s = this.state;
+    const c = D.companies.find(x => x.id === s.companyId);
+    const k = D.clients.find(x => x.id === s.clientId);
+    const isService = s.type === 'NFS-e';
+    const set = (grp, key) => e => { const v = e && e.target ? (e.target.type === 'checkbox' ? e.target.checked : e.target.value) : e; this.setState(x => ({ [grp]: { ...x[grp], [key]: v } })); };
+    const goStep = n => () => this.setState({ step: n, errors: [] });
+    const sel = 'var(--info-700)';
+    const companyCards = D.companies.map(x => {
+      const blocked = x.cert.state === 'expired', on = x.id === s.companyId;
+      return { ...x, sel: on, blocked, typesTxt: x.types.join(', '), bd: on ? '2px solid ' + sel : '1px solid var(--border-subtle)', bg: on ? 'var(--info-100)' : '#fff', cursor: blocked ? 'not-allowed' : 'pointer', op: blocked ? .6 : 1, radio: on ? sel : 'var(--neutral-400)', radioFill: on ? sel : '#fff',
+        certTxt: blocked ? 'Certificado vencido em ' + x.cert.until + ' · renove para emitir' : x.cert.state === 'warn' ? 'Certificado vence em ' + x.cert.days + ' dias' : 'Certificado A1 válido até ' + x.cert.until,
+        certFg: blocked ? 'var(--danger-700)' : x.cert.state === 'warn' ? 'var(--orange-800)' : 'var(--success-700)',
+        pick: () => { if (blocked) { app.toast('error', 'Certificado vencido', x.fantasia + ': envie um novo certificado em Empresas.'); return; } this.setState({ companyId: x.id, type: x.types.includes(s.type) ? s.type : null, errors: [] }); } };
+    });
+    const TYPES = [['NF-e', 'Nota fiscal eletrônica', 'Venda e circulação de mercadorias entre empresas e para consumidor.', 'file-text'], ['NFC-e', 'Nota fiscal de consumidor', 'Venda presencial no varejo, com ou sem identificação do cliente.', 'receipt'], ['NFS-e', 'Nota fiscal de serviço', 'Prestação de serviços, emitida junto à prefeitura do município.', 'briefcase'], ['CT-e', 'Conhecimento de transporte', 'Prestação de serviço de transporte de cargas.', 'truck'], ['MDF-e', 'Manifesto de documentos', 'Vincula documentos de uma mesma viagem de carga.', 'clipboard-list']];
+    const typeCards = TYPES.map(([id, name, desc, icon]) => {
+      const ok = c && c.types.includes(id) && ['NF-e', 'NFC-e', 'NFS-e'].includes(id), on = s.type === id;
+      const why = !c ? '' : !c.types.includes(id) ? ' Não habilitado para esta empresa.' : !ok ? ' Fluxo não incluído neste protótipo.' : '';
+      return { id, name, desc: desc + why, icon: IC(icon), sel: on, bd: on ? '2px solid ' + sel : '1px solid var(--border-subtle)', bg: on ? 'var(--info-100)' : '#fff', cursor: ok ? 'pointer' : 'not-allowed', op: ok ? 1 : .5,
+        pick: () => { if (!ok) return; const keep = s.items.filter(it => { const p = D.products.find(pp => pp.id === it.prodId); return p && (p.kind === 'servico') === (id === 'NFS-e'); }); this.setState({ type: id, items: keep, anon: id === 'NFC-e' ? s.anon : false, errors: [] }); } };
+    });
+    const cq = s.cq.trim().toLowerCase();
+    const clientList = D.clients.filter(x => !cq || x.name.toLowerCase().includes(cq) || x.doc.replace(/\D/g, '').includes(cq.replace(/\D/g, '') || '§')).map(x => {
+      const on = x.id === s.clientId;
+      return { ...x, sel: on, ieF: x.ie || (x.kind === 'PF' ? 'não se aplica' : 'não informada'), bd: on ? '2px solid ' + sel : '1px solid var(--border-subtle)', bg: on ? 'var(--info-100)' : '#fff', pick: () => this.setState({ clientId: x.id, anon: false, errors: [] }) };
+    });
+    const pq = s.pq.trim().toLowerCase();
+    const catalog = D.products.filter(p => (p.kind === 'servico') === isService);
+    const prodResults = pq.length >= 1 ? catalog.filter(p => p.desc.toLowerCase().includes(pq) || p.code.toLowerCase().includes(pq)).slice(0, 8).map(p => ({
+      ...p, icon: IC(p.kind === 'servico' ? 'briefcase' : 'package'), priceF: brl(p.price), fiscal: p.kind === 'servico' ? 'LC 116 ' + p.lc116 : 'NCM ' + p.ncm + (p.status === 'inativo' ? ' · INATIVO' : ''),
+      add: () => this.setState(x => { const ex = x.items.find(i => i.prodId === p.id); return { pq: '', errors: [], items: ex ? x.items.map(i => i.prodId === p.id ? { ...i, qty: String(num(i.qty) + 1).replace('.', ',') } : i) : [...x.items, { prodId: p.id, qty: '1', price: p.price.toFixed(2).replace('.', ',') }] }; })
+    })) : [];
+    const sub = this.sub(), total = this.total();
+    const itemRows = s.items.map((it, idx) => {
+      const p = D.products.find(x => x.id === it.prodId) || {};
+      const upd = patch => this.setState(x => ({ items: x.items.map((i, j) => j === idx ? { ...i, ...patch } : i) }));
+      return { ...p, qty: it.qty, price: it.price, totalF: brl(num(it.qty) * num(it.price)), qtyBd: num(it.qty) > 0 ? 'var(--border-subtle)' : 'var(--danger-500)',
+        fiscal: p.kind === 'servico' ? 'LC 116 ' + p.lc116 : 'NCM ' + p.ncm + ' · CFOP ' + p.cfop,
+        cfopF: p.kind === 'servico' ? (p.lc116 + ' · CNAE ' + p.cnae) : (s.trib.natureza === 'devolucao' ? p.cfop.replace(/^5/, '5').replace(/^(\d)1/, '$12') : p.cfop),
+        tax: p.kind === 'servico' ? 'ISS ' + p.iss : p.icms, pisCofins: p.kind === 'servico' ? '—' : p.pis + ' / ' + p.cofins,
+        setQty: e => upd({ qty: e.target.value }), setPrice: e => upd({ price: e.target.value }),
+        inc: () => upd({ qty: String(num(it.qty) + 1).replace('.', ',') }), dec: () => upd({ qty: String(Math.max(0, num(it.qty) - 1)).replace('.', ',') }),
+        remove: () => this.setState(x => ({ items: x.items.filter((_, j) => j !== idx) }))
+      };
+    });
+    const ieWarn = s.type === 'NF-e' && k && k.kind === 'PJ' && !k.ie && k.contrib === 'Contribuinte ICMS';
+    const step = s.step;
+    const sv = {}; for (let i = 0; i < 8; i++) sv['s' + i] = step === i;
+    const tx = s.phase;
+    const PH = [['Validando estrutura', 'Schema do leiaute e regras locais'], ['Assinando digitalmente', 'Certificado A1 de ' + (c ? c.fantasia : '')], ['Enviando ao provedor', (D.providers.find(p => c && p.id === c.providerId) || {}).name || ''], ['Aguardando autoridade fiscal', isService ? 'Prefeitura · ' + (c ? c.city : '') : 'SEFAZ ' + (c ? c.uf : '')], ['Gerando arquivos', 'XML autorizado e PDF']];
+    const failAt = s.result === 'erro' ? 2 : s.result === 'rejeitada' ? 3 : 99;
+    const phases = PH.map(([t, d], i) => {
+      const done = tx > i && i < failAt, failed = i === failAt && s.result, running = tx === i && !s.result;
+      const skipped = s.result && i > failAt;
+      return { t, d: failed ? (s.result === 'erro' ? 'Timeout de 30 s no provedor' : 'Rejeição 233') : d, running, g: done ? '✓' : failed ? '×' : String(i + 1),
+        dotBg: done ? 'var(--success-700)' : failed ? (s.result === 'erro' ? 'var(--graphite-800)' : 'var(--danger-700)') : running ? 'var(--info-700)' : 'var(--neutral-400)',
+        bg: running ? 'var(--info-100)' : skipped ? 'var(--neutral-050)' : '#fff' };
+    });
+    const rd = s.resDoc;
+    const pdfName = { 'NF-e': 'DANFE', 'NFC-e': 'DANFCE', 'NFS-e': 'PDF' }[s.type] || 'PDF';
+    const narrow = (app.w || 1400) < 1180;
+    const homolog = app.isHomolog !== false;
+    return {
+      ...sv, step, stepN: step + 1, stepTitle: STEPS[step][1], stepHint: STEPS[step][2], stepLabels: STEPS.map(x => x[0]), stepPct: ((step + 1) / 8 * 100) + '%',
+      wideSteps: !narrow, narrowSteps: narrow, layoutCols: (app.w || 1400) >= 1180 ? 'minmax(0,1fr) 300px' : 'minmax(0,1fr)', asidePos: (app.w || 1400) >= 1180 ? 'sticky' : 'static',
+      envKicker: homolog ? 'HOMOLOGAÇÃO' : 'PRODUÇÃO', isHomolog: homolog, isProd: !homolog,
+      envBox: homolog ? { t: 'Homologação · sem validade fiscal', bg: 'var(--warning-100)', fg: 'var(--orange-800)', bd: 'var(--orange-700)' } : { t: 'Produção · documento com validade fiscal', bg: 'var(--success-100)', fg: 'var(--success-700)', bd: 'var(--success-700)' },
+      errors: s.errors, hasErrors: s.errors.length > 0,
+      companyCards, typeCards,
+      allowAnon: s.type === 'NFC-e', anon: s.anon, toggleAnon: e => this.setState({ anon: e.target.checked, clientId: e.target.checked ? null : s.clientId }), showClientSearch: !(s.type === 'NFC-e' && s.anon),
+      cq: s.cq, onCq: e => this.setState({ cq: e.target.value }), clientList, noClients: clientList.length === 0, ieWarn,
+      openNewClient: () => this.setState({ newClientOpen: true }), closeNewClient: () => this.setState({ newClientOpen: false }), newClientOpen: s.newClientOpen,
+      nc: s.nc, kindTabs: [{ id: 'PJ', label: 'Pessoa jurídica' }, { id: 'PF', label: 'Pessoa física' }], ncKind: id => this.setState(x => ({ nc: { ...x.nc, kind: id } })),
+      ncName: set('nc', 'name'), ncDoc: set('nc', 'doc'), ncEmail: set('nc', 'email'),
+      ncNameLabel: s.nc.kind === 'PJ' ? 'Razão social' : 'Nome completo', ncDocLabel: s.nc.kind === 'PJ' ? 'CNPJ' : 'CPF',
+      ncInvalid: s.nc.name.trim().length < 3 || s.nc.doc.replace(/\D/g, '').length !== (s.nc.kind === 'PJ' ? 14 : 11),
+      saveNewClient: () => { const id = app.addClient({ name: s.nc.name, kind: s.nc.kind, doc: s.nc.doc, ie: '', email: s.nc.email, phone: '', city: c ? c.city : 'Curitiba', uf: c ? c.uf : 'PR', address: '—', cep: '', contrib: 'Não contribuinte' }); this.setState({ clientId: id, newClientOpen: false, nc: { kind: 'PJ', name: '', doc: '', email: '' } }); app.toast('success', 'Cliente cadastrado', s.nc.name); },
+      pq: s.pq, onPq: e => this.setState({ pq: e.target.value }), prodResults, showProdResults: pq.length >= 1, noProdResults: prodResults.length === 0,
+      prodPlaceholder: isService ? 'Buscar serviço por descrição ou código (ex.: SRV, suporte)' : 'Buscar produto por descrição ou código (ex.: arroz, ALM-0012)',
+      itemRows, hasItems: itemRows.length > 0, noItems: itemRows.length === 0, itemCount: itemRows.length, subF: brl(sub),
+      trib: s.trib, isGoods: !isService, isService, codeCol: isService ? 'Serviço LC 116' : 'CFOP', taxCol: isService ? 'ISS' : 'ICMS',
+      naturezaOpts: isService ? [{ value: 'venda', label: 'Prestação de serviço' }] : [{ value: 'venda', label: 'Venda de mercadoria' }, { value: 'bonificacao', label: 'Remessa em bonificação' }, { value: 'devolucao', label: 'Devolução de compra' }],
+      finalidadeOpts: [{ value: '1', label: '1 · Normal' }, { value: '2', label: '2 · Complementar' }, { value: '3', label: '3 · Ajuste' }, { value: '4', label: '4 · Devolução' }],
+      presencaOpts: [{ value: '1', label: 'Presencial' }, { value: '2', label: 'Internet' }, { value: '3', label: 'Teleatendimento' }, { value: '9', label: 'Não presencial, outros' }],
+      onNatureza: set('trib', 'natureza'), onFinalidade: set('trib', 'finalidade'), onPresenca: set('trib', 'presenca'), onInfo: set('trib', 'info'), onLocal: set('trib', 'local'), onIss: set('trib', 'issRetido'),
+      hasTransport: s.type === 'NF-e', noTransport: s.type !== 'NF-e', noTransportMsg: isService ? 'NFS-e não possui grupo de transporte.' : 'NFC-e é emitida sem transporte (venda presencial).',
+      tr: s.tr, freteOpts: [{ value: '0', label: '0 · Por conta do emitente' }, { value: '1', label: '1 · Por conta do destinatário' }, { value: '2', label: '2 · Por conta de terceiros' }, { value: '9', label: '9 · Sem frete' }],
+      onModal: set('tr', 'modal'), onTransp: set('tr', 'transp'), onPlaca: set('tr', 'placa'), onVol: set('tr', 'vol'), hasCarrier: s.tr.modal !== '9',
+      transpInvalid: s.errors.length > 0 && !s.tr.transp.trim(),
+      extraFields: (s.type === 'NF-e' ? ['frete', 'seguro', 'desconto', 'outras'] : ['desconto']).map(key => ({ label: { frete: 'Frete', seguro: 'Seguro', desconto: 'Desconto', outras: 'Outras despesas' }[key], value: s.extra[key], set: set('extra', key) })),
+      pay: s.pay, payOpts: [{ value: '17', label: 'PIX' }, { value: '15', label: 'Boleto bancário' }, { value: '01', label: 'Dinheiro' }, { value: '03', label: 'Cartão de crédito' }, { value: '04', label: 'Cartão de débito' }, { value: '90', label: 'Sem pagamento' }],
+      parcOpts: ['1', '2', '3', '4', '6', '10'].map(v => ({ value: v, label: v === '1' ? 'À vista' : v + '× sem juros' })), onPay: set('pay', 'forma'), onParc: set('pay', 'parc'),
+      summaryBlocks: [
+        { k: 'EMITENTE', v: c ? c.fantasia : '—', sub: c ? c.cnpj + ' · ' + c.regime : '', edit: goStep(0) },
+        { k: 'DOCUMENTO', v: (s.type || '—') + (c ? ' · série ' + (s.type === 'NFC-e' ? '2' : c.serie) + ' · nº ' + c.next : ''), sub: 'Número reservado na transmissão', edit: goStep(1) },
+        { k: 'DESTINATÁRIO', v: k ? k.name : (s.anon ? 'Consumidor final não identificado' : '—'), sub: k ? k.doc + ' · ' + k.city + '/' + k.uf : '', edit: goStep(2) },
+        { k: 'OPERAÇÃO', v: isService ? 'Prestação de serviço' : ({ venda: 'Venda de mercadoria', bonificacao: 'Remessa em bonificação', devolucao: 'Devolução de compra' }[s.trib.natureza]), sub: itemRows.length + ' item(ns) · ' + (s.type === 'NF-e' ? ({ '0': 'frete emitente', '1': 'frete destinatário', '2': 'frete terceiros', '9': 'sem frete' }[s.tr.modal]) : 'sem transporte'), edit: goStep(4) }
+      ],
+      totalRows: [{ l: 'Produtos / serviços', v: brl(sub) }, ...(s.type === 'NF-e' ? [{ l: 'Frete', v: brl(num(s.extra.frete)) }, { l: 'Seguro e outras despesas', v: brl(num(s.extra.seguro) + num(s.extra.outras)) }] : []), { l: 'Desconto', v: '− ' + brl(num(s.extra.desconto)) }, { l: 'Total do documento', v: brl(total), bg: 'var(--neutral-050)', fw: 600 }].map(t => ({ bg: '#fff', fw: 400, ...t })),
+      checks: [
+        { t: 'Certificado digital válido para ' + (c ? c.fantasia : 'a empresa'), ok: c && c.cert.state !== 'expired' },
+        { t: 'Destinatário identificado' + (k ? ' com ' + (k.kind === 'PJ' ? 'CNPJ' : 'CPF') + ' válido' : ''), ok: !!k || s.anon },
+        ieWarn ? { t: 'Inscrição estadual do destinatário ausente — provável rejeição 233', warn: true } : { t: 'Inscrição estadual compatível com o tipo de contribuinte', ok: true },
+        { t: 'Itens com NCM/serviço e CFOP preenchidos', ok: itemRows.length > 0 }
+      ].map(x => ({ ...x, g: x.warn ? '!' : x.ok ? '✓' : '×', bg: x.warn ? 'var(--orange-700)' : x.ok ? 'var(--success-700)' : 'var(--danger-700)' })),
+      simFail: s.simFail, toggleSim: e => this.setState({ simFail: e.target.checked }),
+      phases, resOk: s.result === 'autorizada', resRej: s.result === 'rejeitada', resErr: s.result === 'erro',
+      resTitle: s.result === 'autorizada' ? (s.type + ' nº ' + (rd && rd.num) + ' autorizada') : s.result === 'rejeitada' ? 'Rejeição fiscal · SEFAZ 233 — IE do destinatário não cadastrada' : 'Falha técnica · HTTP 504 — o documento não chegou à autoridade fiscal',
+      resBody: s.result === 'autorizada' ? ('Protocolo ' + (rd && rd.protocol) + ' · ' + (homolog ? 'homologação, sem validade fiscal.' : 'produção, com validade fiscal.')) : s.result === 'rejeitada' ? 'A SEFAZ recebeu e recusou o documento. Corrija a inscrição estadual do cliente (ou marque-o como não contribuinte) e reenvie — a numeração não foi consumida.' : 'O provedor não respondeu em 30 s. Nada foi registrado na SEFAZ e a numeração continua livre. Você pode tentar de novo agora; o documento ficou salvo.',
+      resKey: rd ? (rd.key ? rd.key.replace(/(\d{4})/g, '$1 ').trim() : rd.verif) : '', pdfName,
+      openResult: () => app.go('documento', s.docId), dlResult: () => app.toast('success', pdfName + ' gerado', 'Arquivo PDF (demonstração)'),
+      restart: () => this.setState({ ...blank(), companyId: s.companyId }), retry: () => this.transmit(), backToClient: () => app.go('clientes', s.clientId),
+      sideRows: [
+        { k: 'Empresa', v: c ? c.fantasia + ' · ' + c.cnpj : 'não selecionada' },
+        { k: 'Tipo', v: s.type || 'não selecionado' },
+        { k: 'Destinatário', v: k ? k.name : s.anon ? 'Consumidor final' : 'não selecionado', fg: ieWarn ? 'var(--orange-800)' : undefined },
+        { k: 'Itens', v: itemRows.length ? itemRows.length + ' item(ns) · ' + brl(sub) : 'nenhum' },
+        { k: 'Provedor', v: c ? ((D.providers.find(p => p.id === c.providerId) || {}).name || '—') : '—' }
+      ].map(r => ({ fg: 'var(--text-body)', ...r })),
+      totalF: brl(total),
+      showFooter: step < 7, isFirst: step === 0, btnSize: app.mobile ? 'xl' : 'md',
+      nextLabel: step === 6 ? 'transmitir documento' : 'continuar',
+      prev: () => this.setState({ step: Math.max(0, step - 1), errors: [] }),
+      next: () => { const e = this.validate(step); if (e.length) { this.setState({ errors: e }); return; } if (step === 6) { this.transmit(); return; } this.setState({ step: step + 1, errors: [] }); try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (x) { } },
+      noDraft: !s.companyId || step >= 7,
+      saveDraft: () => { app.toast('success', 'Rascunho salvo', 'Você pode continuar depois em Documentos fiscais · pendentes.'); },
+      discard: () => { this.setState({ ...blank(), companyId: app.companyId }); app.toast('neutral', 'Emissão descartada', 'Nenhum dado foi enviado.'); }
+    };
+  }
+}
+</script>
+</body>
+</html>

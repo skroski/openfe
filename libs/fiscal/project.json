@@ -1,0 +1,9 @@
+{
+  "name": "fiscal",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/fiscal/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project fiscal --web",
+  "targets": {}
+}

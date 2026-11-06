@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <title>OpenNFE · Design System</title>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+  <style>
+    html,body{margin:0;background:#f6f6f6}
+    *{box-sizing:border-box}
+    a{color:var(--info-700)}
+    a:hover{color:var(--graphite-800)}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:var(--neutral-050);font:var(--type-body);color:var(--text-body)" data-screen-label="Design System">
+  <header style="background:var(--graphite-800);color:#fff">
+    <div style="max-width:1200px;margin:0 auto;padding:28px 24px 30px;display:grid;gap:18px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="width:44px;height:44px;border-radius:var(--radius-sm);background:var(--info-700);box-shadow:inset 0 1px 0 rgba(255,255,255,.25),0 1px 2px rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;font:700 18px/1 var(--font-display);letter-spacing:.04em">NF</span>
+          <span style="font:300 30px/1 var(--font-sans)">open<strong style="font-weight:600">nfe</strong></span>
+        </div>
+        <a href="OpenNFE.dc.html" style="color:var(--amber-300);font:500 14px/1 var(--font-sans)">abrir o protótipo »</a>
+      </div>
+      <div style="display:grid;gap:8px;max-width:760px">
+        <span style="font:600 13px/1 var(--font-display);letter-spacing:.14em;color:var(--amber-300)">DESIGN SYSTEM · V1</span>
+        <h1 style="margin:0;font:300 40px/1.1 var(--font-sans)"><strong style="font-weight:500">Fundamentos</strong> e componentes do OpenNFE</h1>
+        <p style="margin:0;font:16px/1.55 var(--font-sans);color:var(--text-on-dark-muted)">Construído sobre o Codemix Design System. Este documento define a identidade do produto, os estados fiscais, os componentes reutilizáveis e o mapeamento para Angular 22 + DaisyUI.</p>
+      </div>
+      <nav aria-label="Seções" style="display:flex;gap:6px;flex-wrap:wrap">
+        <sc-for list="{{ toc }}" as="t" hint-placeholder-count="7">
+          <a href="{{ t.href }}" style="height:30px;display:inline-flex;align-items:center;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border-on-dark);background:rgba(255,255,255,.04);color:#fff;text-decoration:none;font:14px/1 var(--font-sans)" style-hover="background:rgba(255,255,255,.1)">{{ t.label }}</a>
+        </sc-for>
+      </nav>
+    </div>
+  </header>
+
+  <main style="max-width:1200px;margin:0 auto;padding:32px 24px 80px;display:grid;gap:44px">
+
+    <section id="identidade" style="display:grid;gap:16px">
+      <div style="display:grid;gap:6px"><span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">01 · IDENTIDADE</span><h2 style="margin:0;font:300 28px/1.15 var(--font-sans)"><strong style="font-weight:500">Marca</strong> e princípios</h2></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px">
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:28px;display:flex;align-items:center;justify-content:center;gap:12px">
+          <span style="width:40px;height:40px;border-radius:var(--radius-sm);background:var(--info-700);display:flex;align-items:center;justify-content:center;font:700 16px/1 var(--font-display);color:#fff">NF</span>
+          <span style="font:300 28px/1 var(--font-sans);color:var(--graphite-800)">open<strong style="font-weight:600">nfe</strong></span>
+        </div>
+        <div style="background:var(--graphite-800);border-radius:var(--radius-md);padding:28px;display:flex;align-items:center;justify-content:center;gap:12px">
+          <span style="width:40px;height:40px;border-radius:var(--radius-sm);background:var(--info-700);display:flex;align-items:center;justify-content:center;font:700 16px/1 var(--font-display);color:#fff">NF</span>
+          <span style="font:300 28px/1 var(--font-sans);color:#fff">open<strong style="font-weight:600">nfe</strong></span>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:18px;display:grid;gap:8px;align-content:start">
+          <strong style="font:500 15px/1.3 var(--font-sans)">Wordmark de duas espessuras</strong>
+          <span style="font:13.5px/1.5 var(--font-sans);color:var(--text-muted-aa)">“open” em Jost light, “nfe” em semibold, em caixa baixa. O bloco NF em Oswald sobre azul fiscal é o único símbolo gráfico. Área de respiro mínima: metade da altura do bloco.</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px">
+        <sc-for list="{{ principles }}" as="p" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:6px">
+            <strong style="font:500 15px/1.3 var(--font-sans)">{{ p.t }}</strong>
+            <span style="font:13.5px/1.5 var(--font-sans);color:var(--text-muted-aa)">{{ p.d }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="cores" style="display:grid;gap:16px">
+      <div style="display:grid;gap:6px"><span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">02 · CORES</span><h2 style="margin:0;font:300 28px/1.15 var(--font-sans)"><strong style="font-weight:500">Paleta</strong> e papéis</h2><span style="font:14px/1.5 var(--font-sans);color:var(--text-muted-aa)">Todas as cores vêm dos tokens Codemix. Cada cor tem um papel fixo — nunca decorativo.</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:12px">
+        <sc-for list="{{ colors }}" as="c" hint-placeholder-count="10">
+          <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden">
+            <div style="height:64px;background:{{ c.v }};border-bottom:1px solid var(--border-subtle)"></div>
+            <div style="padding:10px 12px;display:grid;gap:3px">
+              <strong style="font:500 13.5px/1.2 var(--font-sans)">{{ c.role }}</strong>
+              <code style="font:12px/1.3 var(--font-mono);color:var(--text-muted-aa)">{{ c.token }} · {{ c.hex }}</code>
+              <span style="font:12px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ c.use }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+
+    <section id="tipografia" style="display:grid;gap:16px">
+      <div style="display:grid;gap:6px"><span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">03 · TIPOGRAFIA, ESPAÇO E RAIOS</span><h2 style="margin:0;font:300 28px/1.15 var(--font-sans)"><strong style="font-weight:500">Hierarquia</strong> e medidas</h2></div>
+      <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+        <sc-for list="{{ type }}" as="t" hint-placeholder-count="8">
+          <div style="display:grid;grid-template-columns:minmax(120px,200px) minmax(0,1fr);gap:16px;align-items:baseline;padding:14px 18px;border-bottom:1px solid var(--neutral-100)">
+            <code style="font:12px/1.4 var(--font-mono);color:var(--text-muted-aa)">{{ t.spec }}</code>
+            <span style="font:{{ t.font }};letter-spacing:{{ t.ls }};text-transform:{{ t.tt }};overflow-wrap:anywhere">{{ t.sample }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:16px">
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:10px">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Espaçamento · escala de 4 px</strong>
+          <sc-for list="{{ spaces }}" as="s" hint-placeholder-count="8">
+            <div style="display:grid;grid-template-columns:90px 1fr;gap:10px;align-items:center"><code style="font:12px/1 var(--font-mono);color:var(--text-muted-aa)">{{ s.t }}</code><span style="height:10px;width:{{ s.v }};background:var(--info-500);border-radius:2px"></span></div>
+          </sc-for>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:12px">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Raios</strong>
+          <div style="display:flex;gap:14px;flex-wrap:wrap">
+            <sc-for list="{{ radii }}" as="r" hint-placeholder-count="5">
+              <div style="display:grid;gap:6px;justify-items:center"><span style="width:64px;height:48px;border:2px solid var(--graphite-800);border-radius:{{ r.v }};background:var(--neutral-050)"></span><code style="font:11.5px/1.2 var(--font-mono);color:var(--text-muted-aa);text-align:center">{{ r.t }}<br>{{ r.use }}</code></div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="status" style="display:grid;gap:16px">
+      <div style="display:grid;gap:6px"><span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">04 · ESTADOS FISCAIS</span><h2 style="margin:0;font:300 28px/1.15 var(--font-sans)"><strong style="font-weight:500">Status</strong> e ambiente</h2><span style="font:14px/1.5 var(--font-sans);color:var(--text-muted-aa)">Cada estado combina cor, ícone e texto — a cor nunca é o único sinal. Rejeição fiscal (vermelho) e falha técnica (grafite) são sempre distintas.</span></div>
+      <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font:13.5px/1.4 var(--font-sans);min-width:720px">
+          <thead><tr style="text-align:left;background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:10px 14px">Chip</th><th style="padding:10px 14px">Significado</th><th style="padding:10px 14px">Ação esperada</th><th style="padding:10px 14px">DaisyUI</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ statuses }}" as="s" hint-placeholder-count="7">
+              <tr style="border-top:1px solid var(--neutral-100)">
+                <td style="padding:10px 14px"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:var(--radius-pill);background:{{ s.bg }};color:{{ s.fg }};font:600 11px/1 var(--font-display);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap"><span aria-hidden="true" style="width:12px;height:12px;background:currentColor;mask:url({{ s.icon }}) center/contain no-repeat"></span>{{ s.label }}</span></td>
+                <td style="padding:10px 14px">{{ s.mean }}</td>
+                <td style="padding:10px 14px;color:var(--text-muted-aa)">{{ s.act }}</td>
+                <td style="padding:10px 14px"><code style="font:12px/1.3 var(--font-mono)">{{ s.daisy }}</code></td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px">
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.HighlightBar" hint-size="100%,30px"><strong style="font:600 13px/1 var(--font-display);letter-spacing:.1em">HOMOLOGAÇÃO</strong><span>sem validade fiscal</span></x-import>
+          <div style="padding:14px 16px;font:13.5px/1.5 var(--font-sans);color:var(--text-muted-aa)">Homologação: faixa âmbar fixa sob o header em todas as telas, chip âmbar no seletor de ambiente e marca d'água “SEM VALOR FISCAL” no PDF.</div>
+        </div>
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow:hidden">
+          <div style="height:30px;display:flex;align-items:center;gap:8px;padding:0 16px;background:var(--success-700);color:#fff;font:600 13px/1 var(--font-display);letter-spacing:.1em">PRODUÇÃO</div>
+          <div style="padding:14px 16px;font:13.5px/1.5 var(--font-sans);color:var(--text-muted-aa)">Produção: linha verde de 3 px sob o header e chip verde. Entrar em produção exige confirmação explícita em modal.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="componentes" style="display:grid;gap:16px">
+      <div style="display:grid;gap:6px"><span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">05 · COMPONENTES</span><h2 style="margin:0;font:300 28px/1.15 var(--font-sans)"><strong style="font-weight:500">Biblioteca</strong> reutilizável</h2></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">
+
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:12px;align-content:start">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Buttons</strong>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" hint-size="90px,34px">primária</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" hint-size="100px,34px">secundária</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="danger" hint-size="90px,34px">cancelar NF</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="ghost" hint-size="70px,34px">ghost</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" loading="{{ true }}" hint-size="120px,34px">transmitindo</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" disabled="{{ true }}" hint-size="100px,34px">desabilitado</x-import>
+          </div>
+          <span style="font:12.5px/1.45 var(--font-sans);color:var(--text-muted-aa)">Rótulos em caixa baixa. Uma ação primária grafite por área. Ações destrutivas sempre em vermelho e com confirmação. No mobile, tamanho xl (44 px).</span>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:12px;align-content:start">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Inputs, selects e date pickers</strong>
+          <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">CNPJ<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="24.513.887/0001-04" style="font-family:var(--font-mono)" hint-size="100%,34px"></x-import></label>
+          <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Inscrição estadual<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" invalid="{{ true }}" placeholder="obrigatória para contribuinte" hint-size="100%,34px"></x-import><span style="font:12px/1.3 var(--font-sans);color:var(--danger-700)">Informe a IE ou marque como não contribuinte.</span></label>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ selOpts }}" value="NF-e" aria-label="Tipo" hint-size="100%,34px"></x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" type="date" value="2026-11-03" aria-label="Data" hint-size="100%,34px"></x-import>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:12px;align-content:start">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Checkbox, radio e toggle</strong>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Checkbox" label="Enviar XML ao destinatário" default-checked="{{ true }}" hint-size="100%,24px"></x-import>
+          <div style="display:flex;gap:16px;flex-wrap:wrap">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Radio" name="dsenv" label="Homologação" default-checked="{{ true }}" hint-size="120px,24px"></x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Radio" name="dsenv" label="Produção" hint-size="100px,24px"></x-import>
+          </div>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toggle" label="ISS retido pelo tomador" hint-size="100%,24px"></x-import>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:12px;align-content:start">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Dropdown, modal e drawer</strong>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Dropdown" label="ações" items="{{ ddItems }}" hint-size="100px,34px"></x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ openModal }}" hint-size="110px,34px">abrir modal</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ openDrawer }}" hint-size="110px,34px">abrir drawer</x-import>
+          </div>
+          <span style="font:12.5px/1.45 var(--font-sans);color:var(--text-muted-aa)">Modal: confirmações e formulários curtos (dialog nativo). Drawer lateral (até 560 px): detalhes e edição sem sair da listagem.</span>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:12px;align-content:start">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Tabs, breadcrumbs e pagination</strong>
+          <div style="height:41px;overflow:hidden"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Tabs" tabs="{{ tabs }}" value="{{ tab }}" on-change="{{ setTab }}" hint-size="100%,40px"></x-import></div>
+          <div style="height:41px;overflow:hidden"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Tabs" variant="boxed" tabs="{{ tabs }}" value="{{ tab }}" on-change="{{ setTab }}" hint-size="100%,40px"></x-import></div>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Breadcrumbs" items="{{ crumbs }}" hint-size="100%,18px"></x-import>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Pagination" page="{{ page }}" total="{{ 8 }}" on-change="{{ setPage }}" hint-size="100%,34px"></x-import>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:12px;align-content:start">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Alerts e tooltip</strong>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="error" title="Rejeição fiscal · SEFAZ 233" live="{{ false }}" hint-size="100%,60px">Corrija a IE do destinatário e reenvie.</x-import>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="neutral" title="Falha técnica · HTTP 504" live="{{ false }}" hint-size="100%,60px">Não chegou à SEFAZ. Reenvie sem alterações.</x-import>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Tooltip" content="Prazo de referência: 24 h após a autorização" hint-size="160px,34px"><span><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" hint-size="150px,26px">passe o mouse</x-import></span></x-import>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:12px;align-content:start">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Timeline de eventos</strong>
+          <ol style="list-style:none;margin:0;padding:0">
+            <sc-for list="{{ timeline }}" as="e" hint-placeholder-count="4">
+              <li style="display:grid;grid-template-columns:22px 1fr;gap:12px">
+                <div style="display:flex;flex-direction:column;align-items:center"><span aria-hidden="true" style="width:22px;height:22px;border-radius:var(--radius-sm);background:{{ e.bg }};display:flex;align-items:center;justify-content:center"><span style="width:12px;height:12px;background:{{ e.fg }};mask:url({{ e.icon }}) center/contain no-repeat"></span></span><span style="flex:1;width:2px;min-height:12px;background:{{ e.line }}"></span></div>
+                <div style="display:grid;gap:2px;padding-bottom:12px"><span style="font:500 13.5px/1.3 var(--font-sans)">{{ e.t }}</span><span style="font:11.5px/1 var(--font-mono);color:var(--text-muted-aa)">{{ e.w }}</span></div>
+              </li>
+            </sc-for>
+          </ol>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:12px;align-content:start">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Badges, avatar e progress</strong>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Badge" tone="neutral" hint-size="60px,20px">NF-e</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Badge" tone="dark" hint-size="60px,20px">série 1</x-import>
+            <span style="height:20px;display:inline-flex;align-items:center;padding:0 8px;border-radius:var(--radius-pill);background:var(--info-700);color:#fff;font:600 10.5px/1 var(--font-display);letter-spacing:.1em">ATIVA</span>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Avatar" name="Renata Moraes" size="sm" status="online" hint-size="32px,32px"></x-import>
+          </div>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Progress" value="{{ 64 }}" label="Uso do plano" show-value="{{ true }}" hint-size="100%,30px"></x-import>
+        </div>
+
+        <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:12px;align-content:start">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Loading, skeleton, empty e error</strong>
+          <div style="display:flex;gap:12px;align-items:center"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Loading" size="sm" label="Consultando SEFAZ" show-label="{{ true }}" hint-size="160px,20px"></x-import></div>
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Skeleton" lines="{{ 3 }}" height="12px" hint-size="100%,52px"></x-import>
+          <div style="padding:16px;border:1px dashed var(--border-strong);border-radius:var(--radius-md);text-align:center;display:grid;gap:4px"><strong style="font:500 14px/1.3 var(--font-sans)">Nenhum documento encontrado</strong><span style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">Amplie o período ou limpe os filtros.</span></div>
+          <div style="padding:14px;border:1px solid var(--danger-700);background:var(--danger-100);border-radius:var(--radius-md);display:grid;gap:4px"><strong style="font:500 14px/1.3 var(--font-sans);color:var(--danger-700)">Não foi possível carregar</strong><span style="font:12.5px/1.4 var(--font-sans)">O serviço não respondeu. Tente de novo em instantes.</span></div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Stats" items="{{ stats }}" hint-size="100%,100px"></x-import>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Panel" title-lead="Card" title="com cabeçalho" subtitle="Panel Codemix · hairline + faixa cinza" hint-size="100%,150px">
+          <span style="font:13.5px/1.5 var(--font-sans);color:var(--text-muted-aa)">Cards brancos, borda 1 px #dcdcdc, raio 6 px, sombra discreta. Título em duas espessuras.</span>
+        </x-import>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:640px">
+          <caption style="text-align:left;padding:12px 14px;font:500 15px/1.2 var(--font-sans)">Tabela densa · padrão de listagem</caption>
+          <thead><tr style="text-align:left;background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:10px 14px">Número</th><th style="padding:10px 14px">Destinatário</th><th style="padding:10px 14px;text-align:right">Valor</th><th style="padding:10px 14px">Status</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ tableRows }}" as="r" hint-placeholder-count="3">
+              <tr style="border-top:1px solid var(--neutral-100)" style-hover="background:var(--neutral-050)"><td style="padding:9px 14px;font:500 13px/1 var(--font-mono);color:var(--info-700)">{{ r.n }}</td><td style="padding:9px 14px">{{ r.d }}</td><td style="padding:9px 14px;text-align:right;font:500 13px/1 var(--font-mono)">{{ r.v }}</td><td style="padding:9px 14px"><span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:var(--radius-pill);background:{{ r.bg }};color:{{ r.fg }};font:600 11px/1 var(--font-display);letter-spacing:.06em;text-transform:uppercase">{{ r.s }}</span></td></tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="angular" style="display:grid;gap:16px">
+      <div style="display:grid;gap:6px"><span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">06 · IMPLEMENTAÇÃO</span><h2 style="margin:0;font:300 28px/1.15 var(--font-sans)"><strong style="font-weight:500">Angular 22</strong> + DaisyUI</h2><span style="font:14px/1.5 var(--font-sans);color:var(--text-muted-aa)">Tema DaisyUI derivado dos tokens; componentes standalone com signals; um componente Angular por item da biblioteca.</span></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:16px">
+        <div style="display:grid;gap:8px;min-width:0">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Tema · styles.css (Tailwind v4 + DaisyUI 5)</strong>
+          <pre style="margin:0;padding:14px 16px;border-radius:var(--radius-md);background:var(--charcoal-900);color:#e6e6e6;font:12.5px/1.6 var(--font-mono);overflow-x:auto">{{ themeCode }}</pre>
+        </div>
+        <div style="display:grid;gap:8px;min-width:0">
+          <strong style="font:500 15px/1.2 var(--font-sans)">Componente · status chip</strong>
+          <pre style="margin:0;padding:14px 16px;border-radius:var(--radius-md);background:var(--charcoal-900);color:#e6e6e6;font:12.5px/1.6 var(--font-mono);overflow-x:auto">{{ chipCode }}</pre>
+        </div>
+      </div>
+      <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font:13.5px/1.4 var(--font-sans);min-width:760px">
+          <thead><tr style="text-align:left;background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:10px 14px">Componente OpenNFE</th><th style="padding:10px 14px">Angular</th><th style="padding:10px 14px">Base DaisyUI</th><th style="padding:10px 14px">Notas</th></tr></thead>
+          <tbody>
+            <sc-for list="{{ mapping }}" as="m" hint-placeholder-count="12">
+              <tr style="border-top:1px solid var(--neutral-100)"><td style="padding:9px 14px;font-weight:500">{{ m.c }}</td><td style="padding:9px 14px"><code style="font:12px/1.3 var(--font-mono)">{{ m.a }}</code></td><td style="padding:9px 14px"><code style="font:12px/1.3 var(--font-mono)">{{ m.d }}</code></td><td style="padding:9px 14px;color:var(--text-muted-aa)">{{ m.n }}</td></tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px">
+        <sc-for list="{{ rules }}" as="r" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px 16px;display:grid;gap:6px"><strong style="font:500 14px/1.3 var(--font-sans)">{{ r.t }}</strong><span style="font:13px/1.5 var(--font-sans);color:var(--text-muted-aa)">{{ r.d }}</span></div>
+        </sc-for>
+      </div>
+    </section>
+  </main>
+
+  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Modal" open="{{ modalOpen }}" on-close="{{ closeModal }}" title="Confirmar transmissão" size="sm" hint-size="0,0">
+    <div style="display:grid;gap:14px">
+      <span style="font:14px/1.5 var(--font-sans)">NF-e nº 001.249 · Mercado Bom Preço · R$ 18.450,90</span>
+      <div style="display:flex;justify-content:flex-end;gap:8px"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ closeModal }}" hint-size="80px,34px">voltar</x-import><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" on-click="{{ closeModal }}" hint-size="100px,34px">transmitir</x-import></div>
+    </div>
+  </x-import>
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;background:rgba(31,31,31,.45);z-index:60"></div>
+    <aside role="dialog" aria-label="Exemplo de drawer" style="position:fixed;top:0;right:0;bottom:0;width:min(480px,100vw);z-index:61;background:#fff;box-shadow:var(--shadow-raised);display:flex;flex-direction:column">
+      <header style="display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)"><strong style="font:500 17px/1.2 var(--font-sans)">Padaria Trigo de Ouro ME</strong><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="ghost" size="sm" on-click="{{ closeDrawer }}" hint-size="60px,26px">fechar</x-import></header>
+      <div style="padding:18px;display:grid;gap:12px"><label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">E-mail<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="trigodeouro@email.com" hint-size="100%,34px"></x-import></label><span style="font:13px/1.5 var(--font-sans);color:var(--text-muted-aa)">Cabeçalho fixo, conteúdo rolável, rodapé com ações.</span></div>
+    </aside>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const IC = n => 'https://unpkg.com/lucide-static@0.544.0/icons/' + n + '.svg';
+class Component extends DCLogic {
+  state = { tab: 'a', page: 2, modal: false, drawer: false };
+  renderVals() {
+    const s = this.state;
+    return {
+      toc: [['#identidade', 'identidade'], ['#cores', 'cores'], ['#tipografia', 'tipografia'], ['#status', 'estados fiscais'], ['#componentes', 'componentes'], ['#angular', 'angular + daisyui']].map(([href, label]) => ({ href, label })),
+      principles: [
+        { t: 'O ambiente sempre visível', d: 'Homologação e produção nunca se confundem: faixa, chip e confirmação na troca.' },
+        { t: 'Status com causa e saída', d: 'Todo erro diz de onde veio (fisco ou provedor) e o que fazer para resolver.' },
+        { t: 'Densidade com respiro', d: 'Tabelas compactas, números em mono, seções com títulos claros e etapas curtas.' },
+        { t: 'Neutro em relação ao provedor', d: 'Nenhum provedor domina a interface; o fluxo é o mesmo para todos.' }
+      ],
+      colors: [
+        ['Estrutura · sidebar e ação primária', '--graphite-800', '#363d3f', 'Faz o papel do azul-marinho: chrome, botões primários, tooltips.'],
+        ['Interação · azul fiscal', '--info-700', '#2f6589', 'Links, seleção, foco de filtros, logotipo, gráficos.'],
+        ['Interação · azul claro', '--info-500', '#3d7ea6', 'Barras secundárias, indicadores de progresso.'],
+        ['Autorizado', '--success-700', '#3d6b1f', 'Texto e borda de sucesso; fundo --success-100.'],
+        ['Rejeição e erro', '--danger-700', '#a02f23', 'Rejeições fiscais, ações destrutivas; fundo --danger-100.'],
+        ['Pendência e homologação', '--amber-400', '#f6bc03', 'Faixa de homologação, pendências; texto --orange-800.'],
+        ['Falha técnica', '--charcoal-900', '#2b2b2b', 'Chip grafite: problema de comunicação, não fiscal.'],
+        ['Superfície', '--neutral-050', '#f6f6f6', 'Fundo da aplicação.'],
+        ['Card', '--neutral-000', '#ffffff', 'Cards, tabelas, formulários.'],
+        ['Texto secundário', '--text-muted-aa', '#666666', 'Legendas e metadados (AA sobre branco).']
+      ].map(([role, token, hex, use]) => ({ role, token, hex, use, v: 'var(' + token + ')' })),
+      type: [
+        ['Display · Oswald 700 30/1', '700 30px/1 var(--font-display)', 'R$ 488.960', '0', 'none'],
+        ['H1 · Jost 300+500 30/1.1', '300 30px/1.1 var(--font-sans)', 'Documentos fiscais', '0', 'none'],
+        ['H2 · Jost 300+500 19–21', '500 20px/1.2 var(--font-sans)', 'Emissões por período', '0', 'none'],
+        ['Kicker · Oswald 600 12 +.12em', '600 12px/1 var(--font-display)', 'operação · horizonte', '.12em', 'uppercase'],
+        ['Body · Jost 400 14–15/1.5', '400 15px/1.5 var(--font-sans)', 'Corrija a inscrição estadual e reenvie o documento.', '0', 'none'],
+        ['Caption · Jost 400 12.5', '400 12.5px/1.4 var(--font-sans)', 'Emitida em 03/11/2026 às 10:42', '0', 'none'],
+        ['Mono · JetBrains 12.5', '500 12.5px/1.4 var(--font-mono)', '4126 1124 5138 8700 0104 5500 1000 0012 4810', '0', 'none'],
+        ['Chip · Oswald 600 11 +.06em', '600 11px/1 var(--font-display)', 'autorizada', '.06em', 'uppercase']
+      ].map(([spec, font, sample, ls, tt]) => ({ spec, font, sample, ls, tt })),
+      spaces: [['--space-2 · 4', '4px'], ['--space-4 · 8', '8px'], ['--space-5 · 12', '12px'], ['--space-6 · 16', '16px'], ['--space-7 · 20', '20px'], ['--space-8 · 24', '24px'], ['--space-9 · 32', '32px'], ['--space-10 · 40', '40px']].map(([t, v]) => ({ t, v })),
+      radii: [['2px', 'chips', '--radius-xs'], ['4px', 'botões', '--radius-sm'], ['6px', 'cards', '--radius-md'], ['10px', 'campos', '--radius-lg'], ['999px', 'status', '--radius-pill']].map(([v, use, t]) => ({ v, use, t })),
+      statuses: [
+        ['Autorizada', 'var(--success-100)', 'var(--success-700)', 'circle-check', 'Aceita pela SEFAZ/prefeitura, com protocolo.', 'Baixar XML/PDF; cancelar no prazo.', 'badge badge-success badge-soft'],
+        ['Processando', 'var(--info-100)', 'var(--info-700)', 'loader', 'Enviada; aguardando retorno do fisco.', 'Aguardar ou consultar situação.', 'badge badge-info badge-soft'],
+        ['Pendente', 'var(--warning-100)', 'var(--orange-800)', 'clock', 'Salva e ainda não transmitida.', 'Revisar e transmitir.', 'badge badge-warning badge-soft'],
+        ['Rejeitada', 'var(--danger-100)', 'var(--danger-700)', 'circle-x', 'Recusada pelo fisco por dado inválido.', 'Corrigir o campo indicado e reenviar.', 'badge badge-error badge-soft'],
+        ['Falha técnica', 'var(--graphite-800)', '#fff', 'unplug', 'Erro entre OpenNFE e provedor; não chegou ao fisco.', 'Reenviar sem alterações.', 'badge badge-neutral'],
+        ['Denegada', 'var(--danger-700)', '#fff', 'octagon-x', 'Uso denegado por irregularidade cadastral.', 'Nenhuma; número consumido.', 'badge badge-error'],
+        ['Cancelada', 'var(--neutral-100)', 'var(--text-muted-aa)', 'ban', 'Evento de cancelamento homologado.', 'Somente consulta.', 'badge badge-ghost']
+      ].map(([label, bg, fg, icon, mean, act, daisy]) => ({ label, bg, fg, icon: IC(icon), mean, act, daisy })),
+      selOpts: ['NF-e', 'NFC-e', 'NFS-e'].map(v => ({ value: v, label: v })),
+      ddItems: [{ label: 'Baixar XML' }, { label: 'Consultar situação' }, { label: 'Solicitar cancelamento', tone: 'danger' }],
+      modalOpen: s.modal, openModal: () => this.setState({ modal: true }), closeModal: () => this.setState({ modal: false }),
+      drawerOpen: s.drawer, openDrawer: () => this.setState({ drawer: true }), closeDrawer: () => this.setState({ drawer: false }),
+      tabs: [{ id: 'a', label: 'Resumo' }, { id: 'b', label: 'Itens · 3' }, { id: 'c', label: 'Eventos' }], tab: s.tab, setTab: id => this.setState({ tab: id }),
+      crumbs: [{ label: 'Documentos fiscais', href: '#' }, { label: 'NF-e 001248' }], page: s.page, setPage: p => this.setState({ page: p }),
+      timeline: [['ok', 'circle-check', 'Autorizado pela SEFAZ', '03/11 10:42:13'], ['info', 'send', 'Enviado ao provedor', '03/11 10:42:09'], ['info', 'shield-check', 'Schema validado', '03/11 10:42:08'], ['n', 'file-pen', 'Documento criado', '03/11 10:41:55']].map(([tone, icon, t, w], i, a) => ({ t, w, icon: IC(icon), bg: { ok: 'var(--success-100)', info: 'var(--info-100)', n: 'var(--neutral-100)' }[tone], fg: { ok: 'var(--success-700)', info: 'var(--info-700)', n: 'var(--slate-600)' }[tone], line: i === a.length - 1 ? 'transparent' : 'var(--neutral-300)' })),
+      stats: [{ label: 'Autorizados', value: '128', desc: '94,8% do total', trend: 'up' }, { label: 'Rejeitados', value: '5', desc: '3,7%', trend: 'down' }],
+      tableRows: [['001248', 'Mercado Bom Preço Ltda', 'R$ 18.450,90', 'Autorizada', 'var(--success-100)', 'var(--success-700)'], ['001247', 'Restaurante Cantina Batel', 'R$ 1.536,40', 'Rejeitada', 'var(--danger-100)', 'var(--danger-700)'], ['000411', 'João Pedro Kowalski', 'R$ 4.446,00', 'Falha técnica', 'var(--graphite-800)', '#fff']].map(([n, d, v, st, bg, fg]) => ({ n, d, v, s: st, bg, fg })),
+      themeCode: '@import "tailwindcss";\n@plugin "daisyui" { themes: false; }\n@plugin "daisyui/theme" {\n  name: "opennfe";\n  default: true;\n  color-scheme: light;\n  --color-base-100: #ffffff;\n  --color-base-200: #f6f6f6;\n  --color-base-300: #dcdcdc;\n  --color-base-content: #363d3f;\n  --color-primary: #363d3f;      /* graphite-800 */\n  --color-primary-content: #fefefe;\n  --color-secondary: #2f6589;    /* info-700 */\n  --color-secondary-content: #ffffff;\n  --color-accent: #f6bc03;       /* amber-400 */\n  --color-accent-content: #2b2b2b;\n  --color-neutral: #2b2b2b;\n  --color-neutral-content: #fefefe;\n  --color-info: #2f6589;\n  --color-success: #3d6b1f;\n  --color-warning: #f1a10b;\n  --color-warning-content: #2b2b2b;\n  --color-error: #a02f23;\n  --radius-selector: 0.125rem;  /* 2px chips */\n  --radius-field: 0.625rem;     /* 10px campos */\n  --radius-box: 0.375rem;       /* 6px cards */\n  --size-field: 0.25rem;\n  --border: 1px;\n  --depth: 1;\n  --noise: 0;\n}\n@theme {\n  --font-sans: "Jost", system-ui, sans-serif;\n  --font-display: "Oswald", sans-serif;\n  --font-mono: "JetBrains Mono", monospace;\n}',
+      chipCode: "import { Component, input, computed } from '@angular/core';\n\nexport type FiscalStatus = 'autorizada' | 'processando'\n  | 'pendente' | 'rejeitada' | 'erro' | 'denegada' | 'cancelada';\n\nconst MAP: Record<FiscalStatus, [string, string]> = {\n  autorizada:  ['Autorizada',    'badge-success badge-soft'],\n  processando: ['Processando',   'badge-info badge-soft'],\n  pendente:    ['Pendente',      'badge-warning badge-soft'],\n  rejeitada:   ['Rejeitada',     'badge-error badge-soft'],\n  erro:        ['Falha técnica', 'badge-neutral'],\n  denegada:    ['Denegada',      'badge-error'],\n  cancelada:   ['Cancelada',     'badge-ghost'],\n};\n\n@Component({\n  selector: 'onfe-status-chip',\n  host: { role: 'status' },\n  template: `\n    <span class=\"badge badge-sm font-display uppercase\n                 tracking-wide rounded-full {{ cls() }}\">\n      <onfe-icon [name]=\"icon()\" size=\"12\" />\n      {{ label() }}\n    </span>`,\n})\nexport class StatusChip {\n  status = input.required<FiscalStatus>();\n  label = computed(() => MAP[this.status()][0]);\n  cls   = computed(() => MAP[this.status()][1]);\n  icon  = computed(() => ICONS[this.status()]);\n}",
+      mapping: [
+        ['App shell · sidebar', 'onfe-shell, onfe-sidebar', 'drawer lg:drawer-open, menu', 'Recolhível (68/256 px); drawer no mobile < 760 px.'],
+        ['Header · seletor de empresa', 'onfe-company-switcher', 'dropdown, menu', 'Signal global activeCompany; certificado no item.'],
+        ['Indicador de ambiente', 'onfe-env-switch, onfe-env-banner', 'join, btn, alert-warning', 'Produção exige modal de confirmação.'],
+        ['Button', 'onfe-button (diretiva)', 'btn btn-primary / btn-outline / btn-error', 'Caixa baixa; loading com loading-spinner.'],
+        ['Input / select / date', 'onfe-field + ReactiveForms', 'input, select, fieldset, label', 'Erro abaixo do campo; máscaras CPF/CNPJ/CEP.'],
+        ['Modal', 'onfe-modal (dialog)', 'modal, modal-box', 'showModal() nativo; foco preso; Esc fecha.'],
+        ['Drawer de detalhes', 'onfe-side-panel', 'drawer drawer-end', 'Máx. 560 px; header/rodapé fixos.'],
+        ['Tabs', 'onfe-tabs', 'tabs tabs-border / tabs-box', 'Setas do teclado; aria-selected.'],
+        ['Tabela densa', 'onfe-data-table', 'table table-sm table-pin-rows', 'Vira lista de cards abaixo de 760 px.'],
+        ['Status chip', 'onfe-status-chip', 'badge badge-soft', 'Ver mapeamento na seção 04.'],
+        ['Alert / toast', 'onfe-alert, ToastService', 'alert, toast toast-end', 'Rejeição = error; falha técnica = neutral.'],
+        ['Steps do wizard', 'onfe-stepper', 'steps', 'Compacto (barra + “Etapa n de 8”) abaixo de 1180 px.'],
+        ['Timeline', 'onfe-event-timeline', 'timeline timeline-vertical', 'Mais recente no topo.'],
+        ['Pagination / breadcrumbs', 'onfe-pagination, onfe-breadcrumbs', 'join, breadcrumbs', 'aria-current na página.'],
+        ['Skeleton / loading / empty', 'onfe-skeleton, onfe-empty-state', 'skeleton, loading', 'Empty state sempre com ação.']
+      ].map(([c, a, d, n]) => ({ c, a, d, n })),
+      rules: [
+        { t: 'Breakpoints', d: 'Mobile < 760 px · tablet 760–1100 px (sidebar recolhida) · desktop ≥ 1100 px. Grids com auto-fit/minmax.' },
+        { t: 'Estado e dados', d: 'Signals para empresa ativa, ambiente e sessão; HttpClient atrás de um FiscalProviderPort — nenhuma tela conhece o provedor.' },
+        { t: 'Ícones', d: 'lucide-angular, stroke 1,75, 16–18 px, sempre currentColor. Nunca emoji.' },
+        { t: 'Acessibilidade', d: 'WCAG 2.2 AA: foco visível 3 px, alvos ≥ 24 px (44 px no mobile), cor nunca é o único sinal.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

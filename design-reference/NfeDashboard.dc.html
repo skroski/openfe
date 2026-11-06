@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+</helmet>
+<div style="display:grid;gap:20px;min-width:0" data-screen-label="Dashboard">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
+    <div style="display:grid;gap:6px;min-width:0">
+      <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">OPERAÇÃO · {{ scopeLabel }}</span>
+      <h1 style="margin:0;font:300 30px/1.1 var(--font-sans);color:var(--text-heading)"><strong style="font-weight:500">Visão</strong> geral</h1>
+      <span style="font:14px/1.4 var(--font-sans);color:var(--text-muted-aa)">Emissões, pendências e saúde das integrações · {{ periodText }}</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ goDocs }}" hint-size="150px,34px">ver documentos</x-import>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" on-click="{{ goEmitir }}" hint-size="150px,34px">emitir documento</x-import>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px;background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+    <div style="height:41px;overflow:hidden;flex:none;max-width:100%"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Tabs" variant="boxed" label="Período" tabs="{{ periodTabs }}" value="{{ period }}" on-change="{{ setPeriod }}" hint-size="320px,40px"></x-import></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;flex:1;justify-content:flex-end">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" aria-label="Empresa" options="{{ companyOpts }}" value="{{ fCompany }}" on-change="{{ setCompanyF }}" style="width:210px" hint-size="210px,34px"></x-import>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" aria-label="Tipo de documento" options="{{ typeOpts }}" value="{{ fType }}" on-change="{{ setType }}" style="width:150px" hint-size="150px,34px"></x-import>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" aria-label="Ambiente" options="{{ envOpts }}" value="{{ fEnv }}" on-change="{{ setEnv }}" style="width:160px" hint-size="160px,34px"></x-import>
+    </div>
+  </div>
+
+  <sc-for list="{{ alerts }}" as="a" hint-placeholder-count="1">
+    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="{{ a.tone }}" title="{{ a.title }}" live="{{ false }}" hint-size="100%,64px">
+      <div style="display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;justify-content:space-between">
+        <span>{{ a.body }}</span>
+        <button onClick="{{ a.go }}" style="border:0;background:transparent;padding:0;color:var(--info-700);font:500 14px/1.2 var(--font-sans);text-decoration:underline;text-underline-offset:3px;cursor:pointer;white-space:nowrap">{{ a.cta }} »</button>
+      </div>
+    </x-import>
+  </sc-for>
+
+  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Stats" items="{{ kpis }}" hint-size="100%,104px"></x-import>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:20px">
+    <section style="grid-column:span {{ chartSpan }};background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06);min-width:0">
+      <header style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+        <div style="display:grid;gap:3px">
+          <h2 style="margin:0;font:300 19px/1.2 var(--font-sans)"><strong style="font-weight:500">Emissões</strong> por período</h2>
+          <span style="font:12.5px/1.3 var(--font-sans);color:var(--text-muted-aa)">Quantidade diária por situação · dados demonstrativos</span>
+        </div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;font:12.5px/1 var(--font-sans);color:var(--text-body)">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:var(--info-700)"></span>Autorizadas</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:var(--amber-400)"></span>Pendentes</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background:var(--danger-500)"></span>Rejeitadas</span>
+        </div>
+      </header>
+      <div style="padding:18px 18px 12px;display:grid;grid-template-columns:auto 1fr;gap:10px">
+        <div style="display:flex;flex-direction:column;justify-content:space-between;height:200px;font:11px/1 var(--font-mono);color:var(--text-muted-aa);text-align:right">
+          <span>{{ yMax }}</span><span>{{ yMid }}</span><span>0</span>
+        </div>
+        <div style="min-width:0">
+          <div style="position:relative;height:200px;display:flex;align-items:flex-end;gap:{{ barGap }};border-bottom:1px solid var(--border-strong);background:linear-gradient(180deg,transparent 0,transparent calc(50% - 1px),var(--neutral-100) calc(50% - 1px),var(--neutral-100) 50%,transparent 50%)">
+            <sc-for list="{{ bars }}" as="b" hint-placeholder-count="14">
+              <div title="{{ b.tip }}" style="flex:1;min-width:0;height:{{ b.h }};display:flex;flex-direction:column-reverse;border-radius:2px 2px 0 0;overflow:hidden;cursor:default" style-hover="opacity:.85">
+                <div style="height:{{ b.ha }};background:var(--info-700)"></div>
+                <div style="height:{{ b.hp }};background:var(--amber-400)"></div>
+                <div style="height:{{ b.hr }};background:var(--danger-500)"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;gap:{{ barGap }};margin-top:6px">
+            <sc-for list="{{ bars }}" as="b" hint-placeholder-count="14">
+              <span style="flex:1;min-width:0;text-align:center;font:10.5px/1 var(--font-mono);color:var(--text-muted-aa);overflow:hidden">{{ b.lbl }}</span>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06);min-width:0">
+      <header style="padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+        <h2 style="margin:0;font:300 19px/1.2 var(--font-sans)"><strong style="font-weight:500">Distribuição</strong> por tipo</h2>
+      </header>
+      <div style="padding:16px 18px;display:grid;gap:14px">
+        <sc-for list="{{ byType }}" as="t" hint-placeholder-count="4">
+          <div style="display:grid;gap:6px">
+            <div style="display:flex;justify-content:space-between;gap:8px;font:13.5px/1 var(--font-sans)">
+              <span style="display:flex;gap:8px;align-items:center"><strong style="font:600 12px/1 var(--font-display);letter-spacing:.06em;min-width:48px">{{ t.type }}</strong><span style="color:var(--text-muted-aa)">{{ t.name }}</span></span>
+              <span style="font:500 13px/1 var(--font-mono)">{{ t.qty }} · {{ t.pct }}</span>
+            </div>
+            <div style="height:8px;border-radius:2px;background:var(--neutral-100);overflow:hidden"><div style="height:100%;width:{{ t.pct }};background:{{ t.color }}"></div></div>
+          </div>
+        </sc-for>
+        <sc-if value="{{ noTypes }}" hint-placeholder-val="{{ false }}">
+          <span style="font:13.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">Nenhum documento no filtro atual.</span>
+        </sc-if>
+        <div style="margin-top:4px;padding-top:12px;border-top:1px solid var(--border-subtle);display:flex;justify-content:space-between;font:13px/1.3 var(--font-sans);color:var(--text-muted-aa)">
+          <span>Ticket médio</span><strong style="font:500 14px/1 var(--font-mono);color:var(--text-body)">{{ avgTicket }}</strong>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:20px">
+    <section style="grid-column:span {{ chartSpan }};background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06);min-width:0">
+      <header style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+        <h2 style="margin:0;font:300 19px/1.2 var(--font-sans)"><strong style="font-weight:500">Atividades</strong> recentes</h2>
+        <button onClick="{{ goDocs }}" style="border:0;background:transparent;color:var(--info-700);font:500 13.5px/1 var(--font-sans);cursor:pointer">ver todas »</button>
+      </header>
+      <div>
+        <sc-for list="{{ recent }}" as="d" hint-placeholder-count="6">
+          <button onClick="{{ d.open }}" style="display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center;width:100%;padding:11px 18px;border:0;border-bottom:1px solid var(--neutral-100);background:#fff;text-align:left;cursor:pointer;color:inherit" style-hover="background:var(--neutral-050)">
+            <span aria-hidden="true" style="width:32px;height:32px;border-radius:var(--radius-sm);background:{{ d.st.bg }};display:flex;align-items:center;justify-content:center">
+              <span style="width:16px;height:16px;background:{{ d.st.fg }};mask:url({{ d.st.icon }}) center/contain no-repeat"></span>
+            </span>
+            <span style="display:grid;gap:3px;min-width:0">
+              <span style="font:500 14px/1.25 var(--font-sans);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.type }} nº {{ d.num }} · {{ d.dest }}</span>
+              <span style="font:12.5px/1.3 var(--font-sans);color:var(--text-muted-aa);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.line }}</span>
+            </span>
+            <span style="display:grid;gap:5px;justify-items:end">
+              <span style="font:500 13.5px/1 var(--font-mono)">{{ d.valueF }}</span>
+              <span style="display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 8px;border-radius:var(--radius-pill);background:{{ d.st.bg }};color:{{ d.st.fg }};font:600 11px/1 var(--font-display);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap">{{ d.st.label }}</span>
+            </span>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+
+    <div style="display:grid;gap:20px;align-content:start;min-width:0">
+      <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06)">
+        <header style="padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+          <h2 style="margin:0;font:300 19px/1.2 var(--font-sans)"><strong style="font-weight:500">Alertas</strong> fiscais</h2>
+        </header>
+        <div style="padding:6px 0">
+          <sc-for list="{{ fiscalAlerts }}" as="f" hint-placeholder-count="3">
+            <button onClick="{{ f.go }}" style="display:grid;grid-template-columns:auto 1fr;gap:10px;width:100%;padding:10px 18px;border:0;background:transparent;text-align:left;cursor:pointer;color:inherit" style-hover="background:var(--neutral-050)">
+              <span aria-hidden="true" style="width:8px;height:8px;margin-top:6px;border-radius:50%;background:{{ f.dot }}"></span>
+              <span style="display:grid;gap:3px">
+                <span style="font:500 13.5px/1.3 var(--font-sans)">{{ f.title }}</span>
+                <span style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ f.body }}</span>
+              </span>
+            </button>
+          </sc-for>
+        </div>
+      </section>
+      <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06)">
+        <header style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+          <h2 style="margin:0;font:300 19px/1.2 var(--font-sans)"><strong style="font-weight:500">Situação</strong> das integrações</h2>
+          <button onClick="{{ goInteg }}" style="border:0;background:transparent;color:var(--info-700);font:500 13.5px/1 var(--font-sans);cursor:pointer">gerenciar »</button>
+        </header>
+        <div style="padding:6px 0">
+          <sc-for list="{{ provs }}" as="p" hint-placeholder-count="4">
+            <div style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;padding:10px 18px">
+              <span aria-hidden="true" style="width:9px;height:9px;border-radius:50%;background:{{ p.dot }};box-shadow:0 0 0 3px {{ p.ring }}"></span>
+              <span style="display:grid;gap:2px;min-width:0">
+                <span style="font:500 13.5px/1.2 var(--font-sans)">{{ p.name }}</span>
+                <span style="font:12px/1.2 var(--font-sans);color:var(--text-muted-aa)">{{ p.sub }}</span>
+              </span>
+              <span style="font:600 11px/1 var(--font-display);letter-spacing:.08em;color:{{ p.fg }}">{{ p.label }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { period: '30d', fCompany: null, fType: 'todos', fEnv: 'atual' };
+  renderVals() {
+    const app = this.props.app || {};
+    const D = app.data || { companies: [], docs: [], providers: [], status: {} };
+    const brl = app.brl || (v => 'R$ ' + v);
+    const s = this.state;
+    const fCompany = s.fCompany || app.companyId || 'todas';
+    const days = { hoje: 1, '7d': 7, '30d': 30, mes: 3 }[s.period];
+    const comps = fCompany === 'todas' ? D.companies : D.companies.filter(c => c.id === fCompany);
+    const envNow = s.fEnv === 'atual' ? app.env : s.fEnv;
+    const envF = envNow === 'homologacao' ? 0.18 : 1;
+    const base = { c1: 42, c2: 7, c3: 5, c4: 19 };
+    const ticket = { c1: 3820, c2: 2410, c3: 1680, c4: 14200 };
+    const typeShare = { c1: { 'NF-e': .62, 'NFC-e': .38 }, c2: { 'NF-e': 1 }, c3: { 'NFS-e': 1 }, c4: { 'NF-e': .7, 'CT-e': .22, 'MDF-e': .08 } };
+    const nDays = Math.max(days, 1);
+    const series = [];
+    for (let i = nDays - 1; i >= 0; i--) {
+      const d = new Date(2026, 10, 3); d.setDate(d.getDate() - i);
+      const wd = d.getDay(); const wf = wd === 0 ? .15 : wd === 6 ? .45 : 1;
+      let a = 0, p = 0, r = 0, val = 0;
+      comps.forEach(c => {
+        const sh = s.fType === 'todos' ? 1 : (typeShare[c.id] || {})[s.fType] || 0;
+        const n = (base[c.id] || 6) * wf * (0.78 + 0.22 * Math.sin(i * 1.7 + c.id.charCodeAt(1))) * envF * sh;
+        const aa = Math.round(n * .93), rr = Math.round(n * .035 + ((i + c.id.charCodeAt(1)) % 6 === 0 ? 1 : 0) * sh), pp = i < 2 ? Math.round(n * .05) + (sh ? 1 : 0) : Math.round(n * .01);
+        a += aa; r += rr; p += pp; val += aa * (ticket[c.id] || 2000);
+      });
+      series.push({ a, p, r, val, lbl: String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') });
+    }
+    const tot = series.reduce((o, x) => ({ a: o.a + x.a, p: o.p + x.p, r: o.r + x.r, val: o.val + x.val }), { a: 0, p: 0, r: 0, val: 0 });
+    const emit = tot.a + tot.p + tot.r;
+    const pct = n => emit ? (n / emit * 100).toLocaleString('pt-BR', { maximumFractionDigits: 1 }) + '%' : '0%';
+    const nf = n => n.toLocaleString('pt-BR');
+    const kpis = [
+      { label: 'Documentos emitidos', value: nf(emit), desc: 'no período selecionado' },
+      { label: 'Autorizados', value: nf(tot.a), desc: pct(tot.a) + ' do total', trend: 'up' },
+      { label: 'Rejeitados', value: nf(tot.r), desc: pct(tot.r) + ' · corrija e reenvie', trend: tot.r ? 'down' : undefined },
+      { label: 'Pendentes', value: nf(tot.p), desc: 'aguardando transmissão ou retorno' },
+      { label: 'Total financeiro', value: tot.val >= 1e6 ? 'R$ ' + (tot.val / 1e6).toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + ' mi' : brl(tot.val).replace(',00', ''), desc: 'valor autorizado' }
+    ];
+    let viewSeries = series;
+    if (nDays > 16 && app.w < 900) viewSeries = series.slice(-14);
+    const maxV = Math.max(4, ...viewSeries.map(x => x.a + x.p + x.r));
+    const yMax = Math.ceil(maxV / 5) * 5;
+    const bars = viewSeries.map((x, i) => {
+      const t = x.a + x.p + x.r;
+      return { h: (t / yMax * 100) + '%', ha: t ? (x.a / t * 100) + '%' : '0', hp: t ? (x.p / t * 100) + '%' : '0', hr: t ? (x.r / t * 100) + '%' : '0', tip: x.lbl + ' · ' + x.a + ' autorizadas, ' + x.p + ' pendentes, ' + x.r + ' rejeitadas', lbl: (viewSeries.length > 16 ? (i % 3 === 0 ? x.lbl : '') : x.lbl) };
+    });
+    const tAgg = {};
+    comps.forEach(c => Object.entries(typeShare[c.id] || {}).forEach(([t, sh]) => { if (s.fType !== 'todos' && t !== s.fType) return; tAgg[t] = (tAgg[t] || 0) + (base[c.id] || 6) * sh; }));
+    const tSum = Object.values(tAgg).reduce((a, b) => a + b, 0);
+    const names = { 'NF-e': 'Nota fiscal eletrônica', 'NFC-e': 'Consumidor eletrônica', 'NFS-e': 'Serviço eletrônica', 'CT-e': 'Conhecimento de transporte', 'MDF-e': 'Manifesto de documentos' };
+    const colors = { 'NF-e': 'var(--info-700)', 'NFC-e': 'var(--info-500)', 'NFS-e': 'var(--graphite-800)', 'CT-e': 'var(--slate-500)', 'MDF-e': 'var(--neutral-500)' };
+    const byType = Object.entries(tAgg).sort((a, b) => b[1] - a[1]).map(([t, v]) => ({ type: t, name: names[t], qty: nf(Math.round(emit * v / tSum)), pct: Math.round(v / tSum * 100) + '%', color: colors[t] }));
+
+    const docs = (D.docs || []).filter(d => fCompany === 'todas' || d.companyId === fCompany).slice(0, 7);
+    const provName = id => (D.providers.find(p => p.id === id) || {}).name || '—';
+    const recent = docs.map(d => ({
+      ...d, st: D.status[d.status] || {}, valueF: brl(d.value),
+      line: d.date + ' às ' + d.time + ' · ' + provName(d.providerId) + (d.rej ? ' · cód. ' + d.rej.code + ' ' + d.rej.msg : d.techError ? ' · ' + d.techError.code : ''),
+      open: () => app.go('documento', d.id)
+    }));
+    const alerts = [];
+    const ac = app.company;
+    if (ac && ac.cert && ac.cert.state === 'expired' && fCompany === ac.id) alerts.push({ tone: 'error', title: 'Certificado digital vencido · ' + ac.fantasia, body: 'Emissões bloqueadas desde ' + ac.cert.until + '. Envie um novo certificado A1 para retomar.', cta: 'renovar certificado', go: () => app.go('empresas', ac.id) });
+    const rejN = (D.docs || []).filter(d => (fCompany === 'todas' || d.companyId === fCompany) && (d.status === 'rejeitada' || d.status === 'erro')).length;
+    if (rejN) alerts.push({ tone: 'warning', title: rejN + (rejN > 1 ? ' documentos precisam' : ' documento precisa') + ' de atenção', body: 'Rejeições fiscais e falhas técnicas aguardando correção ou reenvio.', cta: 'revisar', go: () => app.go('documentos', 'atencao') });
+
+    const fiscalAlerts = [
+      { title: 'Certificado A1 vencido', body: 'Coop. Vale do Iguaçu · venceu em 28/10/2026', dot: 'var(--danger-500)', go: () => app.go('empresas', 'c4') },
+      { title: 'Certificado vence em 12 dias', body: 'Ateliê Pinhão · até 15/11/2026', dot: 'var(--amber-500)', go: () => app.go('empresas', 'c2') },
+      { title: 'NF-e 1245 cancelada fora do horário comercial', body: 'Evento homologado · revise a justificativa registrada', dot: 'var(--neutral-500)', go: () => app.go('documento', 'd8') },
+      { title: 'Sequência da série 1 com lacuna', body: 'Horizonte Alimentos · número 1240 não utilizado — avalie inutilizar', dot: 'var(--amber-500)', go: () => app.go('relatorios', 'pendentes') }
+    ];
+    const provs = (D.providers || []).map(p => {
+      const st = !p.active ? { label: 'INATIVO', dot: 'var(--neutral-500)', ring: 'var(--neutral-100)', fg: 'var(--text-muted-aa)' } : p.status === 'degradado' ? { label: 'LENTIDÃO', dot: 'var(--amber-500)', ring: 'var(--warning-100)', fg: 'var(--orange-800)' } : { label: 'OPERANDO', dot: 'var(--success-500)', ring: 'var(--success-100)', fg: 'var(--success-700)' };
+      return { ...st, name: p.name + (p.demo ? ' (demo)' : ''), sub: p.kind + (p.active ? ' · ' + p.latency.toLocaleString('pt-BR') + ' ms · sinc. ' + p.sync : ' · desativado') };
+    });
+    const set = k => e => this.setState({ [k]: e && e.target ? e.target.value : e });
+    return {
+      scopeLabel: (fCompany === 'todas' ? 'TODAS AS EMPRESAS' : ((D.companies.find(c => c.id === fCompany) || {}).fantasia || '').toUpperCase()),
+      periodText: { hoje: 'hoje, 03/11/2026', '7d': 'últimos 7 dias', '30d': 'últimos 30 dias', mes: 'novembro/2026' }[s.period],
+      periodTabs: [{ id: 'hoje', label: 'Hoje' }, { id: '7d', label: '7 dias' }, { id: '30d', label: '30 dias' }, { id: 'mes', label: 'Mês atual' }],
+      period: s.period, setPeriod: id => this.setState({ period: id }),
+      companyOpts: [{ value: 'todas', label: 'Todas as empresas' }, ...D.companies.map(c => ({ value: c.id, label: c.fantasia }))],
+      fCompany, setCompanyF: set('fCompany'),
+      typeOpts: [{ value: 'todos', label: 'Todos os tipos' }, 'NF-e', 'NFC-e', 'NFS-e', 'CT-e', 'MDF-e'].map(o => typeof o === 'string' ? { value: o, label: o } : o),
+      fType: s.fType, setType: set('fType'),
+      envOpts: [{ value: 'atual', label: 'Ambiente atual' }, { value: 'producao', label: 'Produção' }, { value: 'homologacao', label: 'Homologação' }],
+      fEnv: s.fEnv, setEnv: set('fEnv'),
+      kpis, bars, yMax, yMid: Math.round(yMax / 2), barGap: bars.length > 16 ? '3px' : '6px',
+      chartSpan: app.w >= 1100 ? 2 : 1,
+      byType, noTypes: byType.length === 0, avgTicket: tot.a ? brl(tot.val / tot.a) : '—',
+      recent, alerts, fiscalAlerts, provs,
+      goDocs: () => app.go('documentos'), goEmitir: () => app.go('emitir'), goInteg: () => app.go('integracoes')
+    };
+  }
+}
+</script>
+</body>
+</html>

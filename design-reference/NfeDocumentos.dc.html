@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+</helmet>
+<div style="display:grid;gap:18px;min-width:0" data-screen-label="Documentos fiscais">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
+    <div style="display:grid;gap:6px">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Breadcrumbs" items="{{ crumbs }}" hint-size="200px,18px"></x-import>
+      <h1 style="margin:0;font:300 30px/1.1 var(--font-sans);color:var(--text-heading)"><strong style="font-weight:500">Documentos</strong> fiscais</h1>
+      <span style="font:14px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ countText }}</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ exportCsv }}" hint-size="120px,34px">exportar</x-import>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ goImport }}" hint-size="130px,34px">importar XML</x-import>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" on-click="{{ goEmitir }}" hint-size="150px,34px">emitir documento</x-import>
+    </div>
+  </div>
+
+  <div style="overflow-x:auto">
+    <div style="height:41px;overflow:hidden;flex:none;max-width:100%"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Tabs" variant="line" label="Situação" tabs="{{ statusTabs }}" value="{{ tab }}" on-change="{{ setTab }}" hint-size="100%,40px"></x-import></div>
+  </div>
+
+  <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px;display:grid;gap:12px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,180px),1fr));gap:10px 12px">
+      <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa)">Data inicial
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" type="date" value="{{ f.from }}" on-change="{{ onFrom }}" hint-size="100%,34px"></x-import>
+      </label>
+      <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa)">Data final
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" type="date" value="{{ f.to }}" on-change="{{ onTo }}" hint-size="100%,34px"></x-import>
+      </label>
+      <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa)">Empresa
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ companyOpts }}" value="{{ fCompany }}" on-change="{{ onCompany }}" hint-size="100%,34px"></x-import>
+      </label>
+      <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa)">Tipo
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ typeOpts }}" value="{{ f.type }}" on-change="{{ onType }}" hint-size="100%,34px"></x-import>
+      </label>
+      <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa)">Status
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ statusOpts }}" value="{{ f.status }}" on-change="{{ onStatus }}" hint-size="100%,34px"></x-import>
+      </label>
+      <sc-if value="{{ moreFilters }}" hint-placeholder-val="{{ true }}">
+        <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa)">Número
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" placeholder="ex.: 1248" value="{{ f.num }}" on-change="{{ onNum }}" hint-size="100%,34px"></x-import>
+        </label>
+        <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa)">Destinatário
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" placeholder="nome ou CPF/CNPJ" value="{{ f.dest }}" on-change="{{ onDest }}" hint-size="100%,34px"></x-import>
+        </label>
+        <label style="display:grid;gap:5px;font:500 12.5px/1 var(--font-sans);color:var(--text-muted-aa);grid-column:span {{ keySpan }}">Chave de acesso
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" placeholder="44 dígitos ou parte da chave" value="{{ f.key }}" on-change="{{ onKey }}" style="font-family:var(--font-mono);font-size:13px" hint-size="100%,34px"></x-import>
+        </label>
+      </sc-if>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between">
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        <sc-for list="{{ chips }}" as="c" hint-placeholder-count="0">
+          <button onClick="{{ c.clear }}" style="display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border:1px solid var(--info-500);border-radius:var(--radius-pill);background:var(--info-100);color:var(--info-700);font:500 12.5px/1 var(--font-sans);cursor:pointer">{{ c.label }} <span aria-hidden="true">×</span></button>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:8px">
+        <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="ghost" size="sm" on-click="{{ toggleMore }}" hint-size="110px,26px">{{ moreLabel }}</x-import>
+        </sc-if>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ clearAll }}" hint-size="110px,26px">limpar filtros</x-import>
+      </div>
+    </div>
+  </section>
+
+  <sc-if value="{{ hasSelection }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:10px 14px;border-radius:var(--radius-md);background:var(--graphite-800);color:#fff">
+      <span style="font:500 14px/1 var(--font-sans)">{{ selCount }} selecionado(s)</span>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ bulkXml }}" hint-size="110px,26px">baixar XML (zip)</x-import>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ bulkPdf }}" hint-size="110px,26px">baixar DANFE</x-import>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ bulkSync }}" hint-size="110px,26px">consultar situação</x-import>
+        <button onClick="{{ clearSel }}" style="border:0;background:transparent;color:#fff;font:500 13px/1 var(--font-sans);text-decoration:underline;cursor:pointer">limpar</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ loading }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:16px;display:grid;gap:14px">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Skeleton" lines="{{ 6 }}" height="18px" gap="16px" hint-size="100%,200px"></x-import>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#fff;border:1px dashed var(--border-strong);border-radius:var(--radius-md);padding:48px 20px;display:grid;justify-items:center;gap:10px;text-align:center">
+      <span aria-hidden="true" style="width:44px;height:44px;border-radius:var(--radius-md);background:var(--neutral-100);display:flex;align-items:center;justify-content:center"><span style="width:22px;height:22px;background:var(--slate-500);mask:url(https://unpkg.com/lucide-static@0.544.0/icons/file-search.svg) center/contain no-repeat"></span></span>
+      <strong style="font:500 17px/1.3 var(--font-sans)">Nenhum documento encontrado</strong>
+      <span style="font:14px/1.5 var(--font-sans);color:var(--text-muted-aa);max-width:420px">Nenhum documento corresponde aos filtros. Amplie o período, troque a empresa ou limpe os filtros.</span>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ clearAll }}" hint-size="120px,34px">limpar filtros</x-import>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showTable }}" hint-placeholder-val="{{ true }}">
+    <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06);overflow:visible">
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:1180px">
+          <caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Documentos fiscais</caption>
+          <thead>
+            <tr style="background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%);text-align:left">
+              <th scope="col" style="width:40px;padding:10px 0 10px 14px;border-bottom:1px solid var(--border-subtle)">
+                <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Checkbox" aria-label="Selecionar todos" checked="{{ allSel }}" indeterminate="{{ someSel }}" on-change="{{ toggleAll }}" hint-size="18px,24px"></x-import>
+              </th>
+              <sc-for list="{{ cols }}" as="c" hint-placeholder-count="11">
+                <th scope="col" style="padding:10px 12px;border-bottom:1px solid var(--border-subtle);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted-aa);white-space:nowrap;text-align:{{ c.align }}">{{ c.label }}</th>
+              </sc-for>
+            </tr>
+          </thead>
+          <tbody>
+            <sc-for list="{{ rows }}" as="d" hint-placeholder-count="10">
+              <tr style="border-bottom:1px solid var(--neutral-100);background:{{ d.rowBg }}" style-hover="background:var(--neutral-050)">
+                <td style="padding:8px 0 8px 14px">
+                  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Checkbox" aria-label="Selecionar documento" checked="{{ d.sel }}" on-change="{{ d.toggle }}" hint-size="18px,24px"></x-import>
+                </td>
+                <td style="padding:8px 12px;white-space:nowrap"><button onClick="{{ d.open }}" style="border:0;background:transparent;padding:0;color:var(--info-700);font:500 13.5px/1 var(--font-mono);cursor:pointer;text-decoration:underline;text-underline-offset:3px">{{ d.numF }}</button></td>
+                <td style="padding:8px 12px;font-family:var(--font-mono);font-size:12.5px">{{ d.serie }}</td>
+                <td style="padding:8px 12px"><span style="display:inline-block;padding:3px 6px;border-radius:var(--radius-xs);background:var(--neutral-100);font:600 11.5px/1 var(--font-display);letter-spacing:.05em">{{ d.type }}</span></td>
+                <td style="padding:8px 12px;max-width:170px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="{{ d.companyName }}">{{ d.companyName }}</td>
+                <td style="padding:8px 12px;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="{{ d.dest }}">{{ d.dest }}</td>
+                <td style="padding:8px 12px;font:12.5px/1 var(--font-mono);white-space:nowrap;color:var(--text-muted-aa)">{{ d.destDoc }}</td>
+                <td style="padding:8px 12px;white-space:nowrap"><span>{{ d.date }}</span> <span style="color:var(--text-muted-aa);font-size:12px">{{ d.time }}</span></td>
+                <td style="padding:8px 12px;text-align:right;font:500 13px/1 var(--font-mono);white-space:nowrap">{{ d.valueF }}</td>
+                <td style="padding:8px 12px">
+                  <span title="{{ d.stTip }}" style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:var(--radius-pill);background:{{ d.st.bg }};color:{{ d.st.fg }};font:600 11px/1 var(--font-display);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap">
+                    <span aria-hidden="true" style="width:12px;height:12px;background:currentColor;mask:url({{ d.st.icon }}) center/contain no-repeat"></span>{{ d.st.label }}
+                  </span>
+                  <sc-if value="{{ d.hasCode }}" hint-placeholder-val="{{ false }}"><div style="margin-top:4px;font:11.5px/1.2 var(--font-sans);color:var(--text-muted-aa);white-space:nowrap">{{ d.code }}</div></sc-if>
+                </td>
+                <td style="padding:8px 12px;white-space:nowrap;font-size:12.5px;color:var(--text-muted-aa)">{{ d.provider }}</td>
+                <td style="padding:8px 12px 8px 4px;white-space:nowrap;text-align:right;position:relative">
+                  <div style="display:inline-flex;gap:2px">
+                    <button onClick="{{ d.open }}" title="Abrir detalhes" aria-label="Abrir detalhes" style="width:30px;height:30px;border:0;border-radius:var(--radius-sm);background:transparent;color:var(--slate-600);cursor:pointer;display:inline-flex;align-items:center;justify-content:center" style-hover="background:var(--neutral-100)"><span aria-hidden="true" style="width:16px;height:16px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/eye.svg) center/contain no-repeat"></span></button>
+                    <button onClick="{{ d.xml }}" disabled="{{ d.noFiles }}" title="Baixar XML" aria-label="Baixar XML" style="width:30px;height:30px;border:0;border-radius:var(--radius-sm);background:transparent;color:var(--slate-600);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;opacity:{{ d.fileOp }}" style-hover="background:var(--neutral-100)"><span aria-hidden="true" style="width:16px;height:16px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/file-code-2.svg) center/contain no-repeat"></span></button>
+                    <button onClick="{{ d.pdf }}" disabled="{{ d.noFiles }}" title="{{ d.pdfLabel }}" aria-label="{{ d.pdfLabel }}" style="width:30px;height:30px;border:0;border-radius:var(--radius-sm);background:transparent;color:var(--slate-600);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;opacity:{{ d.fileOp }}" style-hover="background:var(--neutral-100)"><span aria-hidden="true" style="width:16px;height:16px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/file-down.svg) center/contain no-repeat"></span></button>
+                    <button onClick="{{ d.menu }}" title="Mais ações" aria-label="Mais ações" aria-expanded="{{ d.menuOpen }}" style="width:30px;height:30px;border:0;border-radius:var(--radius-sm);background:{{ d.menuBg }};color:var(--slate-600);cursor:pointer;display:inline-flex;align-items:center;justify-content:center" style-hover="background:var(--neutral-100)"><span aria-hidden="true" style="width:16px;height:16px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/ellipsis.svg) center/contain no-repeat"></span></button>
+                  </div>
+                  <sc-if value="{{ d.menuOpen }}" hint-placeholder-val="{{ false }}">
+                    <div role="menu" style="position:absolute;right:12px;top:calc(100% - 4px);z-index:20;width:230px;background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:var(--shadow-raised);padding:6px;text-align:left">
+                      <sc-for list="{{ d.actions }}" as="a" hint-placeholder-count="4">
+                        <button role="menuitem" onClick="{{ a.run }}" disabled="{{ a.disabled }}" title="{{ a.why }}" style="display:flex;align-items:center;gap:10px;width:100%;min-height:34px;padding:0 10px;border:0;border-radius:var(--radius-xs);background:transparent;color:{{ a.fg }};font:13.5px/1.2 var(--font-sans);text-align:left;cursor:pointer;opacity:{{ a.op }}" style-hover="background:var(--neutral-100)">
+                          <span aria-hidden="true" style="width:15px;height:15px;flex:none;background:currentColor;mask:url({{ a.icon }}) center/contain no-repeat"></span>{{ a.label }}
+                        </button>
+                      </sc-for>
+                    </div>
+                  </sc-if>
+                </td>
+              </tr>
+            </sc-for>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:12px 14px;border-top:1px solid var(--border-subtle)">
+        <span style="font:13px/1 var(--font-sans);color:var(--text-muted-aa)">{{ pageText }}</span>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Pagination" page="{{ page }}" total="{{ pages }}" on-change="{{ setPage }}" hint-size="240px,34px"></x-import>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showCards }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;gap:10px">
+      <sc-for list="{{ rows }}" as="d" hint-placeholder-count="5">
+        <article style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px;display:grid;gap:10px">
+          <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+            <button onClick="{{ d.open }}" style="border:0;background:transparent;padding:0;text-align:left;cursor:pointer;display:grid;gap:4px;color:inherit;min-width:0">
+              <span style="font:600 12px/1 var(--font-display);letter-spacing:.06em;color:var(--text-muted-aa)">{{ d.type }} · SÉRIE {{ d.serie }}</span>
+              <span style="font:500 17px/1.1 var(--font-mono);color:var(--info-700)">{{ d.numF }}</span>
+            </button>
+            <span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:var(--radius-pill);background:{{ d.st.bg }};color:{{ d.st.fg }};font:600 11px/1 var(--font-display);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap">{{ d.st.label }}</span>
+          </div>
+          <div style="display:grid;gap:3px;font:13.5px/1.35 var(--font-sans)">
+            <strong style="font-weight:500">{{ d.dest }}</strong>
+            <span style="color:var(--text-muted-aa);font-size:12.5px">{{ d.destDoc }} · {{ d.companyName }}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding-top:10px;border-top:1px solid var(--neutral-100)">
+            <span style="font:12.5px/1 var(--font-sans);color:var(--text-muted-aa)">{{ d.date }} {{ d.time }}</span>
+            <strong style="font:500 15px/1 var(--font-mono)">{{ d.valueF }}</strong>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="lg" block="{{ true }}" on-click="{{ d.open }}" hint-size="100%,44px">detalhes</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="lg" block="{{ true }}" disabled="{{ d.noFiles }}" on-click="{{ d.xml }}" hint-size="100%,44px">XML</x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="lg" block="{{ true }}" disabled="{{ d.noFiles }}" on-click="{{ d.pdf }}" hint-size="100%,44px">PDF</x-import>
+          </div>
+        </article>
+      </sc-for>
+      <div style="display:flex;justify-content:center;padding-top:6px">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Pagination" page="{{ page }}" total="{{ pages }}" on-change="{{ setPage }}" hint-size="240px,34px"></x-import>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ anyMenu }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeMenu }}" style="position:fixed;inset:0;z-index:10"></div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { tab: 'todos', f: { from: '2026-10-01', to: '2026-11-03', company: null, type: '', status: '', num: '', dest: '', key: '' }, sel: {}, page: 1, menu: null, loading: true, more: false, syncing: null };
+  componentDidMount() {
+    const p = (this.props.app || {}).param;
+    if (p === 'atencao') this.setState({ tab: 'atencao' });
+    this._t = setTimeout(() => this.setState({ loading: false }), 450);
+  }
+  componentWillUnmount() { clearTimeout(this._t); }
+  renderVals() {
+    const app = this.props.app || {};
+    const D = app.data || { docs: [], companies: [], providers: [], status: {} };
+    const brl = app.brl || (v => v);
+    const s = this.state, f = s.f;
+    const fCompany = f.company || 'todas';
+    const toIso = d => d.date.split('/').reverse().join('-');
+    const groups = { todos: null, autorizada: ['autorizada'], andamento: ['processando', 'pendente'], atencao: ['rejeitada', 'erro'], encerrada: ['cancelada', 'denegada'] };
+    const base = D.docs.filter(d => {
+      if (fCompany !== 'todas' && d.companyId !== fCompany) return false;
+      if (f.type && d.type !== f.type) return false;
+      if (f.status && d.status !== f.status) return false;
+      if (f.from && toIso(d) < f.from) return false;
+      if (f.to && toIso(d) > f.to) return false;
+      if (f.num && !String(d.num).includes(f.num.trim())) return false;
+      if (f.dest) { const q = f.dest.toLowerCase(); if (!d.dest.toLowerCase().includes(q) && !(d.destDoc || '').replace(/\D/g, '').includes(q.replace(/\D/g, '') || '§')) return false; }
+      if (f.key) { const k = f.key.replace(/\D/g, ''); if (!d.key || !d.key.includes(k)) return false; }
+      return true;
+    });
+    const count = g => groups[g] ? base.filter(d => groups[g].includes(d.status)).length : base.length;
+    const list = groups[s.tab] ? base.filter(d => groups[s.tab].includes(d.status)) : base;
+    const per = 10, pages = Math.max(1, Math.ceil(list.length / per)), page = Math.min(s.page, pages);
+    const slice = list.slice((page - 1) * per, page * per);
+    const compName = id => (D.companies.find(c => c.id === id) || {}).fantasia || '—';
+    const provName = id => (D.providers.find(p => p.id === id) || {}).name || '—';
+    const fmtKey = k => k ? k.replace(/(\d{4})/g, '$1 ').trim() : '';
+    const dl = (d, kind) => app.toast && app.toast('success', kind + ' gerado', d.type + ' nº ' + d.num + (kind === 'XML' ? ' · ' + (d.key ? d.key.slice(0, 8) + '…-nfe.xml' : 'nfse.xml') : ' · arquivo PDF') + ' (demonstração)');
+    const rows = slice.map(d => {
+      const st = D.status[d.status] || {};
+      const authorized = ['autorizada', 'cancelada'].includes(d.status);
+      const canCancel = d.status === 'autorizada' && d.ago <= 1 && d.type !== 'NFC-e' || d.status === 'autorizada' && d.type === 'NFC-e' && d.ago === 0;
+      const pdfLabel = d.type === 'NF-e' ? 'Baixar DANFE' : d.type === 'NFC-e' ? 'Baixar DANFCE' : d.type === 'CT-e' ? 'Baixar DACTE' : d.type === 'MDF-e' ? 'Baixar DAMDFE' : 'Baixar PDF da NFS-e';
+      const actions = [
+        { label: 'Abrir detalhes', icon: app.IC('eye'), run: () => app.go('documento', d.id) },
+        { label: 'Visualizar eventos', icon: app.IC('history'), run: () => app.go('documento', d.id + ':eventos') },
+        { label: s.syncing === d.id ? 'Consultando…' : 'Consultar situação', icon: app.IC('refresh-cw'), run: () => { this.setState({ syncing: d.id }); setTimeout(() => { this.setState({ syncing: null, menu: null }); app.toast('info', 'Situação consultada', d.type + ' nº ' + d.num + ': ' + st.label.toLowerCase() + ' na ' + (d.type === 'NFS-e' ? 'prefeitura' : 'SEFAZ') + '.'); }, 900); } },
+        d.status === 'rejeitada' || d.status === 'erro' ? { label: 'Corrigir e reenviar', icon: app.IC('send'), run: () => app.go('documento', d.id) } : null,
+        { label: 'Solicitar cancelamento', icon: app.IC('ban'), fg: 'var(--danger-700)', disabled: !canCancel, why: canCancel ? '' : (d.status !== 'autorizada' ? 'Somente documentos autorizados podem ser cancelados' : 'Prazo de cancelamento encerrado — use carta de correção ou nota de devolução'), run: () => app.go('documento', d.id + ':cancelar') }
+      ].filter(Boolean).map(a => ({ fg: 'var(--text-body)', op: a.disabled ? .45 : 1, ...a, run: a.disabled ? undefined : () => { a.run(); if (!/Consultar/.test(a.label)) this.setState({ menu: null }); } }));
+      return {
+        ...d, st, numF: String(d.num).padStart(6, '0'), companyName: compName(d.companyId), provider: provName(d.providerId), valueF: brl(d.value),
+        hasCode: !!(d.rej || d.techError), code: d.rej ? 'SEFAZ ' + d.rej.code : d.techError ? d.techError.code + ' · provedor' : '',
+        stTip: d.rej ? 'Rejeição fiscal ' + d.rej.code + ': ' + d.rej.msg : d.techError ? 'Falha técnica: ' + d.techError.msg : st.label,
+        sel: !!s.sel[d.id], rowBg: s.sel[d.id] ? 'rgba(61,126,166,.06)' : '#fff',
+        toggle: e => this.setState(x => ({ sel: { ...x.sel, [d.id]: e.target.checked } })),
+        open: () => app.go('documento', d.id), xml: () => authorized && dl(d, 'XML'), pdf: () => authorized && dl(d, pdfLabel.replace('Baixar ', '')),
+        noFiles: !authorized, fileOp: authorized ? 1 : .35, pdfLabel,
+        menuOpen: s.menu === d.id, menuBg: s.menu === d.id ? 'var(--neutral-100)' : 'transparent', menu: () => this.setState({ menu: s.menu === d.id ? null : d.id }), actions
+      };
+    });
+    const selIds = Object.keys(s.sel).filter(k => s.sel[k]);
+    const pageIds = slice.map(d => d.id);
+    const allSel = pageIds.length > 0 && pageIds.every(id => s.sel[id]);
+    const setF = k => e => this.setState(x => ({ f: { ...x.f, [k]: e.target.value }, page: 1 }));
+    const chips = [];
+    if (f.type) chips.push({ label: 'Tipo: ' + f.type, clear: () => this.setState(x => ({ f: { ...x.f, type: '' } })) });
+    if (f.status) chips.push({ label: 'Status: ' + D.status[f.status].label, clear: () => this.setState(x => ({ f: { ...x.f, status: '' } })) });
+    if (f.num) chips.push({ label: 'Nº ' + f.num, clear: () => this.setState(x => ({ f: { ...x.f, num: '' } })) });
+    if (f.dest) chips.push({ label: 'Destinatário: ' + f.dest, clear: () => this.setState(x => ({ f: { ...x.f, dest: '' } })) });
+    if (f.key) chips.push({ label: 'Chave: …' + f.key.slice(-8), clear: () => this.setState(x => ({ f: { ...x.f, key: '' } })) });
+    const mobile = !!app.mobile;
+    const bulk = kind => () => { app.toast('success', kind, selIds.length + ' documento(s) · arquivo preparado (demonstração)'); };
+    return {
+      crumbs: [{ label: 'Operação', href: '#' }, { label: 'Documentos fiscais' }],
+      countText: list.length + ' documento(s) · ' + (fCompany === 'todas' ? 'todas as empresas' : compName(fCompany)) + ' · ' + (app.isHomolog ? 'homologação' : 'produção'),
+      statusTabs: [
+        { id: 'todos', label: 'Todos · ' + count('todos') }, { id: 'autorizada', label: 'Autorizados · ' + count('autorizada') },
+        { id: 'andamento', label: 'Em andamento · ' + count('andamento') }, { id: 'atencao', label: 'Requer atenção · ' + count('atencao') },
+        { id: 'encerrada', label: 'Cancelados e denegados · ' + count('encerrada') }
+      ],
+      tab: s.tab, setTab: id => this.setState({ tab: id, page: 1 }),
+      f, fCompany,
+      companyOpts: [{ value: 'todas', label: 'Todas as empresas' }, ...D.companies.map(c => ({ value: c.id, label: c.fantasia }))],
+      typeOpts: [{ value: '', label: 'Todos os tipos' }, ...['NF-e', 'NFC-e', 'NFS-e', 'CT-e', 'MDF-e'].map(t => ({ value: t, label: t }))],
+      statusOpts: [{ value: '', label: 'Todos os status' }, ...Object.entries(D.status).map(([k, v]) => ({ value: k, label: v.label }))],
+      onFrom: setF('from'), onTo: setF('to'), onCompany: e => this.setState(x => ({ f: { ...x.f, company: e.target.value }, page: 1 })), onType: setF('type'), onStatus: setF('status'), onNum: setF('num'), onDest: setF('dest'), onKey: setF('key'),
+      moreFilters: !mobile || s.more, mobile, toggleMore: () => this.setState({ more: !s.more }), moreLabel: s.more ? 'menos filtros' : 'mais filtros',
+      keySpan: mobile ? 1 : 2, chips,
+      clearAll: () => this.setState({ f: { from: '', to: '', company: 'todas', type: '', status: '', num: '', dest: '', key: '' }, tab: 'todos', page: 1 }),
+      cols: [{ label: 'Número' }, { label: 'Série' }, { label: 'Tipo' }, { label: 'Empresa emissora' }, { label: 'Destinatário' }, { label: 'CPF/CNPJ' }, { label: 'Emissão' }, { label: 'Valor', align: 'right' }, { label: 'Status' }, { label: 'Provedor' }, { label: 'Ações', align: 'right' }].map(c => ({ align: 'left', ...c })),
+      rows, loading: s.loading, showEmpty: !s.loading && list.length === 0, showTable: !s.loading && list.length > 0 && !mobile, showCards: !s.loading && list.length > 0 && mobile,
+      page, pages, setPage: p => this.setState({ page: p }), pageText: 'Exibindo ' + (list.length ? (page - 1) * per + 1 : 0) + '–' + Math.min(page * per, list.length) + ' de ' + list.length,
+      allSel, someSel: !allSel && pageIds.some(id => s.sel[id]),
+      toggleAll: e => { const v = e.target.checked; this.setState(x => { const sel = { ...x.sel }; pageIds.forEach(id => sel[id] = v); return { sel }; }); },
+      hasSelection: selIds.length > 0, selCount: selIds.length, clearSel: () => this.setState({ sel: {} }),
+      bulkXml: bulk('XML em lote'), bulkPdf: bulk('PDFs em lote'), bulkSync: bulk('Situação consultada'),
+      anyMenu: !!s.menu, closeMenu: () => this.setState({ menu: null }),
+      goEmitir: () => app.go('emitir'), goImport: () => app.go('importacao'),
+      exportCsv: () => app.toast('success', 'Exportação iniciada', list.length + ' linhas · CSV (demonstração)')
+    };
+  }
+}
+</script>
+</body>
+</html>

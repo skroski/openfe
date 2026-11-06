@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+</helmet>
+<div style="display:grid;gap:18px;min-width:0" data-screen-label="Configurações">
+  <div style="display:grid;gap:6px">
+    <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">SISTEMA</span>
+    <h1 style="margin:0;font:300 30px/1.1 var(--font-sans);color:var(--text-heading)"><strong style="font-weight:500">Configurações</strong> da organização</h1>
+  </div>
+  <div style="display:grid;grid-template-columns:{{ cols }};gap:20px;align-items:start">
+    <nav aria-label="Seções de configuração" style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:6px;display:{{ navDisplay }};gap:2px;overflow-x:auto;position:{{ navPos }};top:110px">
+      <sc-for list="{{ sections }}" as="x" hint-placeholder-count="9">
+        <button onClick="{{ x.pick }}" aria-current="{{ x.cur }}" style="display:flex;align-items:center;gap:10px;min-height:40px;padding:8px 10px;border:0;border-radius:var(--radius-sm);background:{{ x.bg }};color:{{ x.fg }};font:{{ x.fw }} 14px/1.2 var(--font-sans);text-align:left;cursor:pointer;white-space:nowrap;flex:none" style-hover="background:var(--neutral-100)">
+          <span aria-hidden="true" style="width:16px;height:16px;flex:none;background:currentColor;mask:url({{ x.icon }}) center/contain no-repeat"></span>{{ x.label }}
+        </button>
+      </sc-for>
+    </nav>
+
+    <section style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06);min-width:0">
+      <header style="display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+        <div style="display:grid;gap:3px"><h2 style="margin:0;font:300 21px/1.2 var(--font-sans)"><strong style="font-weight:500">{{ cur.label }}</strong></h2><span style="font:12.5px/1.3 var(--font-sans);color:var(--text-muted-aa)">{{ cur.desc }}</span></div>
+        <sc-if value="{{ hasAction }}" hint-placeholder-val="{{ false }}">
+          <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" size="sm" on-click="{{ action }}" hint-size="140px,26px">{{ actionLabel }}</x-import>
+        </sc-if>
+      </header>
+      <div style="padding:18px;display:grid;gap:16px;min-width:0">
+
+        <sc-if value="{{ v.org }}" hint-placeholder-val="{{ true }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px 18px">
+            <sc-for list="{{ orgFields }}" as="f" hint-placeholder-count="6">
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">{{ f.l }}<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ f.v }}" on-change="{{ f.set }}" hint-size="100%,34px"></x-import></label>
+            </sc-for>
+            <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Fuso horário<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ tzOpts }}" value="America/Sao_Paulo" hint-size="100%,34px"></x-import></label>
+          </div>
+          <div style="display:flex;justify-content:flex-end"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" on-click="{{ saveOrg }}" hint-size="90px,34px">salvar</x-import></div>
+        </sc-if>
+
+        <sc-if value="{{ v.usuarios }}" hint-placeholder-val="{{ false }}">
+          <div style="overflow-x:auto;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+            <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:720px">
+              <thead><tr style="text-align:left;background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:9px 12px">Usuário</th><th style="padding:9px 12px">Papel</th><th style="padding:9px 12px">Empresas</th><th style="padding:9px 12px">Último acesso</th><th style="padding:9px 12px">Situação</th></tr></thead>
+              <tbody>
+                <sc-for list="{{ users }}" as="u" hint-placeholder-count="5">
+                  <tr style="border-top:1px solid var(--neutral-100)">
+                    <td style="padding:9px 12px"><div style="display:flex;gap:10px;align-items:center"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Avatar" name="{{ u.name }}" size="sm" hint-size="32px,32px"></x-import><div style="display:grid;gap:2px"><span style="font-weight:500">{{ u.name }}</span><span style="font:12px/1 var(--font-sans);color:var(--text-muted-aa)">{{ u.email }}</span></div></div></td>
+                    <td style="padding:9px 12px;width:180px"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ roleOpts }}" value="{{ u.role }}" on-change="{{ u.setRole }}" aria-label="Papel" hint-size="100%,34px"></x-import></td>
+                    <td style="padding:9px 12px">{{ u.comps }}</td>
+                    <td style="padding:9px 12px;font:12.5px/1 var(--font-mono)">{{ u.last }}</td>
+                    <td style="padding:9px 12px"><span style="display:inline-flex;align-items:center;gap:6px;font:500 12.5px/1 var(--font-sans);color:{{ u.sFg }}"><span aria-hidden="true" style="width:7px;height:7px;border-radius:50%;background:{{ u.sDot }}"></span>{{ u.status }}</span></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ v.papeis }}" hint-placeholder-val="{{ false }}">
+          <div style="overflow-x:auto;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+            <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:720px">
+              <thead><tr style="background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:9px 12px;text-align:left">Permissão</th><sc-for list="{{ roles }}" as="r" hint-placeholder-count="5"><th style="padding:9px 8px;text-align:center">{{ r }}</th></sc-for></tr></thead>
+              <tbody>
+                <sc-for list="{{ permRows }}" as="p" hint-placeholder-count="9">
+                  <tr style="border-top:1px solid var(--neutral-100)">
+                    <td style="padding:8px 12px"><div style="display:grid;gap:2px"><span style="font-weight:500">{{ p.label }}</span><span style="font:12px/1.3 var(--font-sans);color:var(--text-muted-aa)">{{ p.desc }}</span></div></td>
+                    <sc-for list="{{ p.cells }}" as="c" hint-placeholder-count="5"><td style="padding:8px;text-align:center"><span style="display:inline-flex"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Checkbox" aria-label="{{ c.aria }}" checked="{{ c.on }}" disabled="{{ c.locked }}" on-change="{{ c.toggle }}" hint-size="18px,24px"></x-import></span></td></sc-for>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+          <span style="font:12.5px/1.4 var(--font-sans);color:var(--text-muted-aa)">Administrador sempre tem todas as permissões. Emitir em produção é separado de homologação para evitar transmissões acidentais.</span>
+        </sc-if>
+
+        <sc-if value="{{ v.seguranca }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:14px">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toggle" label="Exigir autenticação em dois fatores para todos os usuários" checked="{{ sec.mfa }}" on-change="{{ toggleMfa }}" hint-size="100%,24px"></x-import>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toggle" label="Pedir confirmação de senha antes de transmitir em produção" checked="{{ sec.confirmProd }}" on-change="{{ toggleConfirm }}" hint-size="100%,24px"></x-import>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px 18px">
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Encerrar sessão após inatividade<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ sessOpts }}" value="{{ sec.sess }}" on-change="{{ onSess }}" hint-size="100%,34px"></x-import></label>
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">IPs permitidos para a API (um por linha)<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Textarea" rows="{{ 3 }}" value="{{ sec.ips }}" on-change="{{ onIps }}" style="font-family:var(--font-mono);font-size:13px" hint-size="100%,80px"></x-import></label>
+            </div>
+            <div style="display:grid;gap:8px">
+              <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">SESSÕES ATIVAS</span>
+              <sc-for list="{{ sessions }}" as="x" hint-placeholder-count="3">
+                <div style="display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+                  <div style="display:grid;gap:2px"><span style="font:500 13.5px/1.2 var(--font-sans)">{{ x.d }}</span><span style="font:12px/1.3 var(--font-sans);color:var(--text-muted-aa)">{{ x.w }}</span></div>
+                  <sc-if value="{{ x.current }}" hint-placeholder-val="{{ false }}"><span style="font:600 11px/1 var(--font-display);letter-spacing:.08em;color:var(--success-700)">ESTA SESSÃO</span></sc-if>
+                  <sc-if value="{{ x.other }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ x.revoke }}" hint-size="80px,26px">encerrar</x-import></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ v.api }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ newKeyShown }}" hint-placeholder-val="{{ false }}">
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Alert" tone="success" title="Chave criada · copie agora" on-dismiss="{{ hideKey }}" hint-size="100%,90px">
+              <div style="display:grid;gap:6px"><span>Por segurança, esta é a única vez que a chave completa será exibida.</span><code style="padding:8px 10px;background:#fff;border-radius:var(--radius-sm);font:12.5px/1.4 var(--font-mono);word-break:break-all">{{ newKey }}</code></div>
+            </x-import>
+          </sc-if>
+          <div style="overflow-x:auto;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+            <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:760px">
+              <thead><tr style="text-align:left;background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:9px 12px">Nome</th><th style="padding:9px 12px">Chave</th><th style="padding:9px 12px">Ambiente</th><th style="padding:9px 12px">Escopo</th><th style="padding:9px 12px">Último uso</th><th style="padding:9px 12px"></th></tr></thead>
+              <tbody>
+                <sc-for list="{{ keys }}" as="k" hint-placeholder-count="3">
+                  <tr style="border-top:1px solid var(--neutral-100);opacity:{{ k.op }}">
+                    <td style="padding:9px 12px;font-weight:500">{{ k.name }}</td><td style="padding:9px 12px;font:12.5px/1 var(--font-mono)">{{ k.prefix }}</td>
+                    <td style="padding:9px 12px"><span style="padding:3px 7px;border-radius:var(--radius-xs);background:{{ k.eBg }};color:{{ k.eFg }};font:600 11px/1 var(--font-display);letter-spacing:.08em">{{ k.envL }}</span></td>
+                    <td style="padding:9px 12px;font-size:12.5px">{{ k.scope }}</td><td style="padding:9px 12px;font:12.5px/1 var(--font-mono)">{{ k.last }}</td>
+                    <td style="padding:9px 12px;text-align:right"><sc-if value="{{ k.alive }}" hint-placeholder-val="{{ true }}"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="ghost" size="sm" on-click="{{ k.revoke }}" style="color:var(--danger-700)" hint-size="70px,26px">revogar</x-import></sc-if><sc-if value="{{ k.dead }}" hint-placeholder-val="{{ false }}"><span style="font:12.5px/1 var(--font-sans);color:var(--text-muted-aa)">revogada</span></sc-if></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ v.webhooks }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:10px">
+            <sc-for list="{{ hooks }}" as="h" hint-placeholder-count="2">
+              <div style="display:grid;gap:10px;padding:14px;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+                <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;align-items:center">
+                  <code style="font:500 13px/1.3 var(--font-mono);word-break:break-all">{{ h.url }}</code>
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toggle" size="sm" label="{{ h.onLabel }}" checked="{{ h.on }}" on-change="{{ h.toggle }}" hint-size="90px,24px"></x-import>
+                    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" size="sm" on-click="{{ h.test }}" hint-size="110px,26px">enviar teste</x-import>
+                  </div>
+                </div>
+                <div style="display:flex;gap:4px;flex-wrap:wrap"><sc-for list="{{ h.events }}" as="e" hint-placeholder-count="3"><span style="padding:3px 7px;border-radius:var(--radius-xs);background:var(--neutral-100);font:12px/1.2 var(--font-mono)">{{ e }}</span></sc-for></div>
+                <span style="font:12.5px/1.3 var(--font-sans);color:{{ h.lastFg }}">{{ h.last }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ v.prefs }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;gap:12px">
+            <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">NOTIFICAÇÕES POR E-MAIL</span>
+            <sc-for list="{{ prefs }}" as="p" hint-placeholder-count="5">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toggle" label="{{ p.l }}" checked="{{ p.on }}" on-change="{{ p.toggle }}" hint-size="100%,24px"></x-import>
+            </sc-for>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:14px 18px;margin-top:6px">
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Página inicial<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ homeOpts }}" value="dashboard" hint-size="100%,34px"></x-import></label>
+              <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Itens por página nas tabelas<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ pageOpts }}" value="10" hint-size="100%,34px"></x-import></label>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ v.plano }}" hint-placeholder-val="{{ false }}">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:16px">
+            <div style="padding:18px;border-radius:var(--radius-md);background:var(--graphite-800);color:#fff;display:grid;gap:10px">
+              <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--amber-300)">PLANO ATUAL</span>
+              <strong style="font:300 26px/1.1 var(--font-sans)"><span style="font-weight:500">Profissional</span> mensal</strong>
+              <span style="font:13.5px/1.5 var(--font-sans);color:var(--text-on-dark-muted)">Até 10 empresas · 2.000 documentos/mês · 3 provedores · API e webhooks</span>
+              <span style="font:13.5px/1.4 var(--font-sans)">Renovação em 01/12/2026</span>
+              <a href="#" onClick="{{ seePlans }}" style="color:var(--amber-300);font:500 14px/1 var(--font-sans)">Consulte nossos planos »</a>
+            </div>
+            <div style="display:grid;gap:14px;align-content:start">
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Progress" value="{{ usage }}" max="{{ 2000 }}" label="Documentos em novembro" show-value="{{ true }}" hint-size="100%,30px"></x-import>
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Progress" value="{{ 4 }}" max="{{ 10 }}" label="Empresas" show-value="{{ true }}" hint-size="100%,30px"></x-import>
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Progress" value="{{ 3 }}" max="{{ 3 }}" label="Provedores ativos" show-value="{{ true }}" hint-size="100%,30px"></x-import>
+            </div>
+          </div>
+          <div style="overflow-x:auto;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+            <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:520px">
+              <thead><tr style="text-align:left;background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:9px 12px">Competência</th><th style="padding:9px 12px">Documentos</th><th style="padding:9px 12px">Situação</th><th style="padding:9px 12px"></th></tr></thead>
+              <tbody><sc-for list="{{ invoices }}" as="i" hint-placeholder-count="3"><tr style="border-top:1px solid var(--neutral-100)"><td style="padding:9px 12px">{{ i.m }}</td><td style="padding:9px 12px;font:12.5px/1 var(--font-mono)">{{ i.d }}</td><td style="padding:9px 12px;color:var(--success-700);font-weight:500">Paga</td><td style="padding:9px 12px;text-align:right"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="ghost" size="sm" on-click="{{ i.dl }}" hint-size="80px,26px">baixar</x-import></td></tr></sc-for></tbody>
+            </table>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ v.auditoria }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <div style="flex:1 1 240px"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" placeholder="Filtrar por usuário, ação ou recurso" value="{{ aq }}" on-change="{{ onAq }}" hint-size="100%,34px"></x-import></div>
+            <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ exportAudit }}" hint-size="120px,34px">exportar CSV</x-import>
+          </div>
+          <div style="overflow-x:auto;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+            <table style="width:100%;border-collapse:collapse;font:13px/1.3 var(--font-sans);min-width:820px">
+              <thead><tr style="text-align:left;background:var(--neutral-050);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase"><th style="padding:9px 12px">Data</th><th style="padding:9px 12px">Usuário</th><th style="padding:9px 12px">Ação</th><th style="padding:9px 12px">Recurso</th><th style="padding:9px 12px">Ambiente</th><th style="padding:9px 12px">IP</th></tr></thead>
+              <tbody><sc-for list="{{ audit }}" as="a" hint-placeholder-count="8"><tr style="border-top:1px solid var(--neutral-100)"><td style="padding:8px 12px;font:12.5px/1 var(--font-mono);white-space:nowrap">{{ a.d }}</td><td style="padding:8px 12px">{{ a.u }}</td><td style="padding:8px 12px;font-weight:500">{{ a.a }}</td><td style="padding:8px 12px;color:var(--text-muted-aa)">{{ a.r }}</td><td style="padding:8px 12px"><span style="padding:3px 7px;border-radius:var(--radius-xs);background:{{ a.eBg }};color:{{ a.eFg }};font:600 10.5px/1 var(--font-display);letter-spacing:.08em">{{ a.e }}</span></td><td style="padding:8px 12px;font:12.5px/1 var(--font-mono)">{{ a.ip }}</td></tr></sc-for></tbody>
+            </table>
+          </div>
+        </sc-if>
+      </div>
+    </section>
+  </div>
+
+  <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Modal" open="{{ modalOpen }}" on-close="{{ closeModal }}" title="{{ modalTitle }}" size="md" hint-size="0,0">
+    <div style="display:grid;gap:12px">
+      <sc-if value="{{ mInvite }}" hint-placeholder-val="{{ false }}">
+        <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">E-mail<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" type="email" value="{{ form.email }}" on-change="{{ fEmail }}" placeholder="nome@empresa.com.br" hint-size="100%,34px"></x-import></label>
+        <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Papel<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ roleOpts }}" value="{{ form.role }}" on-change="{{ fRole }}" hint-size="100%,34px"></x-import></label>
+      </sc-if>
+      <sc-if value="{{ mKey }}" hint-placeholder-val="{{ false }}">
+        <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Nome da chave<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ form.name }}" on-change="{{ fName }}" placeholder="ex.: ERP · integração de pedidos" hint-size="100%,34px"></x-import></label>
+        <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Ambiente<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ keyEnvOpts }}" value="{{ form.env }}" on-change="{{ fEnv }}" hint-size="100%,34px"></x-import></label>
+        <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">Escopo<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Select" options="{{ scopeOpts }}" value="{{ form.scope }}" on-change="{{ fScope }}" hint-size="100%,34px"></x-import></label>
+      </sc-if>
+      <sc-if value="{{ mHook }}" hint-placeholder-val="{{ false }}">
+        <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">URL de destino (HTTPS)<x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ form.url }}" on-change="{{ fUrl }}" placeholder="https://" invalid="{{ urlInvalid }}" style="font-family:var(--font-mono);font-size:13px" hint-size="100%,34px"></x-import></label>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:4px 12px">
+          <sc-for list="{{ evChecks }}" as="e" hint-placeholder-count="6"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Checkbox" label="{{ e.l }}" checked="{{ e.on }}" on-change="{{ e.toggle }}" hint-size="100%,24px"></x-import></sc-for>
+        </div>
+      </sc-if>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:4px">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ closeModal }}" hint-size="90px,34px">cancelar</x-import>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" disabled="{{ modalInvalid }}" on-click="{{ confirmModal }}" hint-size="110px,34px">{{ modalCta }}</x-import>
+      </div>
+    </div>
+  </x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const SECTIONS = [
+  ['org', 'Perfil da organização', 'Dados da conta e contato principal', 'building'],
+  ['usuarios', 'Usuários', 'Quem acessa o OpenNFE e com qual papel', 'users'],
+  ['papeis', 'Papéis e permissões', 'O que cada papel pode fazer', 'shield'],
+  ['seguranca', 'Segurança', 'Autenticação, sessões e restrições de acesso', 'lock'],
+  ['api', 'API keys', 'Chaves para integrar ERPs e sistemas próprios', 'key-round'],
+  ['webhooks', 'Webhooks', 'Avisos automáticos de autorização, rejeição e eventos', 'webhook'],
+  ['prefs', 'Preferências', 'Notificações e comportamento da interface', 'sliders-horizontal'],
+  ['plano', 'Plano e assinatura', 'Uso, limites e faturas', 'credit-card'],
+  ['auditoria', 'Auditoria', 'Registro imutável de ações na conta', 'scroll-text']
+];
+const ROLES = ['Administrador', 'Fiscal', 'Financeiro', 'Leitura', 'Desenvolvedor'];
+const PERMS = [
+  ['Emitir em homologação', 'Transmitir documentos de teste', [1, 1, 0, 0, 1]],
+  ['Emitir em produção', 'Transmitir documentos com validade fiscal', [1, 1, 0, 0, 0]],
+  ['Cancelar e corrigir', 'Cancelamento, CC-e e inutilização', [1, 1, 0, 0, 0]],
+  ['Gerenciar empresas', 'Cadastro, regime e numeração', [1, 1, 0, 0, 0]],
+  ['Certificados digitais', 'Enviar e substituir certificados A1', [1, 0, 0, 0, 0]],
+  ['Integrações', 'Provedores, credenciais e roteamento', [1, 0, 0, 0, 1]],
+  ['Relatórios e exportação', 'Ver e exportar dados', [1, 1, 1, 1, 0]],
+  ['API keys e webhooks', 'Criar e revogar credenciais de API', [1, 0, 0, 0, 1]],
+  ['Usuários e papéis', 'Convidar, remover e alterar papéis', [1, 0, 0, 0, 0]]
+];
+const EVENTS = ['documento.autorizado', 'documento.rejeitado', 'documento.cancelado', 'documento.falha_tecnica', 'certificado.vencendo', 'provedor.degradado'];
+class Component extends DCLogic {
+  state = {
+    sec: 'org', org: { nome: 'Contábil Horizonte Assessoria Ltda', cnpj: '17.402.665/0001-30', resp: 'Renata Moraes', email: 'contato@contabilhorizonte.com.br', tel: '(41) 3029-1188', site: 'contabilhorizonte.com.br' },
+    users: [
+      { name: 'Renata Moraes', email: 'renata@contabilhorizonte.com.br', role: 'Administrador', comps: 'Todas', last: 'agora', status: 'ativo' },
+      { name: 'Carlos Tavares', email: 'carlos@contabilhorizonte.com.br', role: 'Fiscal', comps: 'Horizonte, Ateliê Pinhão', last: '03/11 08:12', status: 'ativo' },
+      { name: 'Juliana Prates', email: 'juliana@horizontealimentos.com.br', role: 'Financeiro', comps: 'Horizonte', last: '01/11 17:40', status: 'ativo' },
+      { name: 'Diego Sato', email: 'diego@serraverde.dev', role: 'Desenvolvedor', comps: 'Serra Verde', last: '31/10 22:05', status: 'ativo' },
+      { name: 'Patrícia Leal', email: 'patricia@valedoiguacu.coop.br', role: 'Leitura', comps: 'Coop. Vale do Iguaçu', last: '—', status: 'convite pendente' }
+    ],
+    perms: PERMS.map(p => p[2].slice()),
+    secv: { mfa: true, confirmProd: true, sess: '60', ips: '200.187.44.10\n177.53.0.0/16' },
+    sessions: [{ d: 'Chrome · macOS · Curitiba/PR', w: 'IP 200.187.44.10 · ativa agora', current: true }, { d: 'Safari · iPhone · Curitiba/PR', w: 'IP 177.53.12.9 · há 3 h', current: false }, { d: 'Edge · Windows · Ponta Grossa/PR', w: 'IP 189.4.77.201 · ontem', current: false }],
+    keys: [
+      { name: 'ERP Horizonte · pedidos', prefix: 'onfe_live_9c1e…b72a', env: 'producao', scope: 'emitir, consultar', last: '03/11 10:41', alive: true },
+      { name: 'Sandbox Serra Verde', prefix: 'onfe_test_47ad…0f19', env: 'homologacao', scope: 'completo', last: '31/10 22:05', alive: true },
+      { name: 'Script antigo de importação', prefix: 'onfe_live_1b20…e8c3', env: 'producao', scope: 'importar', last: '12/08 09:30', alive: false }
+    ],
+    hooks: [
+      { url: 'https://erp.horizontealimentos.com.br/webhooks/opennfe', events: ['documento.autorizado', 'documento.rejeitado', 'documento.cancelado'], on: true, last: 'Última entrega: 03/11 10:42 · HTTP 200 · 182 ms', ok: true },
+      { url: 'https://hooks.serraverde.dev/fiscal', events: ['documento.autorizado', 'documento.falha_tecnica'], on: true, last: 'Última entrega: 03/11 08:56 · HTTP 500 · 3 novas tentativas agendadas', ok: false }
+    ],
+    prefs: { rej: true, cert: true, prov: true, daily: false, dest: true },
+    aq: '', modal: null, form: {}, newKey: null
+  };
+  componentDidMount() { const p = (this.props.app || {}).param; if (p && SECTIONS.some(x => x[0] === p)) this.setState({ sec: p }); }
+  renderVals() {
+    const app = this.props.app || {};
+    const s = this.state;
+    const IC = app.IC || (n => n);
+    const wide = (app.w || 1400) >= 1100;
+    const cur = SECTIONS.find(x => x[0] === s.sec);
+    const v = {}; SECTIONS.forEach(x => v[x[0]] = s.sec === x[0]);
+    const actions = { usuarios: ['convidar usuário', 'invite'], api: ['criar chave', 'key'], webhooks: ['novo webhook', 'hook'] };
+    const act = actions[s.sec];
+    const f = s.form;
+    const setForm = k => e => { const val = e.target.value; this.setState(x => ({ form: { ...x.form, [k]: val } })); };
+    const auditAll = [
+      ['03/11 10:42', 'Renata Moraes', 'Emitiu NF-e 1248', 'Horizonte Alimentos', 'homologacao', '200.187.44.10'],
+      ['03/11 09:20', 'Sistema', 'Registrou rejeição 233', 'NF-e 1247', 'homologacao', '—'],
+      ['03/11 08:12', 'Carlos Tavares', 'Entrou na conta', 'Sessão web', '—', '177.53.12.9'],
+      ['02/11 16:15', 'Renata Moraes', 'Cancelou NF-e 1245', 'Evento 110111', 'homologacao', '200.187.44.10'],
+      ['01/11 16:20', 'Renata Moraes', 'Importou 42 XML', 'Importação de XML', '—', '200.187.44.10'],
+      ['31/10 22:05', 'Diego Sato', 'Criou chave de API', 'Sandbox Serra Verde', 'homologacao', '189.4.77.201'],
+      ['30/10 11:02', 'Renata Moraes', 'Alterou provedor', 'Ateliê Pinhão → Fiscalia API', '—', '200.187.44.10'],
+      ['28/10 09:02', 'Carlos Tavares', 'Ativou produção', 'Horizonte Alimentos', 'producao', '177.53.12.9']
+    ];
+    const aq = s.aq.toLowerCase();
+    return {
+      cols: wide ? '240px minmax(0,1fr)' : 'minmax(0,1fr)', navDisplay: wide ? 'grid' : 'flex', navPos: wide ? 'sticky' : 'static',
+      sections: SECTIONS.map(x => ({ label: x[1], icon: IC(x[3]), cur: s.sec === x[0] ? 'page' : undefined, bg: s.sec === x[0] ? 'var(--info-100)' : 'transparent', fg: s.sec === x[0] ? 'var(--info-700)' : 'var(--text-body)', fw: s.sec === x[0] ? 500 : 400, pick: () => this.setState({ sec: x[0] }) })),
+      cur: { label: cur[1], desc: cur[2] }, v,
+      hasAction: !!act, actionLabel: act ? act[0] : '', action: () => act && this.setState({ modal: act[1], form: act[1] === 'invite' ? { email: '', role: 'Fiscal' } : act[1] === 'key' ? { name: '', env: 'homologacao', scope: 'emitir, consultar' } : { url: 'https://', ev: { 'documento.autorizado': true, 'documento.rejeitado': true } } }),
+      orgFields: [['nome', 'Razão social'], ['cnpj', 'CNPJ da conta'], ['resp', 'Responsável'], ['email', 'E-mail de contato'], ['tel', 'Telefone'], ['site', 'Site']].map(([k, l]) => ({ l, v: s.org[k], set: e => { const val = e.target.value; this.setState(x => ({ org: { ...x.org, [k]: val } })); } })),
+      tzOpts: [{ value: 'America/Sao_Paulo', label: 'Brasília (GMT−3)' }, { value: 'America/Manaus', label: 'Manaus (GMT−4)' }, { value: 'America/Rio_Branco', label: 'Rio Branco (GMT−5)' }],
+      saveOrg: () => app.toast('success', 'Organização atualizada', s.org.nome),
+      roleOpts: ROLES.map(r => ({ value: r, label: r })),
+      users: s.users.map((u, i) => ({ ...u, sFg: u.status === 'ativo' ? 'var(--success-700)' : 'var(--orange-800)', sDot: u.status === 'ativo' ? 'var(--success-500)' : 'var(--amber-500)', setRole: e => { const r = e.target.value; if (i === 0) { app.toast('warning', 'Ação bloqueada', 'A conta precisa de ao menos um administrador.'); return; } this.setState(x => ({ users: x.users.map((uu, j) => j === i ? { ...uu, role: r } : uu) })); app.toast('success', 'Papel alterado', u.name + ' agora é ' + r); } })),
+      roles: ROLES,
+      permRows: PERMS.map((p, pi) => ({ label: p[0], desc: p[1], cells: ROLES.map((r, ri) => ({ aria: p[0] + ' · ' + r, on: !!s.perms[pi][ri], locked: ri === 0, toggle: e => { const on = e.target.checked; this.setState(x => ({ perms: x.perms.map((row, a) => a === pi ? row.map((c, b) => b === ri ? (on ? 1 : 0) : c) : row) })); } })) })),
+      sec: s.secv, toggleMfa: e => { const on = e.target.checked; this.setState(x => ({ secv: { ...x.secv, mfa: on } })); }, toggleConfirm: e => { const on = e.target.checked; this.setState(x => ({ secv: { ...x.secv, confirmProd: on } })); },
+      sessOpts: [['15', '15 minutos'], ['30', '30 minutos'], ['60', '1 hora'], ['480', '8 horas']].map(([value, label]) => ({ value, label })), onSess: e => { const val = e.target.value; this.setState(x => ({ secv: { ...x.secv, sess: val } })); }, onIps: e => { const val = e.target.value; this.setState(x => ({ secv: { ...x.secv, ips: val } })); },
+      sessions: s.sessions.map((x, i) => ({ ...x, other: !x.current, revoke: () => { this.setState(st => ({ sessions: st.sessions.filter((_, j) => j !== i) })); app.toast('success', 'Sessão encerrada', x.d); } })),
+      newKeyShown: !!s.newKey, newKey: s.newKey, hideKey: () => this.setState({ newKey: null }),
+      keys: s.keys.map((k, i) => ({ ...k, op: k.alive ? 1 : .55, dead: !k.alive, envL: k.env === 'producao' ? 'PRODUÇÃO' : 'HOMOLOGAÇÃO', eBg: k.env === 'producao' ? 'var(--success-100)' : 'var(--warning-100)', eFg: k.env === 'producao' ? 'var(--success-700)' : 'var(--orange-800)', revoke: () => { this.setState(x => ({ keys: x.keys.map((kk, j) => j === i ? { ...kk, alive: false } : kk) })); app.toast('neutral', 'Chave revogada', k.name + ' · requisições com ela passam a ser recusadas.'); } })),
+      hooks: s.hooks.map((h, i) => ({ ...h, onLabel: h.on ? 'ativo' : 'pausado', lastFg: h.ok ? 'var(--text-muted-aa)' : 'var(--danger-700)', toggle: e => { const on = e.target.checked; this.setState(x => ({ hooks: x.hooks.map((hh, j) => j === i ? { ...hh, on } : hh) })); }, test: () => { app.toast('info', 'Evento de teste enviado', 'documento.autorizado → ' + h.url.replace('https://', '').split('/')[0]); this.setState(x => ({ hooks: x.hooks.map((hh, j) => j === i ? { ...hh, ok: true, last: 'Última entrega: agora · HTTP 200 · evento de teste' } : hh) })); } })),
+      prefs: [['rej', 'Rejeições fiscais e falhas técnicas'], ['cert', 'Certificados a vencer (30, 15 e 5 dias)'], ['prov', 'Instabilidade de provedores'], ['daily', 'Resumo diário de emissões'], ['dest', 'Enviar XML e PDF automaticamente ao destinatário']].map(([k, l]) => ({ l, on: s.prefs[k], toggle: e => { const on = e.target.checked; this.setState(x => ({ prefs: { ...x.prefs, [k]: on } })); } })),
+      homeOpts: [{ value: 'dashboard', label: 'Dashboard' }, { value: 'documentos', label: 'Documentos fiscais' }, { value: 'emitir', label: 'Emitir documento' }], pageOpts: ['10', '25', '50', '100'].map(x => ({ value: x, label: x })),
+      usage: Math.min(2000, 1284 + ((app.data || {}).docs || []).length - 20),
+      invoices: [['Outubro/2026', '1.912'], ['Setembro/2026', '1.744'], ['Agosto/2026', '1.630']].map(([m, d]) => ({ m, d, dl: () => app.toast('success', 'Fatura gerada', m + ' · PDF (demonstração)') })),
+      seePlans: e => { e.preventDefault(); app.toast('info', 'Planos', 'Comparativo de planos abriria aqui.'); },
+      aq: s.aq, onAq: e => this.setState({ aq: e.target.value }),
+      audit: auditAll.filter(a => !aq || a.join(' ').toLowerCase().includes(aq)).map(([d, u, a, r, e, ip]) => ({ d, u, a, r, ip, e: e === 'producao' ? 'PRODUÇÃO' : e === 'homologacao' ? 'HOMOLOGAÇÃO' : '—', eBg: e === 'producao' ? 'var(--success-100)' : e === 'homologacao' ? 'var(--warning-100)' : 'var(--neutral-100)', eFg: e === 'producao' ? 'var(--success-700)' : e === 'homologacao' ? 'var(--orange-800)' : 'var(--text-muted-aa)' })),
+      exportAudit: () => app.toast('success', 'Auditoria exportada', 'CSV (demonstração)'),
+      modalOpen: !!s.modal, closeModal: () => this.setState({ modal: null }),
+      modalTitle: { invite: 'Convidar usuário', key: 'Nova chave de API', hook: 'Novo webhook' }[s.modal] || '', modalCta: { invite: 'enviar convite', key: 'criar chave', hook: 'salvar' }[s.modal] || '',
+      mInvite: s.modal === 'invite', mKey: s.modal === 'key', mHook: s.modal === 'hook', form: f,
+      fEmail: setForm('email'), fRole: setForm('role'), fName: setForm('name'), fEnv: setForm('env'), fScope: setForm('scope'), fUrl: setForm('url'),
+      keyEnvOpts: [{ value: 'homologacao', label: 'Homologação' }, { value: 'producao', label: 'Produção' }], scopeOpts: ['emitir, consultar', 'somente consulta', 'importar', 'completo'].map(x => ({ value: x, label: x })),
+      urlInvalid: s.modal === 'hook' && !!f.url && f.url.length > 8 && !/^https:\/\/[^\s]+\.[^\s]+/.test(f.url),
+      evChecks: EVENTS.map(ev => ({ l: ev, on: !!(f.ev || {})[ev], toggle: e => { const on = e.target.checked; this.setState(x => ({ form: { ...x.form, ev: { ...(x.form.ev || {}), [ev]: on } } })); } })),
+      modalInvalid: s.modal === 'invite' ? !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.email || '') : s.modal === 'key' ? (f.name || '').trim().length < 3 : s.modal === 'hook' ? !/^https:\/\/[^\s]+\.[^\s]+/.test(f.url || '') || !Object.values(f.ev || {}).some(Boolean) : true,
+      confirmModal: () => {
+        if (s.modal === 'invite') { this.setState(x => ({ users: [...x.users, { name: f.email.split('@')[0], email: f.email, role: f.role, comps: '—', last: '—', status: 'convite pendente' }], modal: null })); app.toast('success', 'Convite enviado', f.email); }
+        if (s.modal === 'key') { const full = 'onfe_' + (f.env === 'producao' ? 'live' : 'test') + '_' + Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 14); this.setState(x => ({ keys: [{ name: f.name, prefix: full.slice(0, 14) + '…' + full.slice(-4), env: f.env, scope: f.scope, last: 'nunca', alive: true }, ...x.keys], modal: null, newKey: full })); }
+        if (s.modal === 'hook') { this.setState(x => ({ hooks: [...x.hooks, { url: f.url, events: Object.keys(f.ev).filter(k => f.ev[k]), on: true, last: 'Nenhuma entrega ainda', ok: true }], modal: null })); app.toast('success', 'Webhook criado', f.url); }
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/colors.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css">
+  <link rel="stylesheet" href="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css">
+  <script src="_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js"></script>
+</helmet>
+<div style="display:grid;gap:18px;min-width:0" data-screen-label="Produtos e serviços">
+  <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+    <div style="display:grid;gap:6px">
+      <span style="font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">CADASTROS</span>
+      <h1 style="margin:0;font:300 30px/1.1 var(--font-sans);color:var(--text-heading)"><strong style="font-weight:500">Produtos</strong> e serviços</h1>
+      <span style="font:14px/1.4 var(--font-sans);color:var(--text-muted-aa)">{{ countText }}</span>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ newService }}" hint-size="130px,34px">novo serviço</x-import>
+      <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" on-click="{{ newProduct }}" hint-size="130px,34px">novo produto</x-import>
+    </div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:10px;background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md)">
+    <div style="flex:1 1 260px"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" placeholder="Buscar por código, descrição ou NCM" value="{{ q }}" on-change="{{ onQ }}" aria-label="Buscar no catálogo" hint-size="100%,34px"></x-import></div>
+    <div style="height:41px;overflow:hidden;flex:none;max-width:100%"><x-import component-from-global-scope="CodemixDesignSystem_95bbea.Tabs" variant="boxed" label="Tipo" tabs="{{ kindTabs }}" value="{{ kind }}" on-change="{{ setKind }}" hint-size="300px,40px"></x-import></div>
+    <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toggle" size="sm" label="Mostrar inativos" checked="{{ showInactive }}" on-change="{{ toggleInactive }}" hint-size="160px,24px"></x-import>
+  </div>
+
+  <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+    <div style="background:#fff;border:1px dashed var(--border-strong);border-radius:var(--radius-md);padding:40px 20px;display:grid;justify-items:center;gap:8px;text-align:center">
+      <strong style="font:500 17px/1.3 var(--font-sans)">Nenhum item no catálogo com esses filtros</strong>
+      <span style="font:14px/1.5 var(--font-sans);color:var(--text-muted-aa)">Tente outro termo ou inclua os itens inativos.</span>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ showTable }}" hint-placeholder-val="{{ true }}">
+    <div style="background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);box-shadow:0 1px 2px rgba(0,0,0,.06);overflow-x:auto">
+      <table style="width:100%;border-collapse:collapse;font:13.5px/1.3 var(--font-sans);min-width:1120px">
+        <thead><tr style="text-align:left;background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%);color:var(--text-muted-aa);font:600 11.5px/1 var(--font-sans);letter-spacing:.06em;text-transform:uppercase">
+          <sc-for list="{{ cols }}" as="c" hint-placeholder-count="10"><th style="padding:10px 12px;border-bottom:1px solid var(--border-subtle);white-space:nowrap;text-align:{{ c.a }}">{{ c.l }}</th></sc-for>
+        </tr></thead>
+        <tbody>
+          <sc-for list="{{ rows }}" as="p" hint-placeholder-count="8">
+            <tr onClick="{{ p.open }}" style="border-bottom:1px solid var(--neutral-100);cursor:pointer;opacity:{{ p.op }}" style-hover="background:var(--neutral-050)">
+              <td style="padding:9px 12px;font:500 12.5px/1 var(--font-mono);white-space:nowrap">{{ p.code }}</td>
+              <td style="padding:9px 12px;max-width:300px">{{ p.desc }}</td>
+              <td style="padding:9px 12px"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:var(--radius-xs);background:{{ p.kBg }};color:{{ p.kFg }};font:600 11px/1 var(--font-display);letter-spacing:.06em;white-space:nowrap"><span aria-hidden="true" style="width:12px;height:12px;background:currentColor;mask:url({{ p.kIcon }}) center/contain no-repeat"></span>{{ p.kLabel }}</span></td>
+              <td style="padding:9px 12px;font:12.5px/1 var(--font-mono);white-space:nowrap">{{ p.ncmF }}</td>
+              <td style="padding:9px 12px;font:12.5px/1 var(--font-mono)">{{ p.cest }}</td>
+              <td style="padding:9px 12px;font:12.5px/1 var(--font-mono)">{{ p.cfop }}</td>
+              <td style="padding:9px 12px;font:12.5px/1 var(--font-mono)">{{ p.un }}</td>
+              <td style="padding:9px 12px;white-space:nowrap;font-size:12.5px">{{ p.origem }}</td>
+              <td style="padding:9px 12px;font:12px/1.3 var(--font-mono);color:var(--text-muted-aa);max-width:180px">{{ p.taxF }}</td>
+              <td style="padding:9px 12px"><span style="display:inline-flex;align-items:center;gap:6px;font:500 12.5px/1 var(--font-sans);color:{{ p.sFg }}"><span aria-hidden="true" style="width:7px;height:7px;border-radius:50%;background:{{ p.sDot }}"></span>{{ p.sLabel }}</span></td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+  </sc-if>
+  <sc-if value="{{ showCards }}" hint-placeholder-val="{{ false }}">
+    <div style="display:grid;gap:10px">
+      <sc-for list="{{ rows }}" as="p" hint-placeholder-count="5">
+        <button onClick="{{ p.open }}" style="display:grid;gap:8px;padding:14px;background:#fff;border:1px solid var(--border-subtle);border-radius:var(--radius-md);text-align:left;cursor:pointer;color:inherit;opacity:{{ p.op }}">
+          <div style="display:flex;justify-content:space-between;gap:8px"><span style="font:500 12.5px/1 var(--font-mono)">{{ p.code }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:var(--radius-xs);background:{{ p.kBg }};color:{{ p.kFg }};font:600 11px/1 var(--font-display);letter-spacing:.06em">{{ p.kLabel }}</span></div>
+          <strong style="font:500 14.5px/1.3 var(--font-sans)">{{ p.desc }}</strong>
+          <span style="font:12.5px/1.3 var(--font-mono);color:var(--text-muted-aa)">{{ p.ncmF }} · {{ p.priceF }}</span>
+        </button>
+      </sc-for>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ close }}" style="position:fixed;inset:0;background:rgba(31,31,31,.45);z-index:60"></div>
+    <aside role="dialog" aria-label="{{ drawerTitle }}" style="position:fixed;top:0;right:0;bottom:0;width:min(560px,100vw);z-index:61;background:#fff;box-shadow:var(--shadow-raised);display:flex;flex-direction:column">
+      <header style="display:flex;gap:12px;align-items:center;padding:16px 18px;border-bottom:1px solid var(--border-subtle);background:linear-gradient(180deg,#f2f2f2 0%,#fbfbfb 100%)">
+        <span aria-hidden="true" style="width:40px;height:40px;flex:none;border-radius:var(--radius-sm);background:{{ ed.kBg }};display:flex;align-items:center;justify-content:center"><span style="width:20px;height:20px;background:{{ ed.kFg }};mask:url({{ ed.kIcon }}) center/contain no-repeat"></span></span>
+        <div style="flex:1;min-width:0;display:grid;gap:3px"><strong style="font:500 17px/1.2 var(--font-sans)">{{ drawerTitle }}</strong><span style="font:12.5px/1 var(--font-mono);color:var(--text-muted-aa)">{{ ed.code }}</span></div>
+        <button onClick="{{ close }}" aria-label="Fechar" style="width:36px;height:36px;border:0;border-radius:var(--radius-sm);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--slate-600)" style-hover="background:var(--neutral-100)"><span aria-hidden="true" style="width:18px;height:18px;background:currentColor;mask:url(https://unpkg.com/lucide-static@0.544.0/icons/x.svg) center/contain no-repeat"></span></button>
+      </header>
+      <div style="flex:1;overflow-y:auto;padding:18px;display:grid;gap:18px;align-content:start">
+        <fieldset style="margin:0;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px 14px">
+          <legend style="padding:0 6px;font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">IDENTIFICAÇÃO</legend>
+          <sc-for list="{{ idFields }}" as="x" hint-placeholder-count="4">
+            <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans);grid-column:{{ x.span }}">{{ x.label }}
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ x.value }}" on-change="{{ x.set }}" invalid="{{ x.invalid }}" placeholder="{{ x.ph }}" hint-size="100%,34px"></x-import>
+              <sc-if value="{{ x.invalid }}" hint-placeholder-val="{{ false }}"><span style="font:12px/1.3 var(--font-sans);color:var(--danger-700)">{{ x.err }}</span></sc-if>
+            </label>
+          </sc-for>
+        </fieldset>
+        <fieldset style="margin:0;border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px 14px">
+          <legend style="padding:0 6px;font:600 12px/1 var(--font-display);letter-spacing:.12em;color:var(--text-muted-aa)">CONFIGURAÇÃO TRIBUTÁRIA · DEMONSTRAÇÃO</legend>
+          <sc-for list="{{ taxFields }}" as="x" hint-placeholder-count="5">
+            <label style="display:grid;gap:6px;font:500 13px/1.2 var(--font-sans)">{{ x.label }}
+              <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Input" value="{{ x.value }}" on-change="{{ x.set }}" placeholder="{{ x.ph }}" hint-size="100%,34px"></x-import>
+            </label>
+          </sc-for>
+        </fieldset>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Toggle" label="Item ativo para emissão" checked="{{ edActive }}" on-change="{{ toggleActive }}" hint-size="220px,24px"></x-import>
+      </div>
+      <footer style="display:flex;gap:8px;justify-content:flex-end;padding:14px 18px;border-top:1px solid var(--border-subtle);background:var(--neutral-050)">
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="secondary" on-click="{{ close }}" hint-size="90px,34px">cancelar</x-import>
+        <x-import component-from-global-scope="CodemixDesignSystem_95bbea.Button" variant="dark" on-click="{{ save }}" hint-size="90px,34px">salvar</x-import>
+      </footer>
+    </aside>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const NEWP = kind => kind === 'servico'
+  ? { code: 'SRV-', desc: '', kind, ncm: '—', cest: '—', cfop: '—', un: 'H', origem: '—', price: 0, status: 'ativo', lc116: '', iss: '', cnae: '', pis: '—', cofins: '—', icms: '—', ipi: '—' }
+  : { code: '', desc: '', kind, ncm: '', cest: '—', cfop: '5102', un: 'UN', origem: '0 · Nacional', price: 0, status: 'ativo', icms: '', pis: '', cofins: '', ipi: 'Não tributado' };
+class Component extends DCLogic {
+  state = { q: '', kind: 'todos', showInactive: true, open: null, ed: null, tried: false };
+  componentDidMount() { const p = (this.props.app || {}).param; if (p && p.startsWith('r')) this.openP(p); }
+  openP(id) { const D = (this.props.app || {}).data || { products: [] }; const p = D.products.find(x => x.id === id); if (p) this.setState({ open: id, ed: { ...p, price: String(p.price).replace('.', ',') }, tried: false }); }
+  renderVals() {
+    const app = this.props.app || {};
+    const D = app.data || { products: [] };
+    const brl = app.brl || (v => v), IC = app.IC || (n => n);
+    const s = this.state, q = s.q.trim().toLowerCase();
+    const kindMeta = k => k === 'servico' ? { kLabel: 'SERVIÇO', kBg: 'var(--info-100)', kFg: 'var(--info-700)', kIcon: IC('briefcase') } : { kLabel: 'PRODUTO', kBg: 'var(--neutral-100)', kFg: 'var(--graphite-800)', kIcon: IC('package') };
+    const list = D.products.filter(p => (s.kind === 'todos' || p.kind === s.kind) && (s.showInactive || p.status === 'ativo') && (!q || p.desc.toLowerCase().includes(q) || p.code.toLowerCase().includes(q) || (p.ncm || '').replace(/\./g, '').includes(q.replace(/\./g, ''))));
+    const rows = list.map(p => ({ ...p, ...kindMeta(p.kind), ncmF: p.kind === 'servico' ? 'LC ' + p.lc116 : p.ncm, priceF: brl(p.price), taxF: p.kind === 'servico' ? 'ISS ' + p.iss : p.icms, op: p.status === 'ativo' ? 1 : .6,
+      sLabel: p.status === 'ativo' ? 'Ativo' : 'Inativo', sDot: p.status === 'ativo' ? 'var(--success-500)' : 'var(--neutral-500)', sFg: p.status === 'ativo' ? 'var(--success-700)' : 'var(--text-muted-aa)', open: () => this.openP(p.id) }));
+    const e = s.ed || NEWP('produto');
+    const setE = key => ev => { const v = ev.target.value; this.setState(x => ({ ed: { ...x.ed, [key]: v } })); };
+    const svc = e.kind === 'servico';
+    const ncmOk = svc || /^\d{4}\.\d{2}\.\d{2}$/.test(e.ncm || '');
+    const isNew = s.open === 'novo';
+    return {
+      countText: D.products.filter(p => p.kind === 'produto').length + ' produtos · ' + D.products.filter(p => p.kind === 'servico').length + ' serviços · dados fiscais demonstrativos',
+      q: s.q, onQ: ev => this.setState({ q: ev.target.value }),
+      kindTabs: [{ id: 'todos', label: 'Todos' }, { id: 'produto', label: 'Produtos' }, { id: 'servico', label: 'Serviços' }], kind: s.kind, setKind: id => this.setState({ kind: id }),
+      showInactive: s.showInactive, toggleInactive: ev => this.setState({ showInactive: ev.target.checked }),
+      cols: [['Código'], ['Descrição'], ['Tipo'], ['NCM / LC 116'], ['CEST'], ['CFOP'], ['Un.'], ['Origem'], ['Tributação'], ['Situação']].map(([l]) => ({ l, a: 'left' })),
+      rows, isEmpty: rows.length === 0, showTable: rows.length > 0 && !app.mobile, showCards: rows.length > 0 && !!app.mobile,
+      drawerOpen: !!s.open, close: () => this.setState({ open: null }),
+      drawerTitle: isNew ? (svc ? 'Novo serviço' : 'Novo produto') : e.desc, ed: { ...e, ...kindMeta(e.kind) },
+      idFields: [
+        { k: 'desc', label: 'Descrição', span: '1 / -1', invalid: s.tried && e.desc.trim().length < 3, err: 'Informe a descrição.' },
+        { k: 'code', label: 'Código interno' }, { k: 'price', label: 'Preço unitário (R$)' }, { k: 'un', label: 'Unidade comercial' },
+        ...(svc ? [] : [{ k: 'origem', label: 'Origem da mercadoria' }])
+      ].map(x => ({ span: 'auto', ph: '', invalid: false, err: '', ...x, value: e[x.k] || '', set: setE(x.k) })),
+      taxFields: (svc
+        ? [{ k: 'lc116', label: 'Item da LC 116/2003', ph: '1.07' }, { k: 'cnae', label: 'CNAE', ph: '0000-0/00' }, { k: 'iss', label: 'ISS (alíquota · retenção)', ph: '2% · retido: não' }]
+        : [{ k: 'ncm', label: 'NCM', ph: '0000.00.00' }, { k: 'cest', label: 'CEST', ph: '00.000.00 ou —' }, { k: 'cfop', label: 'CFOP padrão', ph: '5102' }, { k: 'icms', label: 'ICMS (CST/CSOSN · alíquota)', ph: 'CST 00 · 18%' }, { k: 'pis', label: 'PIS', ph: 'CST 01 · 0,65%' }, { k: 'cofins', label: 'COFINS', ph: 'CST 01 · 3%' }, { k: 'ipi', label: 'IPI', ph: 'Não tributado' }]
+      ).map(x => ({ ...x, value: e[x.k] || '', set: setE(x.k) })),
+      edActive: e.status === 'ativo', toggleActive: ev => { const on = ev.target.checked; this.setState(x => ({ ed: { ...x.ed, status: on ? 'ativo' : 'inativo' } })); },
+      newProduct: () => this.setState({ open: 'novo', ed: NEWP('produto'), tried: false }), newService: () => this.setState({ open: 'novo', ed: NEWP('servico'), tried: false }),
+      save: () => {
+        if (e.desc.trim().length < 3 || !ncmOk) { this.setState({ tried: true }); app.toast('error', 'Revise o cadastro', !ncmOk ? 'NCM deve seguir o formato 0000.00.00.' : 'Informe a descrição.'); return; }
+        const data = { ...e, price: parseFloat(String(e.price).replace(/\./g, '').replace(',', '.')) || 0 };
+        delete data.kLabel; delete data.kBg; delete data.kFg; delete data.kIcon;
+        if (isNew) app.addProduct(data); else app.updateProduct(s.open, data);
+        this.setState({ open: null }); app.toast('success', isNew ? 'Item cadastrado' : 'Item atualizado', e.desc);
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
