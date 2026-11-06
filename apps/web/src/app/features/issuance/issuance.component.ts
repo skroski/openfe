@@ -1,482 +1,495 @@
-import { Component, signal, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { FormsModule } from '@angular/forms';
+import { CurrencyPipe } from '@angular/common';
+import { Component, computed, effect, inject, signal, untracked } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { DocumentStatus, FiscalDocumentDto, FiscalDocumentItemDto, OperationType } from '@opennfe/shared';
 import { FiscalApiService } from '../../core/services/fiscal-api.service';
-import {
-  DocumentType,
-  FiscalDocumentItemDto,
-} from '@opennfe/shared';
+import { ToastService } from '../../core/services/toast.service';
+import { DOCUMENT_TYPE_LABEL, formatDocument } from '../../core/utils/br';
+import { DanfePreviewComponent } from '../../shared/components/danfe/danfe-preview.component';
+import { FormFieldComponent } from '../../shared/components/form-field.component';
 import { AppIconComponent } from '../../shared/components/icon.component';
+import { PageHeaderComponent } from '../../shared/components/page-header.component';
+
+type DocType = 'NFE' | 'NFCE' | 'NFSE';
+
+const STEPS = ['Empresa e operação', 'Cliente', 'Itens', 'Valores', 'Revisar e enviar'] as const;
+
+const NATURES = [
+  'VENDA DE MERCADORIA',
+  'PRESTAÇÃO DE SERVIÇO',
+  'DEVOLUÇÃO DE MERCADORIA',
+  'REMESSA PARA CONSERTO',
+] as const;
+const OTHER = 'OUTRA';
+
+const round2 = (n: number): number => Math.round((n + Number.EPSILON) * 100) / 100;
 
 @Component({
   selector: 'app-issuance',
-  imports: [CommonModule, RouterModule, FormsModule, AppIconComponent],
+  imports: [CurrencyPipe, RouterLink, AppIconComponent, DanfePreviewComponent, FormFieldComponent, PageHeaderComponent],
   template: `
-    <div class="space-y-6 max-w-5xl mx-auto">
-      <!-- Page Header -->
-      <div class="flex items-center justify-between">
-        <div>
-          <span class="text-xs font-semibold tracking-wider text-base-content/50 uppercase" style="font-family: var(--font-display);">
-            EMISSÃO FISCAL · PASSO A PASSO
-          </span>
-          <h1 class="text-3xl font-light text-base-content mt-1">
-            <strong class="font-bold">Emitir</strong> Documento Fiscal
-          </h1>
-          <p class="text-sm text-base-content/60">
-            Fluxo guiado com conferência tributária e validação de regras de domínio antes do envio
-          </p>
-        </div>
-        <a routerLink="/documentos" class="btn btn-sm btn-ghost">Cancelar</a>
-      </div>
+    <div class="flex flex-col gap-6 max-w-5xl mx-auto">
+      <app-page-header
+        title="Emitir nota fiscal"
+        description="Preencha 5 passos rápidos. No último, você vê como a nota vai ficar antes de enviar à SEFAZ."
+        [crumbs]="[{ label: 'Início', link: '/dashboard' }, { label: 'Notas fiscais', link: '/documentos' }, { label: 'Emitir nota' }]"
+      >
+        <a routerLink="/documentos" class="btn btn-ghost">Cancelar</a>
+      </app-page-header>
 
-      <!-- Step Indicator (DaisyUI Steps) -->
-      <ul class="steps steps-horizontal w-full bg-base-100 p-4 rounded-xl border border-base-300 shadow-xs text-xs font-semibold">
-        <li class="step" [class.step-primary]="currentStep() >= 1">1. Emitente & Operação</li>
-        <li class="step" [class.step-primary]="currentStep() >= 2">2. Destinatário</li>
-        <li class="step" [class.step-primary]="currentStep() >= 3">3. Produtos & Serviços</li>
-        <li class="step" [class.step-primary]="currentStep() >= 4">4. Transporte & Totais</li>
-        <li class="step" [class.step-primary]="currentStep() >= 5">5. Revisão & Envio</li>
-      </ul>
+      <!-- PASSOS -->
+      <nav aria-label="Passos da emissão" class="card bg-base-100 border border-base-300 p-4 overflow-x-auto">
+        <ol class="steps w-full min-w-[34rem]">
+          @for (s of steps; track s; let i = $index) {
+            <li class="step" [class.step-primary]="step() >= i + 1" [attr.aria-current]="step() === i + 1 ? 'step' : null">
+              <button type="button" class="text-sm font-semibold px-1 cursor-pointer" [disabled]="i + 1 > maxReached()" (click)="step.set(i + 1)">{{ s }}</button>
+            </li>
+          }
+        </ol>
+      </nav>
 
-      <!-- Step 1: Emitente & Operação -->
-      @if (currentStep() === 1) {
-        <div class="card bg-base-100 border border-base-300 shadow-xs p-6 space-y-4">
-          <h2 class="text-lg font-bold flex items-center gap-2 border-b border-base-200 pb-3">
-            <app-icon name="companies" [size]="20" customClass="text-primary"></app-icon>
-            Dados da Operação e Emitente
-          </h2>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div class="form-control">
-              <label class="label"><span class="label-text font-semibold text-xs">Empresa Emitente *</span></label>
-              <select class="select select-bordered select-sm" [(ngModel)]="companyId">
-                @for (c of api.companies(); track c.id) {
-                  <option [value]="c.id">{{ c.tradeName }} (CNPJ: {{ c.cnpj }})</option>
-                }
-              </select>
-            </div>
-
-            <div class="form-control">
-              <label class="label"><span class="label-text font-semibold text-xs">Modelo do Documento *</span></label>
-              <select class="select select-bordered select-sm" [(ngModel)]="documentType">
-                <option value="NFE">NF-e — Nota Fiscal Eletrônica (Mod. 55)</option>
-                <option value="NFCE">NFC-e — Cupom Fiscal do Consumidor (Mod. 65)</option>
-                <option value="NFSE">NFS-e — Nota Fiscal de Serviço Municipal</option>
-              </select>
-            </div>
-
-            <div class="form-control md:col-span-2">
-              <label class="label"><span class="label-text font-semibold text-xs">Natureza da Operação *</span></label>
-              <input
-                type="text"
-                class="input input-bordered input-sm"
-                placeholder="Ex: VENDA DE MERCADORIA ADQUIRIDA DE TERCEIROS"
-                [(ngModel)]="operationNature"
-              />
-            </div>
-          </div>
-
-          <div class="flex justify-end pt-4">
-            <button type="button" class="btn btn-sm btn-primary text-white gap-2" (click)="goToStep(2)">
-              Avançar para Destinatário
-              <app-icon name="chevron-right" [size]="16"></app-icon>
-            </button>
+      @if (errors().length) {
+        <div class="alert alert-error alert-soft items-start" role="alert">
+          <app-icon name="alert" [size]="20"></app-icon>
+          <div>
+            <strong>Corrija antes de continuar:</strong>
+            <ul class="list-disc pl-5 mt-1 text-sm">
+              @for (e of errors(); track e) { <li>{{ e }}</li> }
+            </ul>
           </div>
         </div>
       }
 
-      <!-- Step 2: Destinatário -->
-      @if (currentStep() === 2) {
-        <div class="card bg-base-100 border border-base-300 shadow-xs p-6 space-y-4">
-          <h2 class="text-lg font-bold flex items-center gap-2 border-b border-base-200 pb-3">
-            <app-icon name="users" [size]="20" customClass="text-primary"></app-icon>
-            Dados do Destinatário
-          </h2>
+      <!-- PASSO 1 -->
+      @if (step() === 1) {
+        <section class="card bg-base-100 border border-base-300 p-5 sm:p-6 grid gap-4 md:grid-cols-2" aria-labelledby="st1">
+          <h2 id="st1" class="md:col-span-2 text-lg font-bold">Quem emite e que tipo de operação é</h2>
 
-          <div class="form-control">
-            <label class="label"><span class="label-text font-semibold text-xs">Selecionar Destinatário Cadastrado</span></label>
-            <select class="select select-bordered select-sm" (change)="onSelectCustomer($event)">
-              <option value="">-- Selecione ou digite manualmente abaixo --</option>
-              @for (cust of api.customers(); track cust.id) {
-                <option [value]="cust.id">{{ cust.name }} ({{ cust.documentNumber }})</option>
-              }
+          <app-form-field label="Empresa que emite" for="e-company" [required]="true">
+            <select id="e-company" class="select w-full" [value]="companyId()" (change)="companyId.set(val($event))">
+              <option value="">Escolha a empresa…</option>
+              @for (c of activeCompanies(); track c.id) { <option [value]="c.id">{{ c.tradeName }} — {{ c.state }}</option> }
             </select>
-          </div>
+          </app-form-field>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-            <div class="form-control">
-              <label class="label"><span class="label-text font-semibold text-xs">Nome / Razão Social *</span></label>
-              <input type="text" class="input input-bordered input-sm" [(ngModel)]="customerName" placeholder="Razão Social ou Nome Completo" />
-            </div>
+          <app-form-field label="Tipo de nota" for="e-type" hint="Produtos para empresas: NF-e. Venda no balcão: NFC-e. Serviços: NFS-e.">
+            <select id="e-type" class="select w-full" [value]="docType()" (change)="docType.set($any(val($event)))">
+              @for (t of types; track t[0]) { <option [value]="t[0]">{{ t[1] }}</option> }
+            </select>
+          </app-form-field>
 
-            <div class="form-control">
-              <label class="label"><span class="label-text font-semibold text-xs">CPF / CNPJ *</span></label>
-              <input type="text" class="input input-bordered input-sm" [(ngModel)]="customerDocument" placeholder="00.000.000/0000-00" />
-            </div>
-          </div>
-
-          <div class="flex justify-between pt-4">
-            <button type="button" class="btn btn-sm btn-ghost gap-2" (click)="goToStep(1)">
-              <app-icon name="chevron-left" [size]="16"></app-icon>
-              Voltar
-            </button>
-            <button type="button" class="btn btn-sm btn-primary text-white gap-2" (click)="goToStep(3)">
-              Avançar para Itens
-              <app-icon name="chevron-right" [size]="16"></app-icon>
-            </button>
-          </div>
-        </div>
-      }
-
-      <!-- Step 3: Produtos & Serviços -->
-      @if (currentStep() === 3) {
-        <div class="card bg-base-100 border border-base-300 shadow-xs p-6 space-y-4">
-          <div class="flex items-center justify-between border-b border-base-200 pb-3">
-            <h2 class="text-lg font-bold flex items-center gap-2">
-              <app-icon name="products" [size]="20" customClass="text-primary"></app-icon>
-              Itens do Documento Fiscal
-            </h2>
-            <div class="flex gap-2">
-              <select class="select select-bordered select-sm text-xs" (change)="addProductFromCatalog($event)">
-                <option value="">+ Adicionar do Catálogo</option>
-                @for (p of api.products(); track p.id) {
-                  <option [value]="p.id">{{ p.code }} — {{ p.description }}</option>
-                }
-              </select>
-            </div>
-          </div>
-
-          <!-- Items Table -->
-          <div class="overflow-x-auto">
-            <table class="table table-sm">
-              <thead class="bg-base-200/50">
-                <tr class="text-xs text-base-content/60">
-                  <th>#</th>
-                  <th>CÓDIGO</th>
-                  <th>DESCRIÇÃO</th>
-                  <th>NCM</th>
-                  <th>CFOP</th>
-                  <th>QTD</th>
-                  <th>VALOR UN.</th>
-                  <th>TOTAL</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (item of items(); track item.itemOrder) {
-                  <tr>
-                    <td class="font-mono text-xs">{{ item.itemOrder }}</td>
-                    <td><input type="text" class="input input-xs input-bordered w-20 font-mono" [(ngModel)]="item.code" /></td>
-                    <td><input type="text" class="input input-xs input-bordered w-48" [(ngModel)]="item.description" /></td>
-                    <td><input type="text" class="input input-xs input-bordered w-24 font-mono" [(ngModel)]="item.ncm" /></td>
-                    <td><input type="text" class="input input-xs input-bordered w-16 font-mono" [(ngModel)]="item.cfop" /></td>
-                    <td><input type="number" class="input input-xs input-bordered w-16 text-right font-mono" [(ngModel)]="item.quantity" (ngModelChange)="updateItemTotal(item)" /></td>
-                    <td><input type="number" class="input input-xs input-bordered w-20 text-right font-mono" [(ngModel)]="item.unitPrice" (ngModelChange)="updateItemTotal(item)" /></td>
-                    <td class="font-mono font-bold">{{ item.totalPrice | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</td>
-                    <td>
-                      <button type="button" class="btn btn-ghost btn-xs text-error p-1" (click)="removeItem(item.itemOrder)">
-                        <app-icon name="trash" [size]="14"></app-icon>
-                      </button>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-
-          <div class="flex justify-end p-3 bg-base-200/40 rounded-lg text-sm">
-            <span>Subtotal dos Produtos: <strong class="font-mono text-base ml-2">{{ totalProducts() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></span>
-          </div>
-
-          <div class="flex justify-between pt-4">
-            <button type="button" class="btn btn-sm btn-ghost gap-2" (click)="goToStep(2)">
-              <app-icon name="chevron-left" [size]="16"></app-icon>
-              Voltar
-            </button>
-            <button type="button" class="btn btn-sm btn-primary text-white gap-2" [disabled]="items().length === 0" (click)="goToStep(4)">
-              Avançar para Totais
-              <app-icon name="chevron-right" [size]="16"></app-icon>
-            </button>
-          </div>
-        </div>
-      }
-
-      <!-- Step 4: Transporte & Totais -->
-      @if (currentStep() === 4) {
-        <div class="card bg-base-100 border border-base-300 shadow-xs p-6 space-y-4">
-          <h2 class="text-lg font-bold flex items-center gap-2 border-b border-base-200 pb-3">
-            <app-icon name="truck" [size]="20" customClass="text-primary"></app-icon>
-            Transporte e Apuração de Tributos
-          </h2>
-
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="form-control">
-              <label class="label"><span class="label-text font-semibold text-xs">Valor do Frete (R$)</span></label>
-              <input type="number" class="input input-bordered input-sm font-mono" [(ngModel)]="totalShipping" />
-            </div>
-
-            <div class="form-control">
-              <label class="label"><span class="label-text font-semibold text-xs">Desconto Comercial (R$)</span></label>
-              <input type="number" class="input input-bordered input-sm font-mono" [(ngModel)]="totalDiscount" />
-            </div>
-
-            <div class="form-control">
-              <label class="label"><span class="label-text font-semibold text-xs">Modalidade do Frete</span></label>
-              <select class="select select-bordered select-sm text-xs">
-                <option value="9">9 — Sem Ocorrência de Transporte</option>
-                <option value="0">0 — Por conta do Emitente (CIF)</option>
-                <option value="1">1 — Por conta do Destinatário (FOB)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="p-4 rounded-lg bg-base-200/50 border border-base-300 space-y-2 text-xs">
-            <div class="font-bold text-sm text-base-content">Resumo de Impostos Calculados</div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-2 font-mono">
-              <div>ICMS Previsto: <span class="font-bold">{{ (totalProducts() * 0.18) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span></div>
-              <div>PIS Previsto: <span class="font-bold">{{ (totalProducts() * 0.0165) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span></div>
-              <div>COFINS Previsto: <span class="font-bold">{{ (totalProducts() * 0.076) | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span></div>
-              <div>Total da Nota: <span class="font-bold text-emerald-600 text-sm">{{ totalDocument() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</span></div>
-            </div>
-          </div>
-
-          <div class="flex justify-between pt-4">
-            <button type="button" class="btn btn-sm btn-ghost gap-2" (click)="goToStep(3)">
-              <app-icon name="chevron-left" [size]="16"></app-icon>
-              Voltar
-            </button>
-            <button type="button" class="btn btn-sm btn-primary text-white gap-2" (click)="goToStep(5)">
-              Avançar para Revisão & Envio
-              <app-icon name="chevron-right" [size]="16"></app-icon>
-            </button>
-          </div>
-        </div>
-      }
-
-      <!-- Step 5: Revisão & Transmissão -->
-      @if (currentStep() === 5) {
-        <div class="card bg-base-100 border border-base-300 shadow-xs p-6 space-y-6">
-          <h2 class="text-lg font-bold flex items-center gap-2 border-b border-base-200 pb-3">
-            <app-icon name="check" [size]="20" customClass="text-success"></app-icon>
-            Conferência Final da Nota Fiscal
-          </h2>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-            <div class="p-4 rounded-lg bg-base-200/40 border border-base-300 space-y-2">
-              <div class="font-bold uppercase tracking-wider text-base-content/60">Dados do Documento</div>
-              <div><strong>Emitente:</strong> {{ getCompanyName() }}</div>
-              <div><strong>Destinatário:</strong> {{ customerName }} ({{ customerDocument }})</div>
-              <div><strong>Operação:</strong> {{ operationNature }}</div>
-              <div><strong>Modelo:</strong> {{ documentType }} · Ambiente Homologação</div>
-            </div>
-
-            <div class="p-4 rounded-lg bg-base-200/40 border border-base-300 space-y-2">
-              <div class="font-bold uppercase tracking-wider text-base-content/60">Valores Totais</div>
-              <div>Quantidade de Itens: <strong>{{ items().length }} item(ns)</strong></div>
-              <div>Total dos Produtos: <strong>{{ totalProducts() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></div>
-              <div>Frete: <strong>{{ totalShipping | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}</strong></div>
-              <div class="text-sm font-bold text-emerald-600">
-                Valor Final: {{ totalDocument() | currency:'BRL':'symbol':'1.2-2':'pt-BR' }}
-              </div>
-            </div>
-          </div>
-
-          <!-- Domain Validation Box -->
-          @if (validationErrors().length > 0) {
-            <div class="alert alert-error text-xs">
-              <app-icon name="alert" [size]="18"></app-icon>
-              <div>
-                <span class="font-bold">Erros de validação encontrados:</span>
-                <ul class="list-disc pl-4 mt-1">
-                  @for (err of validationErrors(); track err) {
-                    <li>{{ err }}</li>
-                  }
-                </ul>
-              </div>
-            </div>
+          <app-form-field label="Natureza da operação" for="e-nature" [required]="true">
+            <select id="e-nature" class="select w-full" [value]="natureChoice()" (change)="natureChoice.set(val($event))">
+              @for (n of natures; track n) { <option [value]="n">{{ n }}</option> }
+              <option [value]="other">OUTRA (digitar)</option>
+            </select>
+          </app-form-field>
+          @if (natureChoice() === other) {
+            <app-form-field label="Descreva a natureza" for="e-nature2" [required]="true">
+              <input id="e-nature2" class="input w-full uppercase" [value]="natureCustom()" (input)="natureCustom.set(val($event))" />
+            </app-form-field>
           }
 
-          <div class="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-base-200">
-            <button type="button" class="btn btn-sm btn-ghost gap-2" (click)="goToStep(4)">
-              <app-icon name="chevron-left" [size]="16"></app-icon>
-              Voltar
-            </button>
-
-            <div class="flex gap-2">
-              <button
-                type="button"
-                class="btn btn-sm btn-outline gap-2"
-                [disabled]="isSubmitting()"
-                (click)="saveDraftOnly()"
-              >
-                <app-icon name="save" [size]="16"></app-icon>
-                Salvar Rascunho
-              </button>
-
-              <button
-                type="button"
-                class="btn btn-sm btn-primary text-white gap-2"
-                [disabled]="isSubmitting()"
-                (click)="saveAndTransmit()"
-              >
-                <app-icon name="send" [size]="16"></app-icon>
-                Transmitir para SEFAZ
-              </button>
+          @if (company(); as c) {
+            <div class="md:col-span-2 rounded-lg p-4 flex flex-wrap items-center gap-3" [class]="c.environment === 'PRODUCTION' ? 'bg-error/10 border border-error' : 'bg-warning/15 border border-warning'">
+              <app-icon [name]="c.environment === 'PRODUCTION' ? 'alert' : 'shield-check'" [size]="20"></app-icon>
+              <p class="text-sm flex-1">
+                @if (c.environment === 'PRODUCTION') {
+                  <strong>Produção:</strong> esta nota terá <strong>valor fiscal real</strong> depois de autorizada.
+                } @else {
+                  <strong>Ambiente de testes:</strong> esta nota <strong>não tem valor fiscal</strong>. Ótimo para treinar.
+                }
+              </p>
             </div>
-          </div>
-        </div>
+          }
+        </section>
       }
+
+      <!-- PASSO 2 -->
+      @if (step() === 2) {
+        <section class="card bg-base-100 border border-base-300 p-5 sm:p-6 flex flex-col gap-4" aria-labelledby="st2">
+          <h2 id="st2" class="text-lg font-bold">Para quem é a nota</h2>
+
+          @if (docType() === 'NFCE') {
+            <label class="flex items-start gap-3 cursor-pointer rounded-lg border border-base-300 p-4">
+              <input type="checkbox" class="checkbox checkbox-primary" [checked]="anonymous()" (change)="setAnonymous($event)" />
+              <span class="text-sm"><strong>Consumidor não identificado.</strong> Permitido na NFC-e. Marque se o cliente não pediu CPF na nota.</span>
+            </label>
+          }
+
+          @if (!anonymous()) {
+            <app-form-field label="Cliente" for="e-cust" [required]="true" hint="Só aparecem clientes já cadastrados, para garantir CPF/CNPJ e endereço corretos.">
+              <select id="e-cust" class="select w-full" [value]="customerId()" (change)="customerId.set(val($event))">
+                <option value="">Escolha o cliente…</option>
+                @for (c of api.customers(); track c.id) { <option [value]="c.id">{{ c.name }} — {{ fmtDoc(c.documentNumber) }}</option>}
+              </select>
+            </app-form-field>
+            <a routerLink="/clientes" class="link text-sm self-start">Cliente não está na lista? Cadastre em “Clientes” e volte aqui.</a>
+
+            @if (customer(); as c) {
+              <div class="rounded-lg bg-base-200 p-4 text-sm grid gap-1 sm:grid-cols-2">
+                <div><span class="text-base-content/70">Nome:</span> <strong>{{ c.name }}</strong></div>
+                <div><span class="text-base-content/70">CPF/CNPJ:</span> <strong class="font-mono">{{ fmtDoc(c.documentNumber) }}</strong></div>
+                <div><span class="text-base-content/70">Cidade:</span> {{ c.cityName }}/{{ c.state }}</div>
+                <div><span class="text-base-content/70">E-mail:</span> {{ c.email || '—' }}</div>
+              </div>
+            }
+          }
+        </section>
+      }
+
+      <!-- PASSO 3 -->
+      @if (step() === 3) {
+        <section class="card bg-base-100 border border-base-300 p-5 sm:p-6 flex flex-col gap-4" aria-labelledby="st3">
+          <div class="flex flex-wrap items-end justify-between gap-3">
+            <h2 id="st3" class="text-lg font-bold">O que está sendo vendido</h2>
+            <label class="flex flex-col gap-1 w-full sm:w-80">
+              <span class="text-sm font-semibold">Adicionar do catálogo</span>
+              <select class="select w-full" (change)="addProduct($event)">
+                <option value="">Escolha um produto ou serviço…</option>
+                @for (p of api.products(); track p.id) { <option [value]="p.id">{{ p.code }} — {{ p.description }}</option> }
+              </select>
+            </label>
+          </div>
+
+          @if (items().length === 0) {
+            <div class="rounded-lg border-2 border-dashed border-base-300 p-8 text-center text-base-content/70">
+              Nenhum item ainda. Escolha um produto no catálogo acima.
+              <a routerLink="/produtos" class="link block mt-1">Produto não existe? Cadastre em “Produtos e serviços”.</a>
+            </div>
+          } @else {
+            <div class="overflow-x-auto">
+              <table class="table">
+                <thead>
+                  <tr class="text-xs uppercase text-base-content/70">
+                    <th>Item</th><th class="w-28 text-right">Quantidade</th><th class="w-36 text-right">Valor unit. (R$)</th><th class="w-32 text-right">Total</th><th class="w-12"><span class="sr-only">Remover</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (it of items(); track it.itemOrder) {
+                    <tr>
+                      <td>
+                        <div class="font-medium">{{ it.description }}</div>
+                        <div class="text-xs text-base-content/70 font-mono">{{ it.code }} · CFOP {{ it.cfop }} · {{ it.unit }}</div>
+                      </td>
+                      <td><input type="number" min="0" step="1" inputmode="decimal" class="input input-sm w-full text-right font-mono" [value]="it.quantity" (input)="setQty(it.itemOrder, $event)" [attr.aria-label]="'Quantidade de ' + it.description" /></td>
+                      <td><input type="number" min="0" step="0.01" inputmode="decimal" class="input input-sm w-full text-right font-mono" [value]="it.unitPrice" (input)="setPrice(it.itemOrder, $event)" [attr.aria-label]="'Valor unitário de ' + it.description" /></td>
+                      <td class="text-right font-semibold font-mono tabular">{{ it.totalPrice | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</td>
+                      <td><button type="button" class="btn btn-ghost btn-sm btn-square text-error" (click)="removeItem(it.itemOrder)" [attr.aria-label]="'Remover ' + it.description"><app-icon name="trash" [size]="16"></app-icon></button></td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            @if (cfopAdjusted()) {
+              <p class="text-sm text-base-content/70 flex items-start gap-2"><app-icon name="info" [size]="16" customClass="mt-0.5 shrink-0"></app-icon> O CFOP foi ajustado automaticamente: vendas para outro estado usam 6xxx; no mesmo estado, 5xxx.</p>
+            }
+          }
+        </section>
+      }
+
+      <!-- PASSO 4 -->
+      @if (step() === 4) {
+        <section class="card bg-base-100 border border-base-300 p-5 sm:p-6 grid gap-4 md:grid-cols-2" aria-labelledby="st4">
+          <h2 id="st4" class="md:col-span-2 text-lg font-bold">Frete e desconto</h2>
+          @if (docType() === 'NFE') {
+            <app-form-field label="Frete (R$)" for="e-ship" hint="Deixe 0 se não há frete cobrado na nota.">
+              <input id="e-ship" type="number" min="0" step="0.01" inputmode="decimal" class="input w-full font-mono" [value]="shipping()" (input)="shipping.set(num($event))" />
+            </app-form-field>
+          }
+          <app-form-field label="Desconto (R$)" for="e-disc" hint="Não pode ser maior que o total dos produtos.">
+            <input id="e-disc" type="number" min="0" step="0.01" inputmode="decimal" class="input w-full font-mono" [value]="discount()" (input)="discount.set(num($event))" />
+          </app-form-field>
+
+          <dl class="md:col-span-2 rounded-lg bg-base-200 p-4 grid gap-2 text-sm">
+            <div class="flex justify-between"><dt>Total dos produtos</dt><dd class="font-mono tabular">{{ totalProducts() | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</dd></div>
+            <div class="flex justify-between"><dt>+ Frete</dt><dd class="font-mono tabular">{{ effectiveShipping() | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</dd></div>
+            <div class="flex justify-between"><dt>− Desconto</dt><dd class="font-mono tabular">{{ discount() | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</dd></div>
+            <div class="flex justify-between border-t border-base-300 pt-2 text-lg font-bold"><dt>Total da nota</dt><dd class="font-mono tabular">{{ totalDocument() | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</dd></div>
+          </dl>
+        </section>
+      }
+
+      <!-- PASSO 5 -->
+      @if (step() === 5) {
+        <section class="flex flex-col gap-4" aria-labelledby="st5">
+          <div class="card bg-base-100 border border-base-300 p-5 sm:p-6 flex flex-col gap-2">
+            <h2 id="st5" class="text-lg font-bold">Confira antes de enviar</h2>
+            <p class="text-sm text-base-content/70">Abaixo está a prévia de como a nota vai ficar. Depois de autorizada pela SEFAZ, ela só pode ser corrigida por cancelamento.</p>
+          </div>
+          <app-danfe-preview [doc]="draft()" [company]="company()" [customer]="customer()" [forceWatermark]="true" />
+        </section>
+      }
+
+      <!-- NAVEGAÇÃO -->
+      <div class="flex flex-wrap items-center justify-between gap-3 sticky bottom-0 bg-base-200/95 backdrop-blur py-3 -mx-1 px-1 border-t border-base-300">
+        <button type="button" class="btn btn-ghost" [disabled]="step() === 1 || busy()" (click)="back()">
+          <app-icon name="chevron-left" [size]="18"></app-icon> Voltar
+        </button>
+        <div class="flex flex-wrap items-center gap-2">
+          @if (step() === 5) {
+            <button type="button" class="btn btn-outline" [disabled]="busy()" (click)="save(false)">
+              <app-icon name="save" [size]="18"></app-icon> Salvar como rascunho
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="busy()" (click)="save(true)">
+              @if (busy()) { <span class="loading loading-spinner loading-xs"></span> } @else { <app-icon name="send" [size]="18"></app-icon> }
+              Enviar para a SEFAZ
+            </button>
+          } @else {
+            <button type="button" class="btn btn-primary" (click)="next()">
+              Continuar <app-icon name="chevron-right" [size]="18"></app-icon>
+            </button>
+          }
+        </div>
+      </div>
     </div>
   `,
 })
 export class IssuanceComponent {
   readonly api = inject(FiscalApiService);
-  private router = inject(Router);
+  private readonly router = inject(Router);
+  private readonly toast = inject(ToastService);
 
-  currentStep = signal<number>(1);
-  isSubmitting = signal<boolean>(false);
-  validationErrors = signal<string[]>([]);
+  readonly steps = STEPS;
+  readonly natures = NATURES;
+  readonly other = OTHER;
+  readonly types = Object.entries(DOCUMENT_TYPE_LABEL);
 
-  companyId = 'comp_1';
-  documentType = 'NFE' as DocumentType;
-  operationNature = 'VENDA DE MERCADORIA';
+  readonly step = signal(1);
+  readonly maxReached = signal(1);
+  readonly errors = signal<string[]>([]);
+  readonly busy = signal(false);
+  readonly cfopAdjusted = signal(false);
 
-  customerId: string | null = null;
-  customerName = '';
-  customerDocument = '';
+  readonly companyId = signal('');
+  readonly docType = signal<DocType>('NFE');
+  readonly natureChoice = signal<string>(NATURES[0]);
+  readonly natureCustom = signal('');
+  readonly customerId = signal('');
+  readonly anonymous = signal(false);
+  readonly items = signal<FiscalDocumentItemDto[]>([]);
+  readonly shipping = signal(0);
+  readonly discount = signal(0);
 
-  items = signal<FiscalDocumentItemDto[]>([
-    {
-      itemOrder: 1,
-      code: 'ALIM-001',
-      description: 'Café Torrado e Moído Especial 500g',
-      ncm: '0901.21.00',
-      cfop: '5102',
-      unit: 'UN',
-      quantity: 10,
-      unitPrice: 28.5,
-      totalPrice: 285.0,
-      icmsCst: '102',
-    },
-  ]);
+  readonly activeCompanies = computed(() => this.api.companies().filter((c) => c.isActive));
+  readonly company = computed(() => this.api.companies().find((c) => c.id === this.companyId()) ?? null);
+  readonly customer = computed(() => this.api.customers().find((c) => c.id === this.customerId()) ?? null);
+  readonly nature = computed(() => (this.natureChoice() === OTHER ? this.natureCustom().trim().toUpperCase() : this.natureChoice()));
 
-  totalShipping = 0;
-  totalDiscount = 0;
+  readonly totalProducts = computed(() => round2(this.items().reduce((s, i) => s + i.totalPrice, 0)));
+  readonly effectiveShipping = computed(() => (this.docType() === 'NFE' ? this.shipping() : 0));
+  readonly totalDocument = computed(() => round2(this.totalProducts() + this.effectiveShipping() - this.discount()));
 
-  readonly totalProducts = computed(() => {
-    return this.items().reduce((acc, it) => acc + (it.totalPrice || 0), 0);
-  });
+  /** Documento montado com o que foi digitado; alimenta a prévia do passo 5. */
+  readonly draft = computed<FiscalDocumentDto>(() => ({
+    id: 'preview',
+    organizationId: '',
+    companyId: this.companyId(),
+    companyName: this.company()?.tradeName,
+    customerId: this.anonymous() ? null : this.customerId() || null,
+    customerName: this.anonymous() ? null : (this.customer()?.name ?? null),
+    customerDocument: this.anonymous() ? null : (this.customer()?.documentNumber ?? null),
+    documentType: this.docType() as FiscalDocumentDto['documentType'],
+    status: DocumentStatus.DRAFT,
+    environment: this.company()?.environment ?? ('HOMOLOGATION' as FiscalDocumentDto['environment']),
+    series: 1,
+    number: null,
+    operationNature: this.nature(),
+    operationType: OperationType.OUTBOUND,
+    totalProducts: this.totalProducts(),
+    totalDiscount: this.discount(),
+    totalIcms: 0, totalIpi: 0, totalPis: 0, totalCofins: 0,
+    totalShipping: this.effectiveShipping(),
+    totalDocument: this.totalDocument(),
+    items: this.items(),
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }));
 
-  readonly totalDocument = computed(() => {
-    return this.totalProducts() + Number(this.totalShipping) - Number(this.totalDiscount);
-  });
-
-  goToStep(step: number): void {
-    this.currentStep.set(step);
+  constructor() {
+    // Empresa padrão: a escolhida no topo da tela ou a única ativa.
+    effect(() => {
+      const list = this.activeCompanies();
+      const preferred = this.api.activeCompany();
+      untracked(() => {
+        if (this.companyId()) return;
+        if (preferred?.isActive) this.companyId.set(preferred.id);
+        else if (list.length === 1) this.companyId.set(list[0].id);
+      });
+    });
+    // Regra: se a empresa ou o cliente mudam, o CFOP (5xxx × 6xxx) acompanha o estado.
+    effect(() => {
+      const from = this.company()?.state;
+      const to = this.customer()?.state;
+      untracked(() => this.syncCfop(from, to));
+    });
+    // NFS-e é nota de serviço.
+    effect(() => {
+      const t = this.docType();
+      untracked(() => {
+        if (t === 'NFSE' && this.natureChoice() === NATURES[0]) this.natureChoice.set('PRESTAÇÃO DE SERVIÇO');
+        if (t !== 'NFSE' && this.natureChoice() === 'PRESTAÇÃO DE SERVIÇO') this.natureChoice.set(NATURES[0]);
+        if (t !== 'NFCE') this.anonymous.set(false);
+      });
+    });
   }
 
-  onSelectCustomer(event: Event): void {
-    const custId = (event.target as HTMLSelectElement).value;
-    const cust = this.api.customers().find((c) => c.id === custId);
-    if (cust) {
-      this.customerId = cust.id;
-      this.customerName = cust.name;
-      this.customerDocument = cust.documentNumber;
+  fmtDoc = formatDocument;
+  val(e: Event): string {
+    return (e.target as HTMLInputElement | HTMLSelectElement).value;
+  }
+  num(e: Event): number {
+    const n = Number(this.val(e));
+    return Number.isFinite(n) && n > 0 ? round2(n) : 0;
+  }
+
+  setAnonymous(e: Event): void {
+    const on = (e.target as HTMLInputElement).checked;
+    this.anonymous.set(on);
+    if (on) this.customerId.set('');
+  }
+
+  addProduct(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    const p = this.api.products().find((x) => x.id === select.value);
+    select.value = '';
+    if (!p) return;
+    const price = Number(p.unitPrice);
+    const existing = this.items().find((i) => i.code === p.code);
+    if (existing) {
+      this.setQuantity(existing.itemOrder, existing.quantity + 1);
+      return;
     }
+    const cfop = this.cfopFor(p.cfopDefault, this.company()?.state, this.customer()?.state);
+    if (cfop !== p.cfopDefault) this.cfopAdjusted.set(true);
+    this.items.update((list) => [
+      ...list,
+      {
+        itemOrder: list.length + 1,
+        code: p.code,
+        description: p.description,
+        ncm: p.ncm,
+        cfop,
+        unit: p.unit,
+        quantity: 1,
+        unitPrice: price,
+        totalPrice: round2(price),
+        icmsCst: p.csosn ?? p.cstIcms ?? '102',
+      },
+    ]);
   }
 
-  addProductFromCatalog(event: Event): void {
-    const prodId = (event.target as HTMLSelectElement).value;
-    const prod = this.api.products().find((p) => p.id === prodId);
-    if (prod) {
-      const nextOrder = this.items().length + 1;
-      this.items.update((list) => [
-        ...list,
-        {
-          itemOrder: nextOrder,
-          code: prod.code,
-          description: prod.description,
-          ncm: prod.ncm,
-          cfop: prod.cfopDefault,
-          unit: prod.unit,
-          quantity: 1,
-          unitPrice: Number(prod.unitPrice),
-          totalPrice: Number(prod.unitPrice),
-          icmsCst: prod.cstIcms || '102',
-        },
-      ]);
-    }
+  setQty(order: number, e: Event): void {
+    this.setQuantity(order, Number(this.val(e)));
   }
-
-  updateItemTotal(item: FiscalDocumentItemDto): void {
-    item.totalPrice = Number(item.quantity || 0) * Number(item.unitPrice || 0);
-    this.items.update((list) => [...list]);
+  private setQuantity(order: number, q: number): void {
+    const qty = Number.isFinite(q) && q > 0 ? q : 0;
+    this.items.update((l) => l.map((i) => (i.itemOrder === order ? { ...i, quantity: qty, totalPrice: round2(qty * i.unitPrice) } : i)));
   }
-
+  setPrice(order: number, e: Event): void {
+    const n = Number(this.val(e));
+    const price = Number.isFinite(n) && n > 0 ? round2(n) : 0;
+    this.items.update((l) => l.map((i) => (i.itemOrder === order ? { ...i, unitPrice: price, totalPrice: round2(i.quantity * price) } : i)));
+  }
   removeItem(order: number): void {
+    this.items.update((l) => l.filter((i) => i.itemOrder !== order).map((i, idx) => ({ ...i, itemOrder: idx + 1 })));
+  }
+
+  /** Operação dentro do estado = 5xxx; para outro estado = 6xxx. */
+  private cfopFor(cfop: string, from?: string, to?: string): string {
+    if (!from || !to || !/^[56]\d{3}$/.test(cfop)) return cfop;
+    return (from === to ? '5' : '6') + cfop.slice(1);
+  }
+  private syncCfop(from?: string, to?: string): void {
+    let changed = false;
     this.items.update((list) =>
-      list
-        .filter((it) => it.itemOrder !== order)
-        .map((it, idx) => ({ ...it, itemOrder: idx + 1 }))
+      list.map((i) => {
+        const next = this.cfopFor(i.cfop, from, to);
+        if (next !== i.cfop) changed = true;
+        return next === i.cfop ? i : { ...i, cfop: next };
+      })
     );
+    if (changed) this.cfopAdjusted.set(true);
   }
 
-  getCompanyName(): string {
-    const comp = this.api.companies().find((c) => c.id === this.companyId);
-    return comp ? comp.legalName : 'Não Selecionada';
-  }
-
-  async saveDraftOnly(): Promise<void> {
-    this.isSubmitting.set(true);
-    try {
-      await this.api.createDraft({
-        companyId: this.companyId,
-        customerId: this.customerId,
-        customerName: this.customerName,
-        customerDocument: this.customerDocument,
-        documentType: this.documentType,
-        operationNature: this.operationNature,
-        totalProducts: this.totalProducts(),
-        totalShipping: this.totalShipping,
-        totalDiscount: this.totalDiscount,
-        totalDocument: this.totalDocument(),
-        items: this.items(),
-      });
-      this.router.navigate(['/documentos']);
-    } finally {
-      this.isSubmitting.set(false);
+  private validate(step: number): string[] {
+    const errs: string[] = [];
+    if (step === 1) {
+      if (!this.company()) errs.push('Escolha a empresa que emite a nota.');
+      else if (this.docType() === 'NFSE' && !this.company()!.municipalRegistration) errs.push('Para NFS-e, a empresa precisa ter Inscrição Municipal cadastrada.');
+      else if (this.docType() !== 'NFSE' && !this.company()!.stateRegistration) errs.push('A empresa não tem Inscrição Estadual cadastrada. Confira em “Empresas” antes de emitir NF-e/NFC-e.');
+      if (!this.nature()) errs.push('Informe a natureza da operação.');
     }
+    if (step === 2 && !this.anonymous() && !this.customer()) errs.push('Escolha o cliente da nota.');
+    if (step === 3) {
+      if (this.items().length === 0) errs.push('Adicione pelo menos um item.');
+      for (const i of this.items()) {
+        if (i.quantity <= 0) errs.push(`“${i.description}”: a quantidade precisa ser maior que zero.`);
+        if (i.unitPrice <= 0) errs.push(`“${i.description}”: o valor unitário precisa ser maior que zero.`);
+      }
+    }
+    if (step === 4) {
+      if (this.discount() > this.totalProducts()) errs.push('O desconto não pode ser maior que o total dos produtos.');
+      if (this.totalDocument() <= 0) errs.push('O total da nota precisa ser maior que zero.');
+    }
+    return errs;
   }
 
-  async saveAndTransmit(): Promise<void> {
-    this.isSubmitting.set(true);
-    this.validationErrors.set([]);
-    try {
-      const draft = await this.api.createDraft({
-        companyId: this.companyId,
-        customerId: this.customerId,
-        customerName: this.customerName,
-        customerDocument: this.customerDocument,
-        documentType: this.documentType,
-        operationNature: this.operationNature,
-        totalProducts: this.totalProducts(),
-        totalShipping: this.totalShipping,
-        totalDiscount: this.totalDiscount,
-        totalDocument: this.totalDocument(),
-        items: this.items(),
-      });
+  next(): void {
+    const errs = this.validate(this.step());
+    this.errors.set(errs);
+    if (errs.length) return;
+    const n = this.step() + 1;
+    this.step.set(n);
+    this.maxReached.update((m) => Math.max(m, n));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
-      await this.api.submitDocument(draft.id);
-      this.router.navigate(['/documentos']);
-    } catch (err: any) {
-      if (err.error?.errors) {
-        this.validationErrors.set(err.error.errors);
-      } else {
-        this.validationErrors.set([err.message || 'Erro ao transmitir documento.']);
+  back(): void {
+    this.errors.set([]);
+    this.step.update((s) => Math.max(1, s - 1));
+  }
+
+  async save(transmit: boolean): Promise<void> {
+    // Revalida tudo: o usuário pode ter voltado e alterado algo.
+    const all = [1, 2, 3, 4].flatMap((s) => this.validate(s));
+    this.errors.set(all);
+    if (all.length) return;
+
+    this.busy.set(true);
+    let draftId: string | null = null;
+    try {
+      const d = this.draft();
+      const created = await this.api.createDraft({
+        companyId: d.companyId,
+        customerId: d.customerId,
+        customerName: d.customerName,
+        customerDocument: d.customerDocument,
+        documentType: d.documentType,
+        operationNature: d.operationNature,
+        totalProducts: d.totalProducts,
+        totalShipping: d.totalShipping,
+        totalDiscount: d.totalDiscount,
+        totalDocument: d.totalDocument,
+        items: d.items,
+      });
+      draftId = created.id;
+      if (!transmit) {
+        this.toast.success('Rascunho salvo. Você pode enviar depois, na lista de notas.');
+        await this.router.navigate(['/documentos', created.id]);
+        return;
       }
+      const sent = await this.api.submitDocument(created.id);
+      if (sent.status === DocumentStatus.REJECTED) this.toast.error(sent.rejectionReason ?? 'A SEFAZ rejeitou a nota.');
+      else if (sent.status === DocumentStatus.AUTHORIZED) this.toast.success(`Nota Nº ${sent.number} autorizada.`);
+      else this.toast.info('Nota enviada. Aguardando a resposta da SEFAZ.');
+      await this.router.navigate(['/documentos', created.id]);
+    } catch (err: any) {
+      const list: string[] = err?.error?.errors ?? [this.api.errorMessage(err, 'Não foi possível enviar a nota.')];
+      this.errors.set(list);
+      if (draftId) this.toast.warning('O rascunho foi salvo, mas o envio falhou. Corrija e envie pela lista de notas.');
     } finally {
-      this.isSubmitting.set(false);
+      this.busy.set(false);
     }
   }
 }

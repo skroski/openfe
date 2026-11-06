@@ -46,108 +46,92 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": ".editorconfig",
-        "hash": "5443105041930014821"
+        "file": "vitest.config.ts",
+        "hash": "7747400676042857361"
       },
       {
-        "file": ".env.example",
-        "hash": "6682745852617629131"
-      },
-      {
-        "file": ".gitignore",
-        "hash": "9928673004667191403"
-      },
-      {
-        "file": ".prettierignore",
-        "hash": "4806318144369935397"
-      },
-      {
-        "file": ".prettierrc",
-        "hash": "16267754514737964994"
-      },
-      {
-        "file": ".vscode/launch.json",
-        "hash": "11911801181309274062"
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css",
+        "hash": "198251265470598406"
       },
       {
         "file": "DEVELOPMENT.md",
         "hash": "2908939375849820188"
       },
       {
-        "file": "design-reference/.thumbnail",
-        "hash": "7817685553390610108"
+        "file": ".prettierrc",
+        "hash": "16267754514737964994"
       },
       {
-        "file": "design-reference/NfeClientes.dc.html",
-        "hash": "9035012684261225434"
-      },
-      {
-        "file": "design-reference/NfeConfiguracoes.dc.html",
-        "hash": "7845331108946561117"
-      },
-      {
-        "file": "design-reference/NfeDashboard.dc.html",
-        "hash": "18027015824704838037"
-      },
-      {
-        "file": "design-reference/NfeDocumentoDetalhe.dc.html",
-        "hash": "10845493591022623093"
-      },
-      {
-        "file": "design-reference/NfeDocumentos.dc.html",
-        "hash": "17915011175438367781"
-      },
-      {
-        "file": "design-reference/NfeEmissao.dc.html",
-        "hash": "18290838698788091486"
-      },
-      {
-        "file": "design-reference/NfeEmpresas.dc.html",
-        "hash": "4982256411977315817"
+        "file": "eslint.config.mjs",
+        "hash": "12926286793420397906"
       },
       {
         "file": "design-reference/NfeImportacao.dc.html",
         "hash": "16735249675860165018"
       },
       {
-        "file": "design-reference/NfeIntegracoes.dc.html",
-        "hash": "1067824367249326927"
+        "file": "docs/PROVIDERS.md",
+        "hash": "14769840639895691244"
+      },
+      {
+        "file": "package-lock.json",
+        "hash": "18312066278950104235"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css",
+        "hash": "14199684132777999316"
+      },
+      {
+        "file": "design-reference/support.js",
+        "hash": "14640174182844953874"
+      },
+      {
+        "file": ".env.example",
+        "hash": "6682745852617629131"
+      },
+      {
+        "file": "design-reference/NfeEmpresas.dc.html",
+        "hash": "4982256411977315817"
       },
       {
         "file": "design-reference/NfeProdutos.dc.html",
         "hash": "7185701423785031275"
       },
       {
-        "file": "design-reference/NfeRelatorios.dc.html",
-        "hash": "7344031642027584451"
+        "file": "package.json",
+        "hash": "18162572172733395942"
       },
       {
-        "file": "design-reference/OpenNFE Design System.dc.html",
-        "hash": "698128687840691119"
+        "file": "docs/PRD.md",
+        "hash": "2131474363515875420"
       },
       {
-        "file": "design-reference/OpenNFE.dc.html",
-        "hash": "5132207699754075556"
+        "file": "docs/DATABASE.md",
+        "hash": "5797814949851530740"
       },
       {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_adherence.oxlintrc.json",
-        "hash": "7660157563473259781"
+        "file": "design-reference/NfeClientes.dc.html",
+        "hash": "9035012684261225434"
       },
       {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js",
-        "hash": "7194858268701789749"
+        "file": "design-reference/NfeDashboard.dc.html",
+        "hash": "18027015824704838037"
       },
       {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_manifest.json",
-        "hash": "12348595191782266251"
+        "file": "nx.json",
+        "hash": "17477786919773191578"
       },
       {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/readme.md",
-        "hash": "9531017648170764555"
+        "file": ".vscode/launch.json",
+        "hash": "11911801181309274062"
       },
       {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/styles.css",
-        "hash": "198251265470598406"
+        "file": "docs/UI-GUIDE.md",
+        "hash": "11333855337902159713"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "950848304108897294"
       },
       {
         "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/a11y.css",
@@ -158,88 +142,108 @@
         "hash": "14934225975189629043"
       },
       {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css",
-        "hash": "10978485217311688495"
+        "file": "jest.preset.js",
+        "hash": "9430166341120122740"
       },
       {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css",
-        "hash": "12728357232290870860"
+        "file": "design-reference/OpenNFE.dc.html",
+        "hash": "5132207699754075556"
       },
       {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/motion.css",
-        "hash": "14199684132777999316"
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_bundle.js",
+        "hash": "7194858268701789749"
       },
       {
-        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css",
-        "hash": "18321901169661015660"
+        "file": "design-reference/.thumbnail",
+        "hash": "7817685553390610108"
       },
       {
         "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/typography.css",
         "hash": "7441608978569851697"
       },
       {
-        "file": "design-reference/support.js",
-        "hash": "14640174182844953874"
+        "file": "jest.config.ts",
+        "hash": "6870352021923392442"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/spacing.css",
+        "hash": "18321901169661015660"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/effects.css",
+        "hash": "10978485217311688495"
+      },
+      {
+        "file": "design-reference/NfeRelatorios.dc.html",
+        "hash": "7344031642027584451"
       },
       {
         "file": "docker/docker-compose.yml",
-        "hash": "14719069719726246128"
+        "hash": "929054956917067231"
       },
       {
-        "file": "docs/API.md",
-        "hash": "9342222593210185780"
+        "file": ".gitignore",
+        "hash": "9928673004667191403"
       },
       {
-        "file": "docs/ARCHITECTURE.md",
-        "hash": "17687977753591575927"
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_ds_manifest.json",
+        "hash": "12348595191782266251"
       },
       {
-        "file": "docs/DATABASE.md",
-        "hash": "5797814949851530740"
+        "file": "design-reference/NfeDocumentos.dc.html",
+        "hash": "17915011175438367781"
       },
       {
-        "file": "docs/PRD.md",
-        "hash": "2131474363515875420"
+        "file": "design-reference/NfeDocumentoDetalhe.dc.html",
+        "hash": "10845493591022623093"
       },
       {
-        "file": "docs/PROVIDERS.md",
-        "hash": "14769840639895691244"
+        "file": "design-reference/NfeEmissao.dc.html",
+        "hash": "18290838698788091486"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/_adherence.oxlintrc.json",
+        "hash": "7660157563473259781"
+      },
+      {
+        "file": "design-reference/NfeIntegracoes.dc.html",
+        "hash": "1067824367249326927"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/readme.md",
+        "hash": "9531017648170764555"
+      },
+      {
+        "file": "design-reference/NfeConfiguracoes.dc.html",
+        "hash": "7845331108946561117"
+      },
+      {
+        "file": "design-reference/_ds/codemix-design-system-95bbea2c-11c8-419a-8232-d14e74590f4b/tokens/fonts.css",
+        "hash": "12728357232290870860"
       },
       {
         "file": "docs/SECURITY.md",
         "hash": "14385278779829559724"
       },
       {
-        "file": "eslint.config.mjs",
-        "hash": "12926286793420397906"
+        "file": "docs/ARCHITECTURE.md",
+        "hash": "17687977753591575927"
       },
       {
-        "file": "jest.config.ts",
-        "hash": "6870352021923392442"
+        "file": ".prettierignore",
+        "hash": "4806318144369935397"
       },
       {
-        "file": "jest.preset.js",
-        "hash": "9430166341120122740"
+        "file": ".editorconfig",
+        "hash": "5443105041930014821"
       },
       {
-        "file": "nx.json",
-        "hash": "17477786919773191578"
+        "file": "docs/API.md",
+        "hash": "9342222593210185780"
       },
       {
-        "file": "package-lock.json",
-        "hash": "18312066278950104235"
-      },
-      {
-        "file": "package.json",
-        "hash": "18162572172733395942"
-      },
-      {
-        "file": "tsconfig.base.json",
-        "hash": "950848304108897294"
-      },
-      {
-        "file": "vitest.config.ts",
-        "hash": "7747400676042857361"
+        "file": "design-reference/OpenNFE Design System.dc.html",
+        "hash": "698128687840691119"
       }
     ],
     "projectFileMap": {
@@ -291,14 +295,14 @@
         },
         {
           "file": "apps/web/src/app/app.routes.server.ts",
-          "hash": "16960858348243221237",
+          "hash": "603264254662479907",
           "deps": [
             "npm:@angular/ssr"
           ]
         },
         {
           "file": "apps/web/src/app/app.routes.ts",
-          "hash": "9071474376368989415",
+          "hash": "15666404695143396696",
           "deps": [
             "npm:@angular/router"
           ]
@@ -320,17 +324,23 @@
           ]
         },
         {
+          "file": "apps/web/src/app/core/data/demo-data.ts",
+          "hash": "16716419894624620409",
+          "deps": [
+            "shared"
+          ]
+        },
+        {
           "file": "apps/web/src/app/core/layout/app-layout.component.ts",
-          "hash": "14280766209158772744",
+          "hash": "16170205249899498639",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common",
             "npm:@angular/router"
           ]
         },
         {
           "file": "apps/web/src/app/core/services/fiscal-api.service.ts",
-          "hash": "7277964551183316293",
+          "hash": "2525281331451933531",
           "deps": [
             "npm:@angular/core",
             "npm:@angular/common",
@@ -339,107 +349,215 @@
           ]
         },
         {
+          "file": "apps/web/src/app/core/services/toast.service.ts",
+          "hash": "7271538672268154694",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/core/utils/br.ts",
+          "hash": "13262195328323198184",
+          "deps": [
+            "shared"
+          ]
+        },
+        {
           "file": "apps/web/src/app/features/companies/companies.component.ts",
-          "hash": "16638705122199200910",
+          "hash": "16809395633112945080",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common",
+            "npm:@angular/router",
             "npm:@angular/forms",
             "shared"
           ]
         },
         {
           "file": "apps/web/src/app/features/customers/customers.component.ts",
-          "hash": "3690402649120066674",
+          "hash": "4020644940790327757",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common",
-            "npm:@angular/forms"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/dashboard/dashboard.component.ts",
-          "hash": "2500709733169267096",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/common",
-            "npm:@angular/router"
-          ]
-        },
-        {
-          "file": "apps/web/src/app/features/documents/documents.component.ts",
-          "hash": "15271910704102741514",
-          "deps": [
-            "npm:@angular/core",
-            "npm:@angular/common",
-            "npm:@angular/router",
             "npm:@angular/forms",
             "shared"
           ]
         },
         {
-          "file": "apps/web/src/app/features/imports/imports.component.ts",
-          "hash": "8335982729867168942",
+          "file": "apps/web/src/app/features/dashboard/dashboard.component.ts",
+          "hash": "15454165471943185846",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/documents/cancel-document-dialog.component.ts",
+          "hash": "15243798665248946847",
           "deps": [
             "npm:@angular/core",
+            "npm:@angular/forms",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/documents/document-detail.component.ts",
+          "hash": "16540228054093059581",
+          "deps": [
             "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/documents/document-examples.component.ts",
+          "hash": "12714428339864776373",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/documents/documents.component.ts",
+          "hash": "16524336814138327815",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "npm:@angular/router",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/guide/guide.component.ts",
+          "hash": "7706687926702698988",
+          "deps": [
+            "npm:@angular/core",
+            "npm:@angular/router"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/features/imports/imports.component.ts",
+          "hash": "4144042057247487696",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
             "npm:@angular/forms",
             "npm:@angular/router"
           ]
         },
         {
           "file": "apps/web/src/app/features/integrations/integrations.component.ts",
-          "hash": "10575047576893998675",
+          "hash": "11563627615092703248",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common",
             "npm:@angular/forms",
             "shared"
           ]
         },
         {
           "file": "apps/web/src/app/features/issuance/issuance.component.ts",
-          "hash": "15665344722376678311",
+          "hash": "8607492104754423052",
           "deps": [
-            "npm:@angular/core",
             "npm:@angular/common",
+            "npm:@angular/core",
             "npm:@angular/router",
-            "npm:@angular/forms",
             "shared"
           ]
         },
         {
           "file": "apps/web/src/app/features/products/products.component.ts",
-          "hash": "10800593618063617179",
+          "hash": "9201817070310651742",
           "deps": [
-            "npm:@angular/core",
             "npm:@angular/common",
-            "npm:@angular/forms"
+            "npm:@angular/core",
+            "npm:@angular/forms",
+            "shared"
           ]
         },
         {
           "file": "apps/web/src/app/features/reports/reports.component.ts",
-          "hash": "7406210744937544200",
+          "hash": "14872244354530867475",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common"
+            "npm:@angular/forms"
           ]
         },
         {
           "file": "apps/web/src/app/features/settings/settings.component.ts",
-          "hash": "2313881109831257072",
+          "hash": "15871823570184312537",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/danfe/danfe-preview.component.ts",
+          "hash": "7635781958848034706",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core",
+            "shared"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/data-grid/data-grid.component.ts",
+          "hash": "8494050370482740347",
+          "deps": [
+            "npm:@angular/common",
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/data-grid/data-grid.types.ts",
+          "hash": "2487743176732065000"
+        },
+        {
+          "file": "apps/web/src/app/shared/components/data-grid/grid-templates.directive.ts",
+          "hash": "319536055437259649",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/form-field.component.ts",
+          "hash": "14332750307037391149",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/icon.component.ts",
+          "hash": "15023314407187403199",
           "deps": [
             "npm:@angular/core",
             "npm:@angular/common"
           ]
         },
         {
-          "file": "apps/web/src/app/shared/components/icon.component.ts",
-          "hash": "16276377051906501511",
+          "file": "apps/web/src/app/shared/components/modal.component.ts",
+          "hash": "15038008489604431207",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/page-header.component.ts",
+          "hash": "5803633015522222983",
           "deps": [
             "npm:@angular/core",
-            "npm:@angular/common"
+            "npm:@angular/router"
           ]
+        },
+        {
+          "file": "apps/web/src/app/shared/components/status-badge.component.ts",
+          "hash": "5072003729392698353",
+          "deps": [
+            "npm:@angular/core"
+          ]
+        },
+        {
+          "file": "apps/web/src/app/shared/forms.ts",
+          "hash": "10841270266984138904"
         },
         {
           "file": "apps/web/src/index.html",
@@ -469,7 +587,7 @@
         },
         {
           "file": "apps/web/src/styles.css",
-          "hash": "569159666570467770"
+          "hash": "5968821452862945188"
         },
         {
           "file": "apps/web/tsconfig.app.json",
@@ -1074,11 +1192,18 @@
         },
         {
           "file": "libs/shared/src/index.ts",
-          "hash": "9994885006767527591"
+          "hash": "4409947503601050718"
         },
         {
           "file": "libs/shared/src/lib/shared.ts",
           "hash": "3815621113879200261"
+        },
+        {
+          "file": "libs/shared/src/lib/validators.spec.ts",
+          "hash": "1979218148632539778",
+          "deps": [
+            "npm:vitest"
+          ]
         },
         {
           "file": "libs/shared/src/security/encryption.service.spec.ts",

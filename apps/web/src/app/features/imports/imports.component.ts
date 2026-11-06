@@ -1,237 +1,224 @@
-import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
+import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { FiscalApiService } from '../../core/services/fiscal-api.service';
+import { ToastService } from '../../core/services/toast.service';
+import { digitsOnly, formatDocument, formatNcm } from '../../core/utils/br';
 import { AppIconComponent } from '../../shared/components/icon.component';
+import { DataGridComponent } from '../../shared/components/data-grid/data-grid.component';
+import { GridColumn } from '../../shared/components/data-grid/data-grid.types';
+import { GridCellDirective } from '../../shared/components/data-grid/grid-templates.directive';
+import { FormFieldComponent } from '../../shared/components/form-field.component';
+import { PageHeaderComponent } from '../../shared/components/page-header.component';
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 @Component({
   selector: 'app-imports',
-  imports: [CommonModule, FormsModule, RouterModule, AppIconComponent],
+  imports: [CurrencyPipe, FormsModule, RouterLink, AppIconComponent, DataGridComponent, GridCellDirective, FormFieldComponent, PageHeaderComponent],
   template: `
-    <div class="space-y-6">
-      <!-- Header -->
-      <div class="flex items-center justify-between">
-        <div>
-          <span class="text-xs font-semibold tracking-wider text-base-content/50 uppercase" style="font-family: var(--font-display);">
-            OPERAÇÃO · ENTRADA DE NOTAS
-          </span>
-          <h1 class="text-3xl font-light text-base-content mt-1">
-            <strong class="font-bold">Importação</strong> de XMLs
-          </h1>
-          <p class="text-sm text-base-content/60">
-            Upload de NF-e de fornecedores, validação estrutural SEFAZ e auto-cadastro de produtos e fornecedores
-          </p>
-        </div>
-      </div>
+    <div class="flex flex-col gap-6">
+      <app-page-header
+        title="Importar XML"
+        description="Já emitiu uma nota em outro sistema? Envie o arquivo XML para ela aparecer aqui, com os produtos e clientes cadastrados automaticamente."
+        [crumbs]="[{ label: 'Início', link: '/dashboard' }, { label: 'Importar XML' }]"
+      />
 
-      <!-- Success Notification -->
       @if (successMessage()) {
-        <div class="alert alert-success shadow-sm">
+        <div class="alert alert-success alert-soft" role="status">
           <app-icon name="check" [size]="20"></app-icon>
-          <div class="flex-1">
-            <span class="font-bold">{{ successMessage() }}</span>
-            <div class="text-xs mt-0.5">O documento foi registrado no livro de entradas e os itens no catálogo de produtos.</div>
-          </div>
-          <a routerLink="/documentos" class="btn btn-xs btn-outline">Ver Documentos</a>
+          <div class="flex-1"><strong>{{ successMessage() }}</strong></div>
+          <a routerLink="/documentos" class="btn btn-sm">Ver notas fiscais</a>
         </div>
       }
-
-      <!-- Error Notification -->
       @if (errorMessage()) {
-        <div class="alert alert-error shadow-sm">
+        <div class="alert alert-error alert-soft" role="alert">
           <app-icon name="alert" [size]="20"></app-icon>
           <span>{{ errorMessage() }}</span>
         </div>
       }
 
-      <!-- Upload Dropzone Area -->
       @if (!parsedData()) {
-        <div
-          class="card bg-base-100 border-2 border-dashed border-base-300 shadow-xs p-12 text-center flex flex-col items-center justify-center gap-4 hover:border-primary transition-colors cursor-pointer"
-          (click)="fileInput.click()"
+        <label
+          for="xml-file"
+          class="card bg-base-100 border-2 border-dashed p-8 sm:p-12 text-center flex flex-col items-center gap-4 cursor-pointer transition-colors focus-within:outline focus-within:outline-[3px] focus-within:outline-secondary"
+          [class]="dragging() ? 'border-primary bg-primary/5' : 'border-base-300 hover:border-primary'"
+          (dragover)="onDrag($event, true)"
+          (dragleave)="onDrag($event, false)"
+          (drop)="onDrop($event)"
         >
-          <input
-            #fileInput
-            type="file"
-            accept=".xml"
-            class="hidden"
-            (change)="onFileSelected($event)"
-          />
-          <div class="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center">
-            <app-icon name="upload" [size]="32"></app-icon>
-          </div>
-          <div>
-            <h3 class="font-bold text-lg text-base-content">Clique para selecionar ou arraste o arquivo XML da NF-e</h3>
-            <p class="text-xs text-base-content/50 mt-1">Suporta arquivos padrão SEFAZ versão 4.00 (NF-e modelo 55 e NFC-e)</p>
-          </div>
-          <button type="button" class="btn btn-sm btn-primary text-white pointer-events-none">
-            Selecionar Arquivo .XML
-          </button>
-        </div>
+          <input id="xml-file" type="file" accept=".xml,text/xml,application/xml" class="sr-only" (change)="onFileSelected($event)" />
+          @if (reading()) {
+            <span class="loading loading-spinner loading-lg text-primary"></span>
+            <p class="font-semibold">Lendo o arquivo…</p>
+          } @else {
+            <span class="w-16 h-16 rounded-full bg-primary/15 text-base-content flex items-center justify-center"><app-icon name="upload" [size]="30"></app-icon></span>
+            <div>
+              <p class="font-bold text-lg">Arraste o arquivo XML até aqui ou clique para escolher</p>
+              <p class="text-sm text-base-content/70 mt-1">Aceita NF-e e NFC-e no padrão da SEFAZ (versão 4.00). Um arquivo por vez.</p>
+            </div>
+            <span class="btn btn-primary pointer-events-none">Escolher arquivo XML</span>
+          }
+        </label>
       }
 
-      <!-- XML Preview Section -->
       @if (parsedData(); as doc) {
-        <div class="card bg-base-100 border border-base-300 shadow-xs divide-y divide-base-200">
-          <!-- Card Header -->
-          <div class="p-5 flex flex-wrap items-center justify-between gap-4 bg-base-200/40">
-            <div>
-              <div class="badge badge-info gap-1 text-xs font-semibold mb-1">
-                NF-e Modelo {{ doc.model }} · Série {{ doc.series }} · Nº {{ doc.number }}
-              </div>
-              <h2 class="text-lg font-bold text-base-content flex items-center gap-2">
-                {{ doc.issuer.legalName }}
-              </h2>
-              <p class="text-xs font-mono text-base-content/60">
-                Chave: {{ doc.accessKey }}
-              </p>
+        <section class="card bg-base-100 border border-base-300 divide-y divide-base-300" aria-label="Conferência da nota importada">
+          <div class="p-5 flex flex-wrap items-center justify-between gap-4">
+            <div class="min-w-0">
+              <span class="badge badge-info badge-soft font-semibold">NF-e modelo {{ doc.model }} · Série {{ doc.series }} · Nº {{ doc.number }}</span>
+              <h2 class="text-lg font-bold mt-2">{{ doc.issuer.legalName }}</h2>
+              <p class="text-xs font-mono text-base-content/70 break-all">Chave: {{ doc.accessKey }}</p>
             </div>
-
             <div class="flex items-center gap-2">
-              <button
-                type="button"
-                (click)="reset()"
-                class="btn btn-sm btn-ghost"
-              >
-                Cancelar
-              </button>
-              <button
-                type="button"
-                (click)="confirmImport()"
-                [disabled]="importing()"
-                class="btn btn-sm btn-primary text-white gap-2"
-              >
-                @if (importing()) {
-                  <span class="loading loading-spinner loading-xs"></span>
-                }
-                Confirmar Importação
+              <button type="button" class="btn btn-ghost" (click)="reset()">Cancelar</button>
+              <button type="button" class="btn btn-primary" [disabled]="importing() || !companyId()" (click)="confirmImport()">
+                @if (importing()) { <span class="loading loading-spinner loading-xs"></span> }
+                Confirmar importação
               </button>
             </div>
           </div>
 
-          <!-- Summary Grid -->
-          <div class="p-5 grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
-            <div class="p-3 bg-base-200/30 rounded-lg">
-              <span class="text-base-content/50 font-bold uppercase tracking-wider block">CNPJ Fornecedor</span>
-              <span class="font-mono font-semibold text-sm">{{ doc.issuer.document }}</span>
-            </div>
-            <div class="p-3 bg-base-200/30 rounded-lg">
-              <span class="text-base-content/50 font-bold uppercase tracking-wider block">Destinatário</span>
-              <span class="font-medium text-sm truncate block">{{ doc.recipient.legalName }}</span>
-            </div>
-            <div class="p-3 bg-base-200/30 rounded-lg">
-              <span class="text-base-content/50 font-bold uppercase tracking-wider block">Total Produtos</span>
-              <span class="font-bold text-sm">{{ doc.totalProducts | currency:'BRL' }}</span>
-            </div>
-            <div class="p-3 bg-primary/10 rounded-lg text-primary">
-              <span class="font-bold uppercase tracking-wider block">Total da Nota</span>
-              <span class="font-bold text-base">{{ doc.totalDocument | currency:'BRL' }}</span>
-            </div>
+          <div class="p-5 grid gap-4 md:grid-cols-2">
+            <app-form-field label="Importar para qual empresa?" for="imp-comp" [required]="true" hint="A nota entra no livro desta empresa.">
+              <select id="imp-comp" class="select w-full" [ngModel]="companyId()" (ngModelChange)="companyId.set($event)">
+                <option value="">Escolha a empresa…</option>
+                @for (c of api.companies(); track c.id) { <option [value]="c.id">{{ c.tradeName }}</option> }
+              </select>
+            </app-form-field>
+            <label class="flex items-start gap-3 cursor-pointer pt-7">
+              <input type="checkbox" class="checkbox checkbox-primary" [ngModel]="autoRegister()" (ngModelChange)="autoRegister.set($event)" />
+              <span class="text-sm"><strong>Cadastrar automaticamente</strong> os produtos que ainda não existem no sistema.</span>
+            </label>
+
+            @if (mismatch()) {
+              <div class="md:col-span-2 alert alert-warning alert-soft" role="alert">
+                <app-icon name="alert" [size]="18"></app-icon>
+                <span>O destinatário desta nota ({{ doc.recipient?.document }}) não é o CNPJ da empresa escolhida. Confira se é a empresa certa antes de importar.</span>
+              </div>
+            }
           </div>
 
-          <!-- Items Table -->
-          <div class="p-5 space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="font-bold text-sm text-base-content">
-                Itens Identificados no XML ({{ doc.items.length }})
-              </h3>
-              <label class="label cursor-pointer gap-2 py-0">
-                <input
-                  type="checkbox"
-                  class="checkbox checkbox-xs checkbox-primary"
-                  [(ngModel)]="autoRegisterProducts"
-                />
-                <span class="label-text text-xs font-medium">Cadastrar novos produtos automaticamente</span>
-              </label>
-            </div>
-
-            <div class="overflow-x-auto border border-base-200 rounded-lg">
-              <table class="table table-xs w-full">
-                <thead class="bg-base-200/60 font-semibold">
-                  <tr>
-                    <th>#</th>
-                    <th>Código</th>
-                    <th>Descrição</th>
-                    <th>NCM</th>
-                    <th>CFOP</th>
-                    <th>Qtd</th>
-                    <th>Preço Un.</th>
-                    <th>Total</th>
-                    <th>ICMS</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  @for (item of doc.items; track item.code) {
-                    <tr class="hover">
-                      <td class="font-mono text-base-content/50">{{ item.itemOrder }}</td>
-                      <td class="font-mono font-medium">{{ item.code }}</td>
-                      <td class="font-medium">{{ item.description }}</td>
-                      <td class="font-mono">{{ item.ncm }}</td>
-                      <td class="font-mono">{{ item.cfop }}</td>
-                      <td class="font-mono">{{ item.quantity }} {{ item.unit }}</td>
-                      <td class="font-mono">{{ item.unitPrice | currency:'BRL' }}</td>
-                      <td class="font-mono font-bold">{{ item.totalPrice | currency:'BRL' }}</td>
-                      <td class="font-mono text-xs">{{ item.icmsValue ? (item.icmsValue | currency:'BRL') : 'R$ 0,00' }}</td>
-                    </tr>
-                  }
-                </tbody>
-              </table>
-            </div>
+          <div class="p-5 grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="rounded-lg bg-base-200 p-4"><span class="text-sm text-base-content/70 block">CNPJ do fornecedor</span><span class="font-mono font-semibold">{{ fmt(doc.issuer.document) }}</span></div>
+            <div class="rounded-lg bg-base-200 p-4"><span class="text-sm text-base-content/70 block">Destinatário</span><span class="font-semibold break-words">{{ doc.recipient?.legalName }}</span></div>
+            <div class="rounded-lg bg-base-200 p-4"><span class="text-sm text-base-content/70 block">Total dos produtos</span><span class="font-bold tabular">{{ doc.totalProducts | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</span></div>
+            <div class="rounded-lg bg-primary/15 p-4"><span class="text-sm text-base-content/70 block">Total da nota</span><span class="font-bold text-lg tabular">{{ doc.totalDocument | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</span></div>
           </div>
-        </div>
+
+          <div class="p-5 flex flex-col gap-3">
+            <h3 class="font-bold">Itens encontrados no XML ({{ doc.items.length }})</h3>
+            <app-data-grid label="Itens da nota importada" [rows]="doc.items" [columns]="itemColumns" [rowId]="itemId" [searchText]="itemSearch" searchPlaceholder="Código ou descrição" [initialSort]="{ key: 'n', direction: 'asc' }">
+              <ng-template appGridCell="total" let-i><span class="font-semibold">{{ i.totalPrice | currency: 'BRL' : 'symbol' : '1.2-2' : 'pt-BR' }}</span></ng-template>
+            </app-data-grid>
+          </div>
+        </section>
       }
     </div>
   `,
 })
 export class ImportsComponent {
-  private readonly api = inject(FiscalApiService);
+  readonly api = inject(FiscalApiService);
+  private readonly toast = inject(ToastService);
 
   readonly parsedData = signal<any | null>(null);
-  readonly rawXml = signal<string>('');
-  readonly importing = signal<boolean>(false);
+  readonly rawXml = signal('');
+  readonly importing = signal(false);
+  readonly reading = signal(false);
+  readonly dragging = signal(false);
   readonly errorMessage = signal<string | null>(null);
   readonly successMessage = signal<string | null>(null);
+  readonly autoRegister = signal(true);
+  readonly companyId = signal(this.api.activeCompany()?.id ?? '');
 
-  autoRegisterProducts = true;
+  /** O destinatário do XML deveria ser a empresa escolhida (nota de entrada). */
+  readonly mismatch = computed(() => {
+    const doc = this.parsedData();
+    const company = this.api.companies().find((c) => c.id === this.companyId());
+    const rec = digitsOnly(doc?.recipient?.document);
+    return !!(doc && company && rec && rec !== digitsOnly(company.cnpj));
+  });
+
+  readonly itemId = (i: any) => `${i.itemOrder}-${i.code}`;
+  readonly itemSearch = (i: any) => `${i.code} ${i.description} ${i.ncm}`;
+  readonly itemColumns: GridColumn<any>[] = [
+    { key: 'n', label: '#', value: (i) => i.itemOrder, mono: true },
+    { key: 'code', label: 'Código', value: (i) => i.code, mono: true },
+    { key: 'desc', label: 'Descrição', value: (i) => i.description },
+    { key: 'ncm', label: 'NCM', value: (i) => formatNcm(i.ncm), mono: true, hideBelow: 'md' },
+    { key: 'cfop', label: 'CFOP', value: (i) => i.cfop, mono: true, hideBelow: 'lg' },
+    { key: 'qty', label: 'Qtd', value: (i) => Number(i.quantity), align: 'end', mono: true, format: (v, i) => `${v} ${i.unit}` },
+    { key: 'unit', label: 'Valor unit.', value: (i) => Number(i.unitPrice), align: 'end', mono: true, hideBelow: 'md',
+      format: (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) },
+    { key: 'total', label: 'Total', value: (i) => Number(i.totalPrice), align: 'end', mono: true,
+      format: (v) => Number(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) },
+  ];
+
+  fmt = formatDocument;
+
+  onDrag(event: DragEvent, on: boolean): void {
+    event.preventDefault();
+    this.dragging.set(on);
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+    this.dragging.set(false);
+    const file = event.dataTransfer?.files?.[0];
+    if (file) this.readFile(file);
+  }
 
   onFileSelected(event: Event): void {
-    const file = (event.target as HTMLInputElement).files?.[0];
-    if (!file) return;
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file) this.readFile(file);
+    input.value = '';
+  }
 
+  private readFile(file: File): void {
     this.errorMessage.set(null);
     this.successMessage.set(null);
-
+    if (!/\.xml$/i.test(file.name)) {
+      this.errorMessage.set('Esse arquivo não é um XML. Escolha o arquivo da nota com final “.xml”.');
+      return;
+    }
+    if (this.api.demoMode()) {
+      this.errorMessage.set('Modo demonstração: a leitura de XML precisa da API conectada.');
+      return;
+    }
+    this.reading.set(true);
     const reader = new FileReader();
     reader.onload = async (e) => {
-      const xmlContent = e.target?.result as string;
-      this.rawXml.set(xmlContent);
-
+      const xml = e.target?.result as string;
+      this.rawXml.set(xml);
       try {
-        const preview = await this.api.previewXml(xmlContent);
-        this.parsedData.set(preview);
-      } catch (err: any) {
-        this.errorMessage.set(err?.error?.message || 'Arquivo XML inválido ou não suportado.');
+        this.parsedData.set(await this.api.previewXml(xml));
+      } catch (err) {
+        this.errorMessage.set(this.api.errorMessage(err, 'Arquivo XML inválido ou não suportado.'));
+      } finally {
+        this.reading.set(false);
       }
+    };
+    reader.onerror = () => {
+      this.reading.set(false);
+      this.errorMessage.set('Não foi possível ler o arquivo.');
     };
     reader.readAsText(file);
   }
 
   async confirmImport(): Promise<void> {
     const xml = this.rawXml();
-    if (!xml) return;
-
+    if (!xml || !this.companyId()) return;
     this.importing.set(true);
     this.errorMessage.set(null);
-
     try {
-      const activeCompId = this.api.activeCompany()?.id || 'comp_1';
-      const res = await this.api.importXml(activeCompId, xml, this.autoRegisterProducts);
-      this.successMessage.set(res.message);
+      const res = await this.api.importXml(this.companyId(), xml, this.autoRegister());
+      this.successMessage.set(res.message ?? 'Nota importada com sucesso.');
+      this.toast.success('Nota importada.');
       this.parsedData.set(null);
       this.rawXml.set('');
-    } catch (err: any) {
-      this.errorMessage.set(err?.error?.message || 'Falha ao importar XML.');
+    } catch (err) {
+      this.errorMessage.set(this.api.errorMessage(err, 'Falha ao importar o XML.'));
     } finally {
       this.importing.set(false);
     }

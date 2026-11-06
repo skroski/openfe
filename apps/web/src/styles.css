@@ -52,8 +52,8 @@
 
 [data-theme="opennfe"] {
   --color-primary: #ee9c0a;
-  --color-primary-content: #ffffff;
-  --color-secondary: #3d7ea6;
+  --color-primary-content: #1f1f1f; /* texto escuro: branco sobre laranja não atinge contraste 4.5:1 */
+  --color-secondary: #2f6d94;
   --color-secondary-content: #ffffff;
   --color-accent: #f58220;
   --color-accent-content: #ffffff;
@@ -62,10 +62,10 @@
   --color-base-100: #ffffff;
   --color-base-200: #f6f6f6;
   --color-base-300: #e6e6e6;
-  --color-base-content: #363d3f;
-  --color-info: #3d7ea6;
+  --color-base-content: #2b3133;
+  --color-info: #2f6d94;
   --color-info-content: #ffffff;
-  --color-success: #5c9c2f;
+  --color-success: #3f7d1a;
   --color-success-content: #ffffff;
   --color-warning: #f1a10b;
   --color-warning-content: #1f1f1f;
@@ -74,6 +74,13 @@
   --radius-selector: 0.375rem;
   --radius-field: 0.375rem;
   --radius-box: 0.5rem;
+  /* Variáveis exigidas pelo daisyUI 5 para desenhar bordas e tamanhos dos campos */
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  color-scheme: light;
 }
 
 html, body {
@@ -85,4 +92,68 @@ html, body {
 
 * {
   box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------------
+   Base de usabilidade
+   ------------------------------------------------------------------ */
+html {
+  font-size: 16px; /* mínimo legível; nunca reduzir o texto do corpo abaixo disso */
+  scroll-behavior: smooth;
+}
+
+body {
+  line-height: 1.5;
+}
+
+/* Foco sempre visível para quem navega pelo teclado */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 3px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+/* Números alinhados em colunas (valores, códigos, datas) */
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Botões e campos com alvo de toque confortável (mín. 44px) */
+.btn,
+.input,
+.select {
+  min-height: 2.75rem;
+}
+.btn-sm,
+.input-sm,
+.select-sm {
+  min-height: 2.25rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Campos com borda visível (contraste mínimo 3:1 para componentes de interface) */
+.input,
+.select,
+.textarea,
+.file-input {
+  --input-color: color-mix(in srgb, var(--color-base-content) 55%, transparent);
+  background-color: var(--color-base-100);
+}
+.input-error,
+.select-error {
+  --input-color: var(--color-error);
 }

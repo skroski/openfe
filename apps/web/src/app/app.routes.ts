@@ -26,6 +26,28 @@ export const appRoutes: Route[] = [
           ),
       },
       {
+        path: 'documentos/exemplo',
+        title: 'Exemplos de nota fiscal',
+        loadComponent: () =>
+          import('./features/documents/document-examples.component').then(
+            (m) => m.DocumentExamplesComponent
+          ),
+      },
+      {
+        path: 'documentos/:id',
+        title: 'Detalhes da nota',
+        loadComponent: () =>
+          import('./features/documents/document-detail.component').then(
+            (m) => m.DocumentDetailComponent
+          ),
+      },
+      {
+        path: 'guia',
+        title: 'Guia do sistema',
+        loadComponent: () =>
+          import('./features/guide/guide.component').then((m) => m.GuideComponent),
+      },
+      {
         path: 'emissao',
         loadComponent: () =>
           import('./features/issuance/issuance.component').then(

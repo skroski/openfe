@@ -1,292 +1,221 @@
-import { Component, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Component, inject, signal } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { FiscalApiService } from '../services/fiscal-api.service';
+import { ToastService } from '../services/toast.service';
 import { AppIconComponent } from '../../shared/components/icon.component';
+
+interface NavItem {
+  label: string;
+  hint: string;
+  icon: string;
+  link: string;
+  exact?: boolean;
+}
+
+interface NavGroup {
+  title: string;
+  items: NavItem[];
+}
+
+const TOAST_ICON = { success: 'check', error: 'alert', info: 'info', warning: 'alert' } as const;
+const TOAST_CLASS = {
+  success: 'alert-success',
+  error: 'alert-error',
+  info: 'alert-info',
+  warning: 'alert-warning',
+} as const;
 
 @Component({
   selector: 'app-layout',
-  imports: [CommonModule, RouterModule, AppIconComponent],
+  imports: [RouterLink, RouterLinkActive, RouterOutlet, AppIconComponent],
   template: `
-    <div class="min-h-screen flex bg-base-200 text-base-content antialiased">
-      <!-- Sidebar -->
-      <aside
-        [class.w-64]="!isCollapsed()"
-        [class.w-20]="isCollapsed()"
-        class="transition-all duration-300 ease-in-out fixed inset-y-0 left-0 z-40 flex flex-col bg-[#363d3f] text-white border-r border-[#2b2b2b] shadow-xl"
-      >
-        <!-- Brand Header -->
-        <div class="h-16 flex items-center px-4 border-b border-white/10 gap-3 justify-between">
-          <a routerLink="/dashboard" class="flex items-center gap-3 no-underline text-white">
-            <span
-              class="w-9 h-9 rounded bg-[#23527a] shadow-inner flex items-center justify-center font-bold text-white tracking-wider text-base"
-              style="font-family: var(--font-display);"
-            >
-              NF
-            </span>
-            @if (!isCollapsed()) {
-              <span class="text-xl tracking-tight" style="font-family: var(--font-sans);">
-                open<strong class="font-bold text-[#f58220]">nfe</strong>
-              </span>
-            }
-          </a>
-          <button
-            type="button"
-            (click)="toggleCollapse()"
-            class="p-1 rounded hover:bg-white/10 text-white/70 hover:text-white transition-colors"
-            title="Recolher / Expandir Menu"
-          >
-            <app-icon [name]="isCollapsed() ? 'chevron-right' : 'chevron-left'" [size]="18"></app-icon>
-          </button>
-        </div>
+    <a href="#conteudo" class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] btn btn-primary">
+      Ir para o conteúdo
+    </a>
 
-        <!-- Organization Selector -->
-        @if (!isCollapsed()) {
-          <div class="p-3">
-            <div class="flex items-center gap-2.5 p-2 rounded-lg bg-white/5 border border-white/10 text-xs text-white/80">
-              <span class="w-7 h-7 rounded bg-[#4b5054] flex items-center justify-center text-white font-semibold">CH</span>
-              <div class="flex flex-col min-w-0 flex-1">
-                <span class="text-[10px] font-bold uppercase tracking-wider text-white/50">Organização</span>
-                <span class="truncate font-medium text-white">Contábil Horizonte</span>
-              </div>
-            </div>
-          </div>
-        }
+    <div class="drawer lg:drawer-open bg-base-200 min-h-dvh">
+      <input id="menu-drawer" type="checkbox" class="drawer-toggle" [checked]="menuOpen()" (change)="menuOpen.set(!menuOpen())" aria-label="Abrir menu" />
 
-        <!-- Direct Emission Button -->
-        <div class="px-3 py-1">
-          <a
-            routerLink="/emissao"
-            class="flex items-center justify-center gap-2 w-full h-10 rounded-md bg-gradient-to-b from-[#ee9c0a] to-[#d97d08] text-white font-medium text-sm shadow hover:brightness-105 active:scale-95 transition-all"
-            title="Emitir Novo Documento"
-          >
-            <app-icon name="file-plus-2" [size]="18"></app-icon>
-            @if (!isCollapsed()) {
-              <span>emitir documento</span>
-            }
-          </a>
-        </div>
+      <!-- ÁREA PRINCIPAL -->
+      <div class="drawer-content flex flex-col min-w-0">
+        <header class="sticky top-0 z-30 bg-base-100 border-b border-base-300 px-4 sm:px-6 h-16 flex items-center gap-3">
+          <label for="menu-drawer" class="btn btn-ghost btn-square lg:hidden" aria-label="Abrir menu">
+            <app-icon name="menu" [size]="22"></app-icon>
+          </label>
 
-        <!-- Navigation Categories -->
-        <nav class="flex-1 overflow-y-auto px-2 py-3 space-y-4">
-          <!-- Operação -->
-          <div>
-            @if (!isCollapsed()) {
-              <div class="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-white/40" style="font-family: var(--font-display);">
-                OPERAÇÃO
-              </div>
-            }
-            <div class="space-y-1">
-              <a
-                routerLink="/dashboard"
-                routerLinkActive="bg-white/15 text-[#fbd23a] font-semibold"
-                [routerLinkActiveOptions]="{ exact: true }"
-                class="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-                title="Visão Geral"
-              >
-                <app-icon name="layout-dashboard" [size]="18"></app-icon>
-                @if (!isCollapsed()) { <span>Visão Geral</span> }
-              </a>
-
-              <a
-                routerLink="/documentos"
-                routerLinkActive="bg-white/15 text-[#fbd23a] font-semibold"
-                class="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-                title="Documentos Fiscais"
-              >
-                <app-icon name="file-text" [size]="18"></app-icon>
-                @if (!isCollapsed()) {
-                  <span class="flex-1">Documentos</span>
-                  <span class="badge badge-sm bg-white/20 text-white border-0">{{ api.documents().length }}</span>
-                }
-              </a>
-
-              <a
-                routerLink="/emissao"
-                routerLinkActive="bg-white/15 text-[#fbd23a] font-semibold"
-                class="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-                title="Emissão Guiada"
-              >
-                <app-icon name="file-plus-2" [size]="18"></app-icon>
-                @if (!isCollapsed()) { <span>Emitir NF-e</span> }
-              </a>
-
-              <a
-                routerLink="/importacao"
-                routerLinkActive="bg-white/15 text-[#fbd23a] font-semibold"
-                class="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-                title="Importação de XML"
-              >
-                <app-icon name="upload-cloud" [size]="18"></app-icon>
-                @if (!isCollapsed()) { <span>Importar XML</span> }
-              </a>
-            </div>
-          </div>
-
-          <!-- Cadastros -->
-          <div>
-            @if (!isCollapsed()) {
-              <div class="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-white/40" style="font-family: var(--font-display);">
-                CADASTROS
-              </div>
-            }
-            <div class="space-y-1">
-              <a
-                routerLink="/empresas"
-                routerLinkActive="bg-white/15 text-[#fbd23a] font-semibold"
-                class="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-                title="Empresas Emitentes"
-              >
-                <app-icon name="building-2" [size]="18"></app-icon>
-                @if (!isCollapsed()) { <span>Empresas</span> }
-              </a>
-
-              <a
-                routerLink="/clientes"
-                routerLinkActive="bg-white/15 text-[#fbd23a] font-semibold"
-                class="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-                title="Clientes e Destinatários"
-              >
-                <app-icon name="users" [size]="18"></app-icon>
-                @if (!isCollapsed()) { <span>Clientes</span> }
-              </a>
-
-              <a
-                routerLink="/produtos"
-                routerLinkActive="bg-white/15 text-[#fbd23a] font-semibold"
-                class="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-                title="Produtos e Serviços"
-              >
-                <app-icon name="package" [size]="18"></app-icon>
-                @if (!isCollapsed()) { <span>Produtos</span> }
-              </a>
-            </div>
-          </div>
-
-          <!-- Gestão e Integrações -->
-          <div>
-            @if (!isCollapsed()) {
-              <div class="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-white/40" style="font-family: var(--font-display);">
-                GESTÃO
-              </div>
-            }
-            <div class="space-y-1">
-              <a
-                routerLink="/relatorios"
-                routerLinkActive="bg-white/15 text-[#fbd23a] font-semibold"
-                class="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-                title="Relatórios e Fechamento"
-              >
-                <app-icon name="bar-chart-3" [size]="18"></app-icon>
-                @if (!isCollapsed()) { <span>Relatórios</span> }
-              </a>
-
-              <a
-                routerLink="/integracoes"
-                routerLinkActive="bg-white/15 text-[#fbd23a] font-semibold"
-                class="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-                title="Provedores e Integrações"
-              >
-                <app-icon name="sliders" [size]="18"></app-icon>
-                @if (!isCollapsed()) { <span>Integrações</span> }
-              </a>
-
-              <a
-                routerLink="/configuracoes"
-                routerLinkActive="bg-white/15 text-[#fbd23a] font-semibold"
-                class="flex items-center gap-3 px-3 py-2 rounded-md text-sm text-white/80 hover:bg-white/10 hover:text-white transition-colors"
-                title="Configurações do Sistema"
-              >
-                <app-icon name="settings" [size]="18"></app-icon>
-                @if (!isCollapsed()) { <span>Configurações</span> }
-              </a>
-            </div>
-          </div>
-        </nav>
-
-        <!-- User Profile Footer -->
-        <div class="p-3 border-t border-white/10 bg-black/10">
-          <div class="flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-[#f58220] text-white flex items-center justify-center font-bold text-xs">
-              DS
-            </div>
-            @if (!isCollapsed()) {
-              <div class="flex flex-col min-w-0 flex-1">
-                <span class="text-xs font-medium text-white truncate">Daniel Skroski</span>
-                <span class="text-[10px] text-white/50 truncate">TENANT_ADMIN</span>
-              </div>
-            }
-          </div>
-        </div>
-      </aside>
-
-      <!-- Main App Content Area -->
-      <div
-        [class.pl-64]="!isCollapsed()"
-        [class.pl-20]="isCollapsed()"
-        class="flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out"
-      >
-        <!-- Top App Bar -->
-        <header class="h-16 bg-base-100 border-b border-base-300 px-6 flex items-center justify-between sticky top-0 z-30 shadow-xs">
-          <div class="flex items-center gap-4">
-            <div class="flex flex-col">
-              <span class="text-xs font-bold uppercase tracking-wider text-base-content/60" style="font-family: var(--font-display);">
-                OpenNFE · Plataforma Fiscal Independente
-              </span>
-              <div class="flex items-center gap-2 text-sm font-semibold text-base-content">
-                <span>{{ api.activeCompany()?.tradeName || 'Todas as Empresas' }}</span>
-                <span class="text-xs font-mono text-base-content/50">({{ api.activeCompany()?.cnpj || 'Consolidado' }})</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Right Controls: Environment & Company Selector -->
-          <div class="flex items-center gap-3">
-            <!-- Environment Badge -->
-            <div class="badge badge-warning gap-1 font-semibold text-xs tracking-wider uppercase py-3">
-              <app-icon name="shield-check" [size]="14"></app-icon>
-              HOMOLOGAÇÃO
-            </div>
-
-            <!-- Company Switcher -->
+          <label class="flex items-center gap-2 min-w-0">
+            <span class="hidden sm:inline text-sm font-semibold text-base-content/70 whitespace-nowrap">Empresa:</span>
             <select
-              class="select select-bordered select-sm max-w-xs text-xs font-medium bg-base-100"
+              class="select max-w-[16rem] sm:max-w-xs"
               [value]="api.selectedCompanyId()"
               (change)="onCompanyChange($event)"
+              aria-label="Empresa que está sendo exibida"
             >
+              <option value="">Todas as empresas</option>
               @for (comp of api.companies(); track comp.id) {
                 <option [value]="comp.id">{{ comp.tradeName }} ({{ comp.state }})</option>
               }
             </select>
+          </label>
 
-            <a
-              routerLink="/emissao"
-              class="btn btn-sm btn-primary text-white gap-2"
-            >
-              <app-icon name="file-plus-2" [size]="16"></app-icon>
-              Emitir NF-e
+          @if (api.activeCompany(); as comp) {
+            @if (comp.environment === 'PRODUCTION') {
+              <span class="badge badge-error gap-1 font-semibold hidden md:inline-flex" title="Notas emitidas neste ambiente têm valor fiscal real.">
+                <app-icon name="alert" [size]="12"></app-icon> PRODUÇÃO · valor fiscal real
+              </span>
+            } @else {
+              <span class="badge badge-warning gap-1 font-semibold hidden md:inline-flex" title="Ambiente de testes: as notas não têm valor fiscal.">
+                <app-icon name="shield-check" [size]="12"></app-icon> HOMOLOGAÇÃO · só testes
+              </span>
+            }
+          }
+
+          <div class="ml-auto flex items-center gap-2">
+            <a routerLink="/emissao" class="btn btn-primary">
+              <app-icon name="file-plus-2" [size]="18"></app-icon>
+              <span class="hidden sm:inline">Emitir nota</span>
+              <span class="sr-only sm:hidden">Emitir nota</span>
             </a>
           </div>
         </header>
 
-        <!-- Page View Container -->
-        <main class="flex-1 p-6 max-w-7xl w-full mx-auto">
-          <router-outlet></router-outlet>
+        @if (api.connectionFailed()) {
+          <div class="bg-error text-error-content px-4 sm:px-6 py-3 text-sm flex flex-wrap items-center gap-x-3 gap-y-2" role="alert">
+            <app-icon name="alert" [size]="18"></app-icon>
+            <p class="flex-1 min-w-[14rem]"><strong>Sem conexão com a API.</strong> Não foi possível carregar seus dados. Confira se o servidor está ligado e tente de novo.</p>
+            <button type="button" class="btn btn-sm bg-base-100 border-base-300 text-base-content" (click)="reconnect()" [disabled]="api.loading()">
+              <app-icon name="refresh" [size]="14" [customClass]="api.loading() ? 'animate-spin' : ''"></app-icon> Tentar de novo
+            </button>
+            <button type="button" class="btn btn-sm btn-ghost" (click)="api.startDemo()">Ver demonstração</button>
+          </div>
+        }
+
+        @if (api.demoMode()) {
+          <div class="bg-warning text-warning-content border-b border-warning/40 px-4 sm:px-6 py-3 text-sm flex flex-wrap items-center gap-x-3 gap-y-2" role="status">
+            <app-icon name="info" [size]="18"></app-icon>
+            <p class="flex-1 min-w-[14rem]">
+              <strong>Modo demonstração.</strong>
+              Não foi possível conectar à API, então você está vendo dados de exemplo. Nada é enviado à SEFAZ.
+            </p>
+            <button type="button" class="btn btn-sm bg-base-100 border-base-300 text-base-content" (click)="reconnect()" [disabled]="api.loading()">
+              <app-icon name="refresh" [size]="14" [customClass]="api.loading() ? 'animate-spin' : ''"></app-icon>
+              Tentar conectar de novo
+            </button>
+          </div>
+        }
+
+        <main id="conteudo" class="flex-1 p-4 sm:p-6 w-full max-w-[90rem] mx-auto" tabindex="-1">
+          <router-outlet />
         </main>
       </div>
+
+      <!-- MENU LATERAL -->
+      <div class="drawer-side z-40">
+        <label for="menu-drawer" aria-label="Fechar menu" class="drawer-overlay"></label>
+        <aside class="w-72 min-h-full flex flex-col bg-[#363d3f] text-white">
+          <a routerLink="/dashboard" class="h-16 px-5 flex items-center gap-3 border-b border-white/10 text-white no-underline" (click)="menuOpen.set(false)">
+            <span class="w-9 h-9 rounded bg-[#23527a] flex items-center justify-center font-bold tracking-wider" style="font-family: var(--font-display);">NF</span>
+            <span class="text-xl tracking-tight">open<strong class="font-bold text-[#f58220]">nfe</strong></span>
+          </a>
+
+          <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-5" aria-label="Menu principal">
+            @for (group of nav; track group.title) {
+              <div>
+                <h2 class="px-3 pb-1.5 text-xs font-semibold uppercase tracking-wider text-white/60" style="font-family: var(--font-display);">
+                  {{ group.title }}
+                </h2>
+                <ul class="space-y-0.5">
+                  @for (item of group.items; track item.link) {
+                    <li>
+                      <a
+                        [routerLink]="item.link"
+                        routerLinkActive="bg-white/15 text-[#fbd23a] font-semibold"
+                        [routerLinkActiveOptions]="{ exact: !!item.exact }"
+                        class="flex items-center gap-3 px-3 min-h-11 rounded-md text-sm text-white/90 hover:bg-white/10 hover:text-white transition-colors no-underline"
+                        [title]="item.hint"
+                        (click)="menuOpen.set(false)"
+                      >
+                        <app-icon [name]="item.icon" [size]="19"></app-icon>
+                        <span class="flex-1">{{ item.label }}</span>
+                        @if (item.link === '/documentos') {
+                          <span class="badge badge-sm bg-white/20 text-white border-0">{{ api.scopedDocuments().length }}</span>
+                        }
+                      </a>
+                    </li>
+                  }
+                </ul>
+              </div>
+            }
+          </nav>
+
+          <div class="p-3 border-t border-white/10">
+            <a routerLink="/guia" routerLinkActive="bg-white/15 text-[#fbd23a]" class="flex items-center gap-3 px-3 min-h-11 rounded-md text-sm text-white/90 hover:bg-white/10 no-underline" (click)="menuOpen.set(false)">
+              <app-icon name="circle-help" [size]="19"></app-icon>
+              Guia do sistema
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- AVISOS -->
+    <div class="toast toast-end toast-bottom z-[90]" aria-live="polite">
+      @for (t of toasts.toasts(); track t.id) {
+        <div class="alert shadow-lg max-w-sm" [class]="toastClass[t.kind]" role="status">
+          <app-icon [name]="toastIcon[t.kind]" [size]="18"></app-icon>
+          <span class="text-sm">{{ t.message }}</span>
+          <button type="button" class="btn btn-ghost btn-xs btn-square" (click)="toasts.dismiss(t.id)" aria-label="Fechar aviso">
+            <app-icon name="x" [size]="14"></app-icon>
+          </button>
+        </div>
+      }
     </div>
   `,
 })
 export class AppLayoutComponent {
   readonly api = inject(FiscalApiService);
-  readonly isCollapsed = signal<boolean>(false);
+  readonly toasts = inject(ToastService);
+  readonly menuOpen = signal(false);
 
-  toggleCollapse(): void {
-    this.isCollapsed.update((v) => !v);
-  }
+  readonly toastIcon = TOAST_ICON;
+  readonly toastClass = TOAST_CLASS;
+
+  /** Estrutura do menu — agrupada pelo que a pessoa quer FAZER, em linguagem simples. */
+  readonly nav: NavGroup[] = [
+    {
+      title: 'Dia a dia',
+      items: [
+        { label: 'Início', hint: 'Resumo do que está acontecendo', icon: 'layout-dashboard', link: '/dashboard', exact: true },
+        { label: 'Notas fiscais', hint: 'Consultar, enviar, baixar e cancelar notas', icon: 'file-text', link: '/documentos' },
+        { label: 'Emitir nota', hint: 'Criar uma nova nota passo a passo', icon: 'file-plus-2', link: '/emissao' },
+        { label: 'Importar XML', hint: 'Trazer notas que você já emitiu em outro sistema', icon: 'upload-cloud', link: '/importacao' },
+      ],
+    },
+    {
+      title: 'Cadastros',
+      items: [
+        { label: 'Empresas', hint: 'Empresas que emitem as notas', icon: 'building-2', link: '/empresas' },
+        { label: 'Clientes', hint: 'Quem compra de você', icon: 'users', link: '/clientes' },
+        { label: 'Produtos e serviços', hint: 'O que você vende', icon: 'package', link: '/produtos' },
+      ],
+    },
+    {
+      title: 'Administração',
+      items: [
+        { label: 'Relatórios', hint: 'Fechamento mensal para o contador', icon: 'bar-chart-3', link: '/relatorios' },
+        { label: 'Integrações', hint: 'Conexão com o provedor que fala com a SEFAZ', icon: 'sliders', link: '/integracoes' },
+        { label: 'Configurações', hint: 'Chaves de API e avisos automáticos', icon: 'settings', link: '/configuracoes' },
+      ],
+    },
+  ];
 
   onCompanyChange(event: Event): void {
-    const value = (event.target as HTMLSelectElement).value;
-    this.api.selectedCompanyId.set(value);
+    this.api.selectedCompanyId.set((event.target as HTMLSelectElement).value);
+  }
+
+  async reconnect(): Promise<void> {
+    await this.api.refreshAll();
+    if (!this.api.demoMode() && !this.api.connectionFailed()) this.toasts.success('Conectado à API.');
+    else this.toasts.warning('A API continua sem responder.');
   }
 }

@@ -176,6 +176,70 @@ import { CommonModule } from '@angular/common';
           <path d="m21 2-9.6 9.6" />
           <path d="m15.5 7.5 3 3L22 7l-3-3" />
         }
+        @case ('arrow-up') {
+          <path d="m5 12 7-7 7 7" />
+          <path d="M12 19V5" />
+        }
+        @case ('arrow-down') {
+          <path d="M12 5v14" />
+          <path d="m19 12-7 7-7-7" />
+        }
+        @case ('arrow-up-down') {
+          <path d="m21 16-4 4-4-4" />
+          <path d="M17 20V4" />
+          <path d="m3 8 4-4 4 4" />
+          <path d="M7 4v16" />
+        }
+        @case ('chevrons-left') {
+          <path d="m11 17-5-5 5-5" />
+          <path d="m18 17-5-5 5-5" />
+        }
+        @case ('chevrons-right') {
+          <path d="m6 17 5-5-5-5" />
+          <path d="m13 17 5-5-5-5" />
+        }
+        @case ('eye') {
+          <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z" />
+          <circle cx="12" cy="12" r="3" />
+        }
+        @case ('x') {
+          <path d="M18 6 6 18" />
+          <path d="m6 6 12 12" />
+        }
+        @case ('info') {
+          <circle cx="12" cy="12" r="10" />
+          <path d="M12 16v-4" />
+          <path d="M12 8h.01" />
+        }
+        @case ('printer') {
+          <path d="M6 9V2h12v7" />
+          <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+          <rect width="12" height="8" x="6" y="14" />
+        }
+        @case ('pencil') {
+          <path d="M21.17 6.81a1 1 0 0 0-3.99-3.99L3.84 16.17a2 2 0 0 0-.5.83l-1.32 4.35a.5.5 0 0 0 .62.62l4.35-1.32a2 2 0 0 0 .83-.5Z" />
+          <path d="m15 5 4 4" />
+        }
+        @case ('menu') {
+          <line x1="4" x2="20" y1="12" y2="12" />
+          <line x1="4" x2="20" y1="6" y2="6" />
+          <line x1="4" x2="20" y1="18" y2="18" />
+        }
+        @case ('filter') {
+          <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
+        }
+        @case ('circle-help') {
+          <circle cx="12" cy="12" r="10" />
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
+          <path d="M12 17h.01" />
+        }
+        @case ('palette') {
+          <circle cx="13.5" cy="6.5" r=".5" />
+          <circle cx="17.5" cy="10.5" r=".5" />
+          <circle cx="8.5" cy="7.5" r=".5" />
+          <circle cx="6.5" cy="12.5" r=".5" />
+          <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z" />
+        }
         @default {
           <circle cx="12" cy="12" r="10" />
         }
